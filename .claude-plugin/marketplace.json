@@ -1,0 +1,33 @@
+{
+  "name": "harness-coding-protocol",
+  "id": "harness-coding-protocol",
+  "owner": {
+    "name": "ManHua"
+  },
+  "metadata": {
+    "description": "AI 编码协议框架 — 包含 RIPER-5 五模式流程、Karpathy 编码原则、事/法/steering 三层规范体系",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "harness-coding-protocol",
+      "source": "./",
+      "description": "AI 编码协议框架：RIPER-5 五模式流程、Think Before Coding、Simplicity First、Surgical Changes、Goal-Driven Execution、事/法/steering 三层规范",
+      "version": "1.0.0",
+      "author": {
+        "name": "ManHua"
+      },
+      "keywords": [
+        "guidelines",
+        "best-practices",
+        "coding",
+        "workflow",
+        "riper5",
+        "protocol",
+        "claude",
+        "cursor"
+      ],
+      "category": "workflow"
+    }
+  ]
+}

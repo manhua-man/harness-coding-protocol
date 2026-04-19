@@ -1,0 +1,13 @@
+{
+  "name": "harness-coding-protocol",
+  "description": "AI 编码协议框架 — RIPER-5 五模式流程、Karpathy 编码原则、事/法/steering 三层规范体系",
+  "version": "1.0.0",
+  "author": {
+    "name": "ManHua"
+  },
+  "license": "MIT",
+  "keywords": ["guidelines", "best-practices", "coding", "workflow", "riper5", "protocol", "claude", "cursor"],
+  "skills": [
+    "./templates"
+  ]
+}
