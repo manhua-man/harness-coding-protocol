@@ -1,17 +1,29 @@
 {
   "name": "harness-coding-protocol",
-  "version": "1.0.0",
-  "description": "AI 编码协议框架 - 包含 RIPER-5 五模式流程、Karpathy 编码原则、事/法/steering 三层规范体系",
+  "version": "2.0.0",
+  "description": "Repository AI Governance Starter Kit — root truth files, steering overrides, and optional tool adapters",
   "author": "ManHua",
   "license": "MIT",
-  "keywords": ["ai", "template", "claude", "cursor", "codex", "coding-protocol", "riper5"],
+  "keywords": [
+    "ai",
+    "governance",
+    "starter-kit",
+    "claude",
+    "cursor",
+    "codex",
+    "steering",
+    "riper5"
+  ],
   "files": [
     "templates/",
     "scripts/",
+    "examples/",
+    "docs/",
     ".claude-plugin/"
   ],
   "scripts": {
     "apply": "bash scripts/apply-template.sh",
-    "apply:win": "powershell scripts/apply-template.ps1"
+    "apply:win": "powershell -File scripts/apply-template.ps1",
+    "validate": "node scripts/validate-template.mjs"
   }
 }

@@ -1,47 +1,35 @@
-# 项目规则索引
+# Project Steering
 
-分层规则索引：always / file-match / manual
+> 这是 `steering/` 的索引示例，用来说明哪些规则适合放在局部覆盖层，而不是根级真值层。
 
----
+## 何时放进 steering
 
-## always（始终生效）
+- 只对某个技术栈或子目录生效的规则
+- 项目局部上下文、临时约束、专题实践
+- 不值得进入根级 `AGENTS.md` / `CLAUDE.md` 的补充说明
 
-- `CLAUDE.md` - 主入口、核心原则
-- `AGENTS.md` - 工具路由
+## 不该放进 steering 的内容
 
----
+- 仓库总体结构、端口、命令等事实
+- 全局冲突优先级
+- 所有工具都必须遵守的核心协议
 
-## file-match（文件匹配时生效）
+## 推荐文件
 
-| 文件 | 规则 |
-|------|------|
-| `*.rs` | Rust 规范 |
-| `*.py` | Python 规范 |
-| `*.ts` / `*.tsx` | TypeScript 规范 |
-| `.cursor/rules/*.mdc` | Cursor 会话规则 |
+| Topic | File |
+|-------|------|
+| Shared coding examples | `steering/karpathy-examples.md` |
+| Frontend guidance | `steering/frontend.md` |
+| Backend guidance | `steering/backend.md` |
+| Testing expectations | `steering/testing.md` |
 
----
+## Quick Navigation
 
-## manual（按需阅读）
-
-| 文件 | 用途 |
-|------|------|
-| `steering/architecture.md` | 架构设计 |
-| `steering/commands.md` | 命令表 |
-| `steering/decision.md` | 决策原则 |
-| `steering/workflows.md` | 可选工作流 |
-| `steering/karpathy-examples.md` | Simplicity / Clarity / Surgical Changes / Testability / Explicit Deps |
-| `docs/` | 详细文档 |
-
----
-
-## 快速导航
-
-```
-项目根/
-├── CLAUDE.md          # 必读入口
-├── AGENTS.md          # 工具路由
-├── .kiro/
-│   └── steering/      # 规则目录
-└── docs/              # 详细文档
+```text
+project-root/
+├── AGENTS.md
+├── CLAUDE.md
+├── steering/
+├── .cursor/          # optional mirror output
+└── .kiro/            # optional mirror output
 ```

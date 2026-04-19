@@ -5,27 +5,28 @@
     "name": "ManHua"
   },
   "metadata": {
-    "description": "AI 编码协议框架 — 包含 RIPER-5 五模式流程、Karpathy 编码原则、事/法/steering 三层规范体系",
-    "version": "1.0.0"
+    "description": "Repository AI Governance Starter Kit — root truth files, steering overrides, and optional tool adapters",
+    "version": "2.0.0"
   },
   "plugins": [
     {
       "name": "harness-coding-protocol",
       "source": "./",
-      "description": "AI 编码协议框架：RIPER-5 五模式流程、Think Before Coding、Simplicity First、Surgical Changes、Goal-Driven Execution、事/法/steering 三层规范",
-      "version": "1.0.0",
+      "description": "Repository AI Governance Starter Kit with AGENTS.md, CLAUDE.md, steering/, optional Cursor mirrors, and optional Kiro mirrors.",
+      "version": "2.0.0",
       "author": {
         "name": "ManHua"
       },
       "keywords": [
         "guidelines",
-        "best-practices",
-        "coding",
+        "governance",
+        "starter-kit",
         "workflow",
         "riper5",
         "protocol",
         "claude",
-        "cursor"
+        "cursor",
+        "codex"
       ],
       "category": "workflow"
     }

@@ -1,0 +1,12 @@
+---
+description: Compatibility mirror for repository AI governance
+alwaysApply: true
+---
+
+# Cursor Adapter Mirror
+
+This file mirrors repository guidance for Cursor.
+
+- Root truth: `../../AGENTS.md`
+- Root protocol: `../../CLAUDE.md`
+- Local overrides: `../../steering/`
