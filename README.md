@@ -2,28 +2,42 @@
 
 适用于 Claude Code、Cursor、Codex 等 AI 编码助手的**编码协议框架**。
 
+## 安装
+
+### Claude Code 插件（推荐）
+
+```bash
+claude code plugin install manhua-man/harness-coding-protocol
+```
+
+或运行 `/plugin install manhua-man/harness-coding-protocol`
+
+### 手动安装
+
+```bash
+git clone https://github.com/manhua-man/harness-coding-protocol.git
+cp -r templates/AGENTS.md /your/project/
+cp -r templates/CLAUDE.md /your/project/
+```
+
 ## 目录结构
 
-```
-templates/
-├── AGENTS.md                      # 事 · Facts 模板（结构、命令、端口）
-├── CLAUDE.md                      # 法 · Protocol 模板（决策优先级、RIPER-5）
-├── examples/                      # 已填好的完整示例
-│   ├── AGENTS.example.md          # 游戏 monorepo 完整示例
-│   └── CLAUDE.example.md
-├── steering/                      # 分层规则
-│   ├── project.md                 # 规则索引
-│   └── karpathy-examples.md       # 编码示例
-├── rules/                         # Cursor 规则
-│   └── karpathy-guidelines.mdc
-└── workflow/
-    └── README.md
+```text
+harness-coding-protocol/
+├── .claude-plugin/          # Claude Code 插件配置
+├── templates/               # 模板文件
+│   ├── AGENTS.md          # 事 · Facts 模板
+│   ├── CLAUDE.md          # 法 · Protocol 模板
+│   ├── examples/          # 完整示例
+│   ├── steering/          # 分层规则
+│   └── rules/             # Cursor 规则
+└── scripts/               # 安装脚本
 ```
 
 ## 核心概念：事 / 法 / steering
 
 | 文件 | 汉字 | 回答什么问题 |
-|------|------|-------------|
+| ---- | ---- | ------------ |
 | `AGENTS.md` | **事** | 「这个仓库是什么样」— 结构、命令、端口、模块 |
 | `CLAUDE.md` | **法** | 「在这个仓库怎么做事」— 决策优先级、RIPER-5、协作习惯 |
 | `steering/*.md` | 局部 override | 本路径或本任务才需要的细则 |
@@ -72,8 +86,8 @@ powershell scripts/apply-template.ps1 /path/to/project
 ## 适用工具
 
 | 工具 | 支持情况 |
-|------|---------|
+| ---- | -------- |
 | Claude Code | 完全支持 |
-| Cursor | 部分支持（.cursor/rules/） |
+| Cursor | 部分支持（`.cursor/rules/`） |
 | Codex | 完全支持 |
 | 其他 MCP 工具 | 可扩展 |
