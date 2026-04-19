@@ -46,8 +46,20 @@ Harness Coding Protocol 是一个 **Repository AI Governance Starter Kit**：
 
 ## 30 秒上手
 
+### 安装插件（推荐）
+
 ```bash
-bash scripts/apply-template.sh /your/project --with-cursor --with-kiro --example complete
+/plugin install manhua-man/harness-coding-protocol
+```
+
+或在 Claude Code 中运行：
+```
+/plugin install manhua-man/harness-coding-protocol
+```
+
+安装后运行校验：
+
+```bash
 node scripts/validate-template.mjs /your/project
 ```
 
@@ -59,33 +71,7 @@ CLAUDE.md
 steering/
 ```
 
-## 仓库结构
-
-```text
-harness-coding-protocol/
-├── .claude-plugin/
-├── docs/
-├── examples/
-│   ├── complete/
-│   └── minimal/
-├── scripts/
-│   ├── apply-template.ps1
-│   ├── apply-template.sh
-│   └── validate-template.mjs
-└── templates/
-    ├── adapters/
-    │   ├── codex/
-    │   ├── cursor/
-    │   └── kiro/
-    ├── root/
-    │   ├── AGENTS.md
-    │   └── CLAUDE.md
-    └── steering/
-```
-
-## 5 分钟上手
-
-### 方案 A：推荐安装
+### 手动安装（不使用插件）
 
 ```bash
 bash scripts/apply-template.sh /your/project --with-cursor --with-kiro --example complete
@@ -99,18 +85,23 @@ powershell -File scripts/apply-template.ps1 C:\your\project --with-cursor --with
 
 默认策略是 `--skip-existing`。如需覆盖或备份，可改用 `--overwrite` 或 `--backup`。
 
-### 方案 B：手动复制
+## 仓库结构
 
-```bash
-cp templates/root/AGENTS.md /your/project/AGENTS.md
-cp templates/root/CLAUDE.md /your/project/CLAUDE.md
-cp -R templates/steering /your/project/steering
-```
-
-### 方案 C：安装后校验
-
-```bash
-node scripts/validate-template.mjs /your/project
+```text
+harness-coding-protocol/
+├── .claude-plugin/        # Claude Code 插件配置
+├── docs/                  # 设计文档
+├── examples/               # 示例项目
+│   ├── complete/          # 完整示例
+│   └── minimal/           # 最小示例
+├── scripts/              # 安装脚本
+│   ├── apply-template.sh
+│   ├── apply-template.ps1
+│   └── validate-template.mjs
+└── templates/
+    ├── adapters/          # 工具适配器
+    ├── root/              # AGENTS.md / CLAUDE.md
+    └── steering/          # 分层规则
 ```
 
 ## 安装后会得到什么
