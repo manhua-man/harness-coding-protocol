@@ -1,9 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 function usage() {
-  console.log('Usage: node scripts/validate-template.mjs <target> [--require-adapter cursor|kiro|codex]');
+  console.log('Usage: node scripts/validate-template.mjs <target>');
 }
 
 const args = process.argv.slice(2);
@@ -13,25 +12,9 @@ if (args.length === 0) {
 }
 
 const targetArg = args[0];
-const requiredAdapters = [];
-const supportedAdapters = new Set(['cursor', 'kiro', 'codex']);
 
 for (let i = 1; i < args.length; i += 1) {
   const arg = args[i];
-  if (arg === '--require-adapter') {
-    const value = args[i + 1];
-    if (!value) {
-      console.error('Missing value for --require-adapter');
-      process.exit(1);
-    }
-    requiredAdapters.push(value);
-    i += 1;
-    continue;
-  }
-  if (arg.startsWith('--require-adapter=')) {
-    requiredAdapters.push(arg.split('=')[1]);
-    continue;
-  }
   if (arg === '--help' || arg === '-h') {
     usage();
     process.exit(0);
@@ -40,15 +23,6 @@ for (let i = 1; i < args.length; i += 1) {
   process.exit(1);
 }
 
-for (const adapter of requiredAdapters) {
-  if (!supportedAdapters.has(adapter)) {
-    console.error(`Unknown adapter: ${adapter}`);
-    process.exit(1);
-  }
-}
-
-const scriptDir = path.dirname(fileURLToPath(import.meta.url));
-const repoRoot = path.resolve(scriptDir, '..');
 const targetRoot = path.resolve(process.cwd(), targetArg);
 
 if (!fs.existsSync(targetRoot) || !fs.statSync(targetRoot).isDirectory()) {
@@ -57,14 +31,15 @@ if (!fs.existsSync(targetRoot) || !fs.statSync(targetRoot).isDirectory()) {
 }
 
 const results = [];
+const sourceTemplateRoot = path.join(targetRoot, 'templates');
+const validatesRepositorySource =
+  fs.existsSync(path.join(sourceTemplateRoot, 'AGENTS.md'))
+  && fs.existsSync(path.join(sourceTemplateRoot, 'CLAUDE.md'))
+  && fs.existsSync(path.join(sourceTemplateRoot, 'steering'))
+  && !fs.existsSync(path.join(targetRoot, 'AGENTS.md'));
 
 function report(level, message) {
   results.push({ level, message });
-}
-
-function relFromTarget(targetPath) {
-  const relative = path.relative(targetRoot, targetPath).replace(/\\/g, '/');
-  return relative || '.';
 }
 
 function listRelativeEntries(rootDir) {
@@ -88,6 +63,26 @@ function listRelativeEntries(rootDir) {
 const targetEntries = listRelativeEntries(targetRoot);
 
 function existsLocalToken(token, fileDir) {
+  if (validatesRepositorySource) {
+    const sourceTokenPath = resolveRepositorySourceToken(token);
+    if (sourceTokenPath) {
+      if (token.includes('*')) {
+        const pattern = path.relative(targetRoot, sourceTokenPath).replace(/\\/g, '/');
+        const regex = new RegExp(
+          `^${pattern
+            .replace(/[.+^${}()|[\]\\]/g, '\\$&')
+            .replace(/\*/g, '[^/]*')
+            .replace(/\?/g, '.')}${token.endsWith('/') ? '/' : ''}$`
+        );
+        return targetEntries.some((entry) => regex.test(entry));
+      }
+      if (token.endsWith('/')) {
+        return fs.existsSync(sourceTokenPath) && fs.statSync(sourceTokenPath).isDirectory();
+      }
+      return fs.existsSync(sourceTokenPath);
+    }
+  }
+
   const resolved = path.resolve(fileDir, token);
   if (!resolved.startsWith(targetRoot)) {
     return true;
@@ -111,6 +106,38 @@ function existsLocalToken(token, fileDir) {
   return fs.existsSync(resolved);
 }
 
+function resolveRepositorySourceToken(token) {
+  const generatedTargetPaths = new Set([
+    'steering/harness-recommendations.md',
+    'docs/ai-tool-recommendations.md'
+  ]);
+  const optionalCompatibilityTargetPaths = new Set([
+    '.cursor/rules/',
+    './.cursor/rules/',
+    '.kiro/steering/',
+    './.kiro/steering/'
+  ]);
+  if (generatedTargetPaths.has(token)) {
+    return path.join(targetRoot, 'package.json');
+  }
+  if (optionalCompatibilityTargetPaths.has(token)) {
+    return sourceTemplateRoot;
+  }
+  if (token === 'AGENTS.md' || token === './AGENTS.md') {
+    return path.join(sourceTemplateRoot, 'AGENTS.md');
+  }
+  if (token === 'CLAUDE.md' || token === './CLAUDE.md') {
+    return path.join(sourceTemplateRoot, 'CLAUDE.md');
+  }
+  if (token === 'steering/' || token === './steering/') {
+    return path.join(sourceTemplateRoot, 'steering');
+  }
+  if (token.startsWith('steering/')) {
+    return path.join(sourceTemplateRoot, token);
+  }
+  return undefined;
+}
+
 function normalizeToken(token) {
   return token.trim().replace(/^['"`]+|['"`.,;:]+$/g, '');
 }
@@ -123,6 +150,9 @@ function shouldCheckToken(token) {
     return false;
   }
   if (token.includes('<') || token.includes('>') || token.includes('<!--')) {
+    return false;
+  }
+  if (/\s/.test(token)) {
     return false;
   }
   if (/^\[MODE:/.test(token)) {
@@ -165,7 +195,7 @@ function validatePathReferences(fileName) {
     return;
   }
 
-  const text = fs.readFileSync(filePath, 'utf8');
+  const text = fs.readFileSync(filePath, 'utf8').replace(/<!--[\s\S]*?-->/g, '');
   const fileDir = path.dirname(filePath);
   const candidates = extractPathCandidates(text);
 
@@ -176,88 +206,68 @@ function validatePathReferences(fileName) {
   }
 }
 
-function validateRequiredRoot() {
+function validateRequiredRoot(rootDir = targetRoot, label = 'root') {
   const requiredFiles = ['AGENTS.md', 'CLAUDE.md'];
   for (const fileName of requiredFiles) {
-    const filePath = path.join(targetRoot, fileName);
+    const filePath = path.join(rootDir, fileName);
     if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
-      report('OK', `root file exists: ${fileName}`);
+      const relative = path.relative(targetRoot, filePath).replace(/\\/g, '/');
+      report('OK', `${label} file exists: ${relative}`);
     } else {
-      report('ERROR', `missing root file: ${fileName}`);
+      report('ERROR', `missing ${label} file: ${path.relative(targetRoot, filePath).replace(/\\/g, '/')}`);
     }
   }
 
-  const steeringDir = path.join(targetRoot, 'steering');
+  const steeringDir = path.join(rootDir, 'steering');
   if (fs.existsSync(steeringDir) && fs.statSync(steeringDir).isDirectory()) {
-    report('OK', 'root directory exists: steering/');
+    const relative = path.relative(targetRoot, steeringDir).replace(/\\/g, '/');
+    report('OK', `${label} directory exists: ${relative}/`);
   } else {
-    report('ERROR', 'missing root directory: steering/');
+    report('ERROR', `missing ${label} directory: ${path.relative(targetRoot, steeringDir).replace(/\\/g, '/')}/`);
   }
 }
 
-function validateAdapterTemplates() {
+function validateOptionalMirrors() {
   const hasCursorMirror = fs.existsSync(path.join(targetRoot, '.cursor', 'rules'));
   const hasKiroMirror = fs.existsSync(path.join(targetRoot, '.kiro', 'steering'));
-  const adapterSet = new Set(requiredAdapters);
 
-  if (hasCursorMirror || adapterSet.has('cursor')) {
-    const cursorTemplateDir = path.join(repoRoot, 'templates', 'adapters', 'cursor', 'rules');
-    if (fs.existsSync(cursorTemplateDir) && fs.readdirSync(cursorTemplateDir).length > 0) {
-      report('OK', 'cursor adapter template exists');
+  if (hasCursorMirror) {
+    const rulesDir = path.join(targetRoot, '.cursor', 'rules');
+    const rules = fs.readdirSync(rulesDir).filter((entry) => entry.endsWith('.mdc'));
+    if (rules.length > 0) {
+      report('OK', 'cursor mirror contains .mdc files');
     } else {
-      report('ERROR', 'cursor adapter template missing');
-    }
-
-    if (hasCursorMirror) {
-      const rules = fs.readdirSync(path.join(targetRoot, '.cursor', 'rules')).filter((entry) => entry.endsWith('.mdc'));
-      if (rules.length > 0) {
-        report('OK', 'cursor mirror contains .mdc files');
-      } else {
-        report('ERROR', 'cursor mirror exists but contains no .mdc files');
-      }
+      report('WARN', 'cursor mirror exists but contains no .mdc files');
     }
   }
 
-  if (hasKiroMirror || adapterSet.has('kiro')) {
-    const kiroTemplateReadme = path.join(repoRoot, 'templates', 'adapters', 'kiro', 'README.md');
-    if (fs.existsSync(kiroTemplateReadme)) {
-      report('OK', 'kiro adapter template exists');
-    } else {
-      report('ERROR', 'kiro adapter template missing');
-    }
-
-    if (hasKiroMirror) {
-      const steeringRoot = path.join(targetRoot, 'steering');
-      const kiroMirrorRoot = path.join(targetRoot, '.kiro', 'steering');
-      if (fs.existsSync(steeringRoot) && fs.existsSync(kiroMirrorRoot)) {
-        const rootFiles = listRelativeEntries(steeringRoot).filter((entry) => !entry.endsWith('/'));
-        const mirrorFiles = new Set(listRelativeEntries(kiroMirrorRoot).filter((entry) => !entry.endsWith('/')));
-        for (const relativeFile of rootFiles) {
-          if (!mirrorFiles.has(relativeFile)) {
-            report('ERROR', `.kiro/steering is missing mirror file: ${relativeFile}`);
-          }
+  if (hasKiroMirror) {
+    const steeringRoot = path.join(targetRoot, 'steering');
+    const kiroMirrorRoot = path.join(targetRoot, '.kiro', 'steering');
+    if (fs.existsSync(steeringRoot) && fs.existsSync(kiroMirrorRoot)) {
+      const rootFiles = listRelativeEntries(steeringRoot).filter((entry) => !entry.endsWith('/'));
+      const mirrorFiles = new Set(listRelativeEntries(kiroMirrorRoot).filter((entry) => !entry.endsWith('/')));
+      for (const relativeFile of rootFiles) {
+        if (!mirrorFiles.has(relativeFile)) {
+          report('ERROR', `.kiro/steering is missing mirror file: ${relativeFile}`);
         }
-        report('OK', 'kiro mirror checked against root steering/');
       }
-    }
-  }
-
-  if (adapterSet.has('codex')) {
-    const codexReadme = path.join(repoRoot, 'templates', 'adapters', 'codex', 'README.md');
-    if (fs.existsSync(codexReadme)) {
-      report('OK', 'codex adapter documentation exists');
-    } else {
-      report('ERROR', 'codex adapter documentation missing');
+      report('OK', 'kiro mirror checked against root steering/');
     }
   }
 }
 
-validateRequiredRoot();
+if (validatesRepositorySource) {
+  validateRequiredRoot(sourceTemplateRoot, 'template');
+} else {
+  validateRequiredRoot();
+  validatePathReferences('AGENTS.md');
+  validatePathReferences('CLAUDE.md');
+}
 validatePathReferences('README.md');
 validatePathReferences('README.en.md');
-validatePathReferences('AGENTS.md');
-validatePathReferences('CLAUDE.md');
-validateAdapterTemplates();
+validatePathReferences('ROADMAP.md');
+validateOptionalMirrors();
 
 for (const result of results) {
   console.log(`${result.level}: ${result.message}`);

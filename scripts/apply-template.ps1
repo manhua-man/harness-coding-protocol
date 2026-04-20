@@ -2,7 +2,8 @@ $ErrorActionPreference = "Stop"
 
 function Show-Usage {
     Write-Host "Usage:"
-    Write-Host "  powershell -File scripts/apply-template.ps1 <target> [--with-cursor] [--with-kiro] [--example minimal|complete] [--overwrite|--backup|--skip-existing]"
+    Write-Host "  powershell -File scripts/apply-template.ps1 <target> [--with-cursor] [--with-kiro] [--overwrite|--backup|--skip-existing]"
+    Write-Host "  powershell -File scripts/apply-template.ps1 <target> --smart [--mode confirm|silent|dry-run] [--backup] [--shallow]"
 }
 
 if ($args.Count -lt 1) {
@@ -23,7 +24,9 @@ if ($args.Count -gt 1) {
 
 $withCursor = $false
 $withKiro = $false
-$exampleName = ""
+$smart = $false
+$smartMode = "confirm"
+$smartShallow = $false
 $strategy = "skip"
 
 for ($i = 0; $i -lt $remaining.Count; $i++) {
@@ -37,16 +40,24 @@ for ($i = 0; $i -lt $remaining.Count; $i++) {
             $withKiro = $true
             continue
         }
-        '^--example=(.+)$' {
-            $exampleName = $Matches[1]
+        '^--smart$' {
+            $smart = $true
             continue
         }
-        '^--example$' {
+        '^--mode=(.+)$' {
+            $smartMode = $Matches[1]
+            continue
+        }
+        '^--mode$' {
             if ($i + 1 -ge $remaining.Count) {
-                throw "Missing value for --example"
+                throw "Missing value for --mode"
             }
-            $exampleName = $remaining[$i + 1]
+            $smartMode = $remaining[$i + 1]
             $i++
+            continue
+        }
+        '^--shallow$' {
+            $smartShallow = $true
             continue
         }
         '^--overwrite$' {
@@ -81,16 +92,34 @@ $repoRoot = Split-Path -Parent $scriptDir
 $targetDir = $resolvedTarget.Path
 $timestamp = Get-Date -Format "yyyyMMddHHmmss"
 
-$sourceRootDir = Join-Path $repoRoot "templates\root"
+$sourceRootDir = Join-Path $repoRoot "templates"
 $sourceSteeringDir = Join-Path $repoRoot "templates\steering"
 
-if ($exampleName) {
-    $sourceExampleDir = Join-Path $repoRoot ("examples\" + $exampleName)
-    if (-not (Test-Path -LiteralPath $sourceExampleDir -PathType Container)) {
-        throw "Example not found: $exampleName"
+if (@("confirm", "silent", "dry-run") -notcontains $smartMode) {
+    throw "Invalid --mode value: $smartMode"
+}
+
+if ($smart) {
+    $smartArgs = @((Join-Path $repoRoot "templates\auto-detect\cli.ts"), "setup", $targetDir, "--mode", $smartMode)
+    if ($strategy -eq "backup") {
+        $smartArgs += "--backup"
     }
-    $sourceRootDir = $sourceExampleDir
-    $sourceSteeringDir = Join-Path $sourceExampleDir "steering"
+    if ($smartShallow) {
+        $smartArgs += "--shallow"
+    }
+
+    $localTsx = Join-Path $repoRoot "node_modules\.bin\tsx.cmd"
+    if (Test-Path -LiteralPath $localTsx -PathType Leaf) {
+        & $localTsx @smartArgs
+        exit $LASTEXITCODE
+    }
+
+    $npx = Get-Command npx -ErrorAction SilentlyContinue
+    if (-not $npx) {
+        throw "Smart mode requires local dependencies or npm/npx."
+    }
+    & $($npx.Source) tsx @smartArgs
+    exit $LASTEXITCODE
 }
 
 function Require-File([string]$path) {
@@ -151,22 +180,21 @@ Sync-Directory $sourceSteeringDir (Join-Path $targetDir "steering")
 
 if ($withCursor) {
     $cursorTemplateDir = Join-Path $repoRoot "templates\adapters\cursor\rules"
-    Require-Directory $cursorTemplateDir
-    Sync-Directory $cursorTemplateDir (Join-Path $targetDir ".cursor\rules")
+    if (Test-Path -LiteralPath $cursorTemplateDir -PathType Container) {
+        Sync-Directory $cursorTemplateDir (Join-Path $targetDir ".cursor\rules")
+    }
+    else {
+        Write-Host "SKIP Cursor mirror: no bundled cursor template in this repository"
+    }
 }
 
 if ($withKiro) {
-    $kiroTemplateDir = Join-Path $repoRoot "templates\adapters\kiro"
-    Require-Directory $kiroTemplateDir
     Sync-Directory $sourceSteeringDir (Join-Path $targetDir ".kiro\steering")
 }
 
 Write-Host ""
 Write-Host "Installed Harness Coding Protocol v2 into: $targetDir"
 Write-Host "Strategy: $strategy"
-if ($exampleName) {
-    Write-Host "Example source: $exampleName"
-}
 Write-Host "Root truth:"
 Write-Host "  - $(Join-Path $targetDir 'AGENTS.md')"
 Write-Host "  - $(Join-Path $targetDir 'CLAUDE.md')"

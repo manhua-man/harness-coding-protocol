@@ -5,7 +5,8 @@ set -euo pipefail
 usage() {
   cat <<'EOF'
 Usage:
-  bash scripts/apply-template.sh <target> [--with-cursor] [--with-kiro] [--example minimal|complete] [--overwrite|--backup|--skip-existing]
+  bash scripts/apply-template.sh <target> [--with-cursor] [--with-kiro] [--overwrite|--backup|--skip-existing]
+  bash scripts/apply-template.sh <target> --smart [--mode confirm|silent|dry-run] [--backup] [--shallow]
 EOF
 }
 
@@ -24,7 +25,9 @@ shift
 
 with_cursor=false
 with_kiro=false
-example_name=""
+smart=false
+smart_mode="confirm"
+smart_shallow=false
 strategy="skip"
 
 while [[ $# -gt 0 ]]; do
@@ -37,16 +40,24 @@ while [[ $# -gt 0 ]]; do
       with_kiro=true
       shift
       ;;
-    --example)
+    --smart)
+      smart=true
+      shift
+      ;;
+    --mode)
       if [[ $# -lt 2 ]]; then
-        echo "Missing value for --example" >&2
+        echo "Missing value for --mode" >&2
         exit 1
       fi
-      example_name="$2"
+      smart_mode="$2"
       shift 2
       ;;
-    --example=*)
-      example_name="${1#*=}"
+    --mode=*)
+      smart_mode="${1#*=}"
+      shift
+      ;;
+    --shallow)
+      smart_shallow=true
       shift
       ;;
     --overwrite)
@@ -83,17 +94,32 @@ repo_root="$(cd -- "$script_dir/.." && pwd)"
 target_dir="$(cd -- "$target_arg" && pwd)"
 timestamp="$(date +%Y%m%d%H%M%S)"
 
-source_root_dir="$repo_root/templates/root"
+source_root_dir="$repo_root/templates"
 source_steering_dir="$repo_root/templates/steering"
 
-if [[ -n "$example_name" ]]; then
-  source_example_dir="$repo_root/examples/$example_name"
-  if [[ ! -d "$source_example_dir" ]]; then
-    echo "Example not found: $example_name" >&2
+if [[ "$smart_mode" != "confirm" && "$smart_mode" != "silent" && "$smart_mode" != "dry-run" ]]; then
+  echo "Invalid --mode value: $smart_mode" >&2
+  exit 1
+fi
+
+if $smart; then
+  smart_args=("$repo_root/templates/auto-detect/cli.ts" "setup" "$target_dir" "--mode" "$smart_mode")
+  if [[ "$strategy" == "backup" ]]; then
+    smart_args+=("--backup")
+  fi
+  if $smart_shallow; then
+    smart_args+=("--shallow")
+  fi
+
+  if [[ -x "$repo_root/node_modules/.bin/tsx" ]]; then
+    "$repo_root/node_modules/.bin/tsx" "${smart_args[@]}"
+  elif command -v npx >/dev/null 2>&1; then
+    npx tsx "${smart_args[@]}"
+  else
+    echo "Smart mode requires local dependencies or npm/npx." >&2
     exit 1
   fi
-  source_root_dir="$source_example_dir"
-  source_steering_dir="$source_example_dir/steering"
+  exit 0
 fi
 
 require_file() {
@@ -159,21 +185,21 @@ copy_with_strategy "$source_root_dir/CLAUDE.md" "$target_dir/CLAUDE.md"
 sync_directory "$source_steering_dir" "$target_dir/steering"
 
 if $with_cursor; then
-  require_dir "$repo_root/templates/adapters/cursor/rules"
-  sync_directory "$repo_root/templates/adapters/cursor/rules" "$target_dir/.cursor/rules"
+  cursor_template_dir="$repo_root/templates/adapters/cursor/rules"
+  if [[ -d "$cursor_template_dir" ]]; then
+    sync_directory "$cursor_template_dir" "$target_dir/.cursor/rules"
+  else
+    echo "SKIP Cursor mirror: no bundled cursor template in this repository"
+  fi
 fi
 
 if $with_kiro; then
-  require_dir "$repo_root/templates/adapters/kiro"
   sync_directory "$source_steering_dir" "$target_dir/.kiro/steering"
 fi
 
 echo
 echo "Installed Harness Coding Protocol v2 into: $target_dir"
 echo "Strategy: $strategy"
-if [[ -n "$example_name" ]]; then
-  echo "Example source: $example_name"
-fi
 echo "Root truth:"
 echo "  - $target_dir/AGENTS.md"
 echo "  - $target_dir/CLAUDE.md"

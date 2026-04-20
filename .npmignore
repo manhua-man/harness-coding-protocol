@@ -1,0 +1,66 @@
+# Source TypeScript files (publish compiled JS only)
+templates/auto-detect/**/*.ts
+!templates/auto-detect/**/*.d.ts
+
+# Test files
+**/*.test.ts
+**/*.spec.ts
+**/__tests__/
+**/__mocks__/
+coverage/
+.nyc_output/
+
+# Test fixtures
+templates/auto-detect/fixtures/
+
+# Development files
+tsconfig.json
+vitest.config.ts
+.eslintrc*
+.prettierrc*
+
+# Documentation drafts
+drafts/
+notes/
+.tasks/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Git files
+.git/
+.gitignore
+.gitattributes
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+
+# Temporary files
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Detection output examples (not needed in package)
+detected-report.json
+detected-tools.json
+
+# Build artifacts that shouldn't be published
+*.js.map
+*.tsbuildinfo
+
+# Package manager files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Environment files
+.env
+.env.*
+!.env.example

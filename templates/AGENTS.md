@@ -10,7 +10,7 @@ alwaysApply: true
 > 协作方法、决策优先级、工作流规则见同级的 `CLAUDE.md`。
 
 **仓库真值入口固定为根目录的 `AGENTS.md`、`CLAUDE.md`、`steering/`。**  
-**Harness 角色**：我们是工作流的管理者与智能适配器，会在安装或 `harness setup` 时**实时检测**项目现有工具和工作流，动态生成适配钩子，不硬编码任何具体工作流。
+**Harness 角色**：Harness 是 AI 编码环境的全栈生态适配器，会在安装或 setup 阶段检测项目现状，生成最少但更正确的配置建议，不把工具私有目录提升为真值源。
 
 ---
 
@@ -77,23 +77,23 @@ alwaysApply: true
 | Topic                  | Path                          |
 |------------------------|-------------------------------|
 | Project governance     | `CLAUDE.md`                   |
-| Steering rules index   | `steering/project.md`         |
+| Steering rules index   | `steering/`                   |
 | Karpathy coding examples | `steering/karpathy-examples.md` |
 
 ---
 
-## 第三方工作流适配钩子（动态生成）
+## 第三方 AI 工具适配建议（动态生成）
 
-> 本章节由 **Harness Detection Engine** 在安装或 `harness setup` 时**实时扫描**项目现有工具和工作流后自动生成。  
-> Harness 不提供工作流，仅负责检测、适配并给出调用方式、适用场景及与 RIPER-5 的协作指引。
+> 本章节由 **Harness Detection Engine** 在智能 setup 时扫描项目现有技术栈、AI 工具痕迹和根级真值后生成。
+> Harness 不默认安装第三方工具，仅负责检测、推荐、解释并给出可审查的适配钩子。
 
 <!-- HARNESS_DYNAMIC_WORKFLOW_HOOKS_START -->
-<!-- 此处由 templates/auto-detect/generators/workflow-hooks.generator.ts 动态插入具体工作流表格 -->
-<!-- 生成器会根据 detected-tools.json 自动填充 GSD、Superpowers、G-Talk、OpenSpec、GStack 等已检测到的工具 -->
+<!-- 此处由 templates/auto-detect/generators/ecosystem-recommender.generator.ts 动态插入推荐表格 -->
+<!-- 生成器会根据 detected-tools.json 推荐 Workflows、Skills、Hooks、Subagents、MCP、Plugins、Memory 等能力 -->
 <!-- HARNESS_DYNAMIC_WORKFLOW_HOOKS_END -->
 
 **想引入新的工作流？**  
-请在运行 `harness setup --bundle <name>` 时选择，或手动在 `.kiro/steering/` 下放置对应规则文件后重新执行检测。
+请先运行智能检测查看推荐理由和 diff，再决定是否把建议合并到根级真值或工具兼容层。
 
 ---
 
