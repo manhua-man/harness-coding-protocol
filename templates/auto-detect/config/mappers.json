@@ -1,0 +1,41 @@
+{
+  "rootTruth": {
+    "AGENTS.md": { "tool": "root-truth", "label": "Root truth: AGENTS.md", "category": "truth" },
+    "CLAUDE.md": { "tool": "root-truth", "label": "Root truth: CLAUDE.md", "category": "truth" },
+    "steering": { "tool": "root-truth", "label": "Root truth: steering/", "category": "truth" }
+  },
+  "claudeCode": {
+    ".claude/settings.json": { "tool": "claude-code", "label": "Claude Code settings", "category": "editor" },
+    ".claude/hooks": { "tool": "claude-code", "label": "Claude Code hooks", "category": "automation" },
+    ".claude/skills": { "tool": "claude-code", "label": "Claude Code skills", "category": "automation" },
+    ".claude/agents": { "tool": "claude-code", "label": "Claude Code agents", "category": "automation" },
+    ".claude/memory": { "tool": "claude-code", "label": "Claude Code memory", "category": "automation" }
+  },
+  "cursor": {
+    ".cursorrules": { "tool": "cursor", "label": "Cursor rules file", "category": "editor" },
+    ".cursor/rules": { "tool": "cursor", "label": "Cursor rules directory", "category": "editor" }
+  },
+  "mcp": {
+    "mcp.json": { "tool": "mcp", "label": "MCP config", "category": "integration" },
+    "package.json": { "tool": "mcp", "label": "MCP package dependency", "category": "integration" }
+  },
+  "techStacks": {
+    "node": { "tool": "node", "label": "Node.js", "category": "stack" },
+    "python": { "tool": "python", "label": "Python", "category": "stack" },
+    "go": { "tool": "go", "label": "Go", "category": "stack" },
+    "rust": { "tool": "rust", "label": "Rust", "category": "stack" },
+    "java": { "tool": "java", "label": "Java", "category": "stack" }
+  },
+  "repoShape": {
+    "monorepo": { "tool": "monorepo", "label": "Monorepo", "category": "shape" },
+    "layered": { "tool": "layered-repo", "label": "Layered repository", "category": "shape" },
+    "single-package": { "tool": "single-package", "label": "Single package repository", "category": "shape" }
+  },
+  "aiTraces": {
+    "skills": { "tool": "ai-traces", "label": "Skills trace", "category": "automation" },
+    "hooks": { "tool": "ai-traces", "label": "Hooks trace", "category": "automation" },
+    "subagents": { "tool": "ai-traces", "label": "Subagents trace", "category": "automation" },
+    "agents": { "tool": "ai-traces", "label": "Agents trace", "category": "automation" },
+    "memory": { "tool": "ai-traces", "label": "Memory trace", "category": "automation" }
+  }
+}

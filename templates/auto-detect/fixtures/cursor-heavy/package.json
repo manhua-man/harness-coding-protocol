@@ -1,0 +1,15 @@
+{
+  "name": "cursor-heavy",
+  "private": true,
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "test": "vitest run",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "react": "^18.0.0",
+    "vite": "^5.0.0"
+  }
+}

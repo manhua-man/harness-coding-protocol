@@ -1,0 +1,52 @@
+{
+  "ignoredDirectories": [".git", "node_modules", "dist", "build", "coverage", ".next", ".turbo", ".cache"],
+  "rootTruth": {
+    "files": ["AGENTS.md", "CLAUDE.md"],
+    "dirs": ["steering"]
+  },
+  "claudeCode": {
+    "files": [".claude/settings.json", ".claude/settings.local.json"],
+    "dirs": [".claude/hooks", ".claude/skills", ".claude/agents", ".claude/memory"]
+  },
+  "cursor": {
+    "files": [".cursorrules"],
+    "dirs": [".cursor/rules"]
+  },
+  "mcp": {
+    "files": ["mcp.json"],
+    "packageDependencyNames": [
+      "@modelcontextprotocol/sdk",
+      "@anthropic-ai/mcp",
+      "modelcontextprotocol",
+      "mcp",
+      "mcp-server"
+    ],
+    "packageNameHints": ["mcp", "modelcontextprotocol"]
+  },
+  "techStacks": {
+    "node": {
+      "files": ["package.json", "tsconfig.json", "vite.config.ts", "next.config.js", "next.config.mjs", "pnpm-workspace.yaml", "yarn.lock", "pnpm-lock.yaml", "package-lock.json"]
+    },
+    "python": {
+      "files": ["pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", "requirements-dev.txt", "Pipfile", "poetry.lock"]
+    },
+    "go": {
+      "files": ["go.mod", "go.sum"]
+    },
+    "rust": {
+      "files": ["Cargo.toml", "Cargo.lock"]
+    },
+    "java": {
+      "files": ["pom.xml", "build.gradle", "build.gradle.kts", "settings.gradle", "settings.gradle.kts", "mvnw", "gradlew"]
+    }
+  },
+  "repoShape": {
+    "monorepoIndicators": ["pnpm-workspace.yaml", "turbo.json", "nx.json", "lerna.json", "rush.json"],
+    "layeredIndicators": ["src", "app", "server", "client", "frontend", "backend", "packages", "apps", "services", "modules"],
+    "packageJsonWorkspaceKeys": ["workspaces"]
+  },
+  "aiTraces": {
+    "directories": ["skills", "hooks", "subagents", "agents", "memory"],
+    "filePatterns": ["*.md", "*.json", "*.yaml", "*.yml", "*.ts", "*.js", "*.mjs", "*.cjs", "*.sh"]
+  }
+}
