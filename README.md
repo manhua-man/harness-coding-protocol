@@ -2,14 +2,14 @@
 
 让 AI 编码助手在你的仓库里先读对，再动手。
 
-Harness Coding Protocol 是一个 **Repository AI Governance Starter Kit**：  
+Harness Coding Protocol 是一个 **Repository AI Governance Starter Kit**：
 用一套最小但完整的根级规则，把 `AGENTS.md`、`CLAUDE.md`、`steering/` 变成 AI 协作的统一入口。
 
 适用于 Claude Code、Codex、Cursor、Kiro 和其他 MCP-compatible 工具。
 
 ## 一句话价值
 
-不要再把 AI 规则散落在 README、IDE 私有目录和临时说明里。  
+不要再把 AI 规则散落在 README、IDE 私有目录和临时说明里。
 把仓库真值收敛到根目录，让人类、AI、IDE 对"该读什么、听谁的、装完长什么样"有同一套答案。
 
 ## 你会得到什么
@@ -17,7 +17,7 @@ Harness Coding Protocol 是一个 **Repository AI Governance Starter Kit**：
 - 一个清晰的根级真值层：`AGENTS.md` + `CLAUDE.md` + `steering/`
 - 一套可安装的 starter kit，而不是零散模板
 - 一条安装命令和一条校验命令，形成完整闭环
-- 内置 `backend.md`、`frontend.md`、`testing.md` 等常用 steering 规则
+- 内置 `karpathy-examples.md` 等通用 steering 示例
 
 ## 它解决什么问题
 
@@ -44,11 +44,7 @@ Harness Coding Protocol 是一个 **Repository AI Governance Starter Kit**：
 
 ### 安装插件（推荐）
 
-```bash
-/plugin install manhua-man/harness-coding-protocol
-```
-
-或在 Claude Code 中运行：
+在 Claude Code 中运行：
 
 ```
 /plugin install manhua-man/harness-coding-protocol
@@ -62,7 +58,7 @@ node scripts/validate-template.mjs /your/project
 
 装完后的仓库真值固定是：
 
-```text
+```
 AGENTS.md
 CLAUDE.md
 steering/
@@ -84,45 +80,42 @@ powershell -File scripts/apply-template.ps1 C:\your\project
 
 ## 仓库结构
 
-```text
+```
 harness-coding-protocol/
 ├── .claude-plugin/        # Claude Code 插件配置
-├── docs/                  # 设计文档
-├── scripts/              # 安装脚本
+├── .gitignore
+├── LICENSE
+├── README.md
+├── ROADMAP.md
+├── plugin.json            # 仓库分发与脚本入口元数据
+├── scripts/               # 安装脚本
 │   ├── apply-template.sh
 │   ├── apply-template.ps1
 │   └── validate-template.mjs
 └── templates/
-    ├── AGENTS.md         # 事实层模板
-    ├── CLAUDE.md         # 协议层模板
-    └── steering/          # 局部规则模板
-        ├── backend.md
-        ├── frontend.md
-        ├── karpathy-examples.md
-        ├── project.md
-        └── testing.md
+    ├── AGENTS.md          # 事实层模板
+    ├── CLAUDE.md          # 协议层模板
+    └── steering/
+        └── karpathy-examples.md   # Karpathy 风格编码示例
 ```
 
 ## 安装后会得到什么
 
-```text
+```
 your-project/
 ├── AGENTS.md
 ├── CLAUDE.md
 └── steering/
-    ├── backend.md
-    ├── frontend.md
-    ├── karpathy-examples.md
-    ├── project.md
-    └── testing.md
+    └── karpathy-examples.md   # 可按需补充 project.md、frontend.md 等
 ```
 
 ## 规则优先级
 
-1. User instruction
-2. Repository root `AGENTS.md`
-3. Repository root `CLAUDE.md`
-4. Matching `steering/*.md`
+1. 用户当次明确指令
+2. 仓库根目录 `AGENTS.md`
+3. 仓库根目录 `CLAUDE.md`
+4. 匹配的 `steering/*.md`
+5. 工具适配文件（仅做兼容，不覆盖真值）
 
 ## 支持的工具
 
@@ -133,16 +126,6 @@ your-project/
 | Cursor | 是 |
 | Kiro | 是 |
 | 其他 MCP-compatible tools | 通常是 |
-
-## 设计文档
-
-- `docs/design-principles.md`：设计原则
-- `docs/compatibility-matrix.md`：工具兼容矩阵与元数据职责
-
-## 发布元数据
-
-- 根级 `plugin.json`：仓库分发与脚本入口元数据
-- `.claude-plugin/plugin.json`：Claude Code 插件描述文件
 
 ## 许可
 
