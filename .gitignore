@@ -2,3 +2,13 @@
 ROADMAP.md
 PRIVATE.md
 *.private.md
+
+# Node / TypeScript local outputs
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Harness generated diagnostics
+detected-report.json
+detected-tools.json

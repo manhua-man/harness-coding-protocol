@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "types": [
+      "node"
+    ],
+    "outDir": "dist",
+    "declaration": true,
+    "sourceMap": true
+  },
+  "include": [
+    "templates/auto-detect/**/*.ts"
+  ],
+  "exclude": [
+    "templates/auto-detect/fixtures/**"
+  ]
+}

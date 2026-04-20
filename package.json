@@ -1,0 +1,53 @@
+{
+  "name": "harness-coding-protocol",
+  "version": "2.1.0",
+  "description": "Project-centric AI coding ecosystem adapter with root truth templates, detection, generation, and safe setup helpers.",
+  "type": "module",
+  "license": "MIT",
+  "author": "ManHua",
+  "keywords": [
+    "ai",
+    "governance",
+    "adapter",
+    "claude",
+    "cursor",
+    "codex",
+    "steering",
+    "mcp"
+  ],
+  "files": [
+    "dist/",
+    "templates/",
+    "scripts/",
+    "docs/",
+    ".claude-plugin/"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "validate": "node scripts/validate-template.mjs",
+    "detect": "tsx templates/auto-detect/cli.ts detect",
+    "smart": "tsx templates/auto-detect/cli.ts setup",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "bin": {
+    "harness": "dist/cli.js"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^11.0.0",
+    "diff": "^5.1.0",
+    "fast-glob": "^3.3.0",
+    "inquirer": "^9.2.0",
+    "yaml": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@vitest/coverage-v8": "^1.6.1",
+    "tsx": "^4.0.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.0.0"
+  }
+}

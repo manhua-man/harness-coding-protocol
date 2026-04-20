@@ -1,23 +1,23 @@
 {
   "name": "harness-coding-protocol",
-  "version": "2.0.0",
-  "description": "Repository AI Governance Starter Kit — root truth files, steering overrides, and optional tool adapters",
+  "version": "2.1.0",
+  "description": "Project-centric AI coding ecosystem adapter with root truth templates, detection, generation, and safe setup helpers",
   "author": "ManHua",
   "license": "MIT",
   "keywords": [
     "ai",
     "governance",
-    "starter-kit",
+    "adapter",
     "claude",
     "cursor",
     "codex",
     "steering",
-    "riper5"
+    "riper5",
+    "mcp"
   ],
   "files": [
     "templates/",
     "scripts/",
-    "examples/",
     "docs/",
     ".claude-plugin/"
   ],

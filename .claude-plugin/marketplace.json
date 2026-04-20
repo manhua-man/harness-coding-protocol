@@ -5,15 +5,15 @@
     "name": "ManHua"
   },
   "metadata": {
-    "description": "Repository AI Governance Starter Kit — root truth files, steering overrides, and optional tool adapters",
-    "version": "2.0.0"
+    "description": "Root-truth-first AI coding environment adapter with static templates, auto-detect, dry-run generation, safe merge, rollback helpers, and full-stack recommendations.",
+    "version": "2.1.0"
   },
   "plugins": [
     {
       "name": "harness-coding-protocol",
       "source": "./",
-      "description": "Repository AI Governance Starter Kit with AGENTS.md, CLAUDE.md, steering/, optional Cursor mirrors, and optional Kiro mirrors.",
-      "version": "2.0.0",
+      "description": "Root-truth-first adapter for AI coding environments with AGENTS.md, CLAUDE.md, steering/, auto-detect, dry-run diff previews, safe compatibility mirrors, rollback-aware setup, and recommendation bundles.",
+      "version": "2.1.0",
       "author": {
         "name": "ManHua"
       },
@@ -22,11 +22,16 @@
         "governance",
         "starter-kit",
         "workflow",
+        "auto-detect",
+        "rollback",
+        "bundles",
         "riper5",
         "protocol",
         "claude",
         "cursor",
-        "codex"
+        "codex",
+        "mcp",
+        "full-stack"
       ],
       "category": "workflow"
     }
