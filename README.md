@@ -10,15 +10,14 @@ Harness Coding Protocol 是一个 **Repository AI Governance Starter Kit**：
 ## 一句话价值
 
 不要再把 AI 规则散落在 README、IDE 私有目录和临时说明里。  
-把仓库真值收敛到根目录，让人类、AI、IDE 对“该读什么、听谁的、装完长什么样”有同一套答案。
+把仓库真值收敛到根目录，让人类、AI、IDE 对"该读什么、听谁的、装完长什么样"有同一套答案。
 
 ## 你会得到什么
 
 - 一个清晰的根级真值层：`AGENTS.md` + `CLAUDE.md` + `steering/`
 - 一套可安装的 starter kit，而不是零散模板
-- Cursor / Kiro 可选 adapter 镜像，但不污染规范真值
 - 一条安装命令和一条校验命令，形成完整闭环
-- `minimal` / `complete` 两个可直接参考的成品示例
+- 内置 `backend.md`、`frontend.md`、`testing.md` 等常用 steering 规则
 
 ## 它解决什么问题
 
@@ -41,9 +40,6 @@ Harness Coding Protocol 是一个 **Repository AI Governance Starter Kit**：
 | 协议层 | `CLAUDE.md` | 记录决策优先级、冲突解析、RIPER-5、协作方式 |
 | 局部覆盖 | `steering/*.md` | 为特定路径、技术栈或任务补充局部规则 |
 
-工具私有目录不是规范真值层。  
-`.cursor/rules/`、`.kiro/steering/` 仅作为兼容镜像，由安装脚本按需生成。
-
 ## 30 秒上手
 
 ### 安装插件（推荐）
@@ -53,6 +49,7 @@ Harness Coding Protocol 是一个 **Repository AI Governance Starter Kit**：
 ```
 
 或在 Claude Code 中运行：
+
 ```
 /plugin install manhua-man/harness-coding-protocol
 ```
@@ -74,13 +71,13 @@ steering/
 ### 手动安装（不使用插件）
 
 ```bash
-bash scripts/apply-template.sh /your/project --with-cursor --with-kiro --example complete
+bash scripts/apply-template.sh /your/project
 ```
 
 Windows PowerShell：
 
 ```powershell
-powershell -File scripts/apply-template.ps1 C:\your\project --with-cursor --with-kiro --example complete
+powershell -File scripts/apply-template.ps1 C:\your\project
 ```
 
 默认策略是 `--skip-existing`。如需覆盖或备份，可改用 `--overwrite` 或 `--backup`。
@@ -91,17 +88,19 @@ powershell -File scripts/apply-template.ps1 C:\your\project --with-cursor --with
 harness-coding-protocol/
 ├── .claude-plugin/        # Claude Code 插件配置
 ├── docs/                  # 设计文档
-├── examples/               # 示例项目
-│   ├── complete/          # 完整示例
-│   └── minimal/           # 最小示例
 ├── scripts/              # 安装脚本
 │   ├── apply-template.sh
 │   ├── apply-template.ps1
 │   └── validate-template.mjs
 └── templates/
-    ├── adapters/          # 工具适配器
-    ├── root/              # AGENTS.md / CLAUDE.md
-    └── steering/          # 分层规则
+    ├── AGENTS.md         # 事实层模板
+    ├── CLAUDE.md         # 协议层模板
+    └── steering/          # 局部规则模板
+        ├── backend.md
+        ├── frontend.md
+        ├── karpathy-examples.md
+        ├── project.md
+        └── testing.md
 ```
 
 ## 安装后会得到什么
@@ -110,16 +109,12 @@ harness-coding-protocol/
 your-project/
 ├── AGENTS.md
 ├── CLAUDE.md
-├── steering/
-│   ├── backend.md
-│   ├── frontend.md
-│   ├── karpathy-examples.md
-│   ├── project.md
-│   └── testing.md
-├── .cursor/              # 可选
-│   └── rules/
-└── .kiro/                # 可选
-    └── steering/
+└── steering/
+    ├── backend.md
+    ├── frontend.md
+    ├── karpathy-examples.md
+    ├── project.md
+    └── testing.md
 ```
 
 ## 规则优先级
@@ -128,27 +123,20 @@ your-project/
 2. Repository root `AGENTS.md`
 3. Repository root `CLAUDE.md`
 4. Matching `steering/*.md`
-5. Tool adapter files
 
 ## 支持的工具
 
-| 工具 | 读取根级真值 | 是否需要镜像 |
-|------|--------------|--------------|
-| Claude Code | 是 | 否 |
-| Codex | 是 | 否 |
-| Cursor | 是 | 可选 |
-| Kiro | 是 | 可选 |
-| 其他 MCP-compatible tools | 通常是 | 视工具而定 |
-
-## 示例项目
-
-- `examples/minimal/`：最小可用，只展示根级双文件和一个最小 `steering/`
-- `examples/complete/`：完整范式，展示根级真值、多个 steering 文件以及可选 adapter 镜像
+| 工具 | 读取根级真值 |
+|------|-------------|
+| Claude Code | 是 |
+| Codex | 是 |
+| Cursor | 是 |
+| Kiro | 是 |
+| 其他 MCP-compatible tools | 通常是 |
 
 ## 设计文档
 
-- `docs/design-principles.md`：v2 设计原则
-- `docs/migration-guide-v1-to-v2.md`：从 v1 升级到 v2 的迁移说明
+- `docs/design-principles.md`：设计原则
 - `docs/compatibility-matrix.md`：工具兼容矩阵与元数据职责
 
 ## 发布元数据
