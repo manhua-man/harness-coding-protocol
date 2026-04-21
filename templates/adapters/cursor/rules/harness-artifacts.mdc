@@ -1,0 +1,24 @@
+---
+description: Harness artifact-first workflow for Cursor
+alwaysApply: true
+---
+
+# Harness Artifact Workflow
+
+Cursor may help orchestrate Harness, but the CLI is the source of truth for detection, planning, risk, diffs, and apply results.
+
+## Rules
+
+<!-- HARNESS_DYNAMIC_SECTION_START:CURSOR_ARTIFACT_WORKFLOW -->
+> HARNESS Cursor artifact workflow
+1. Read root truth first: `AGENTS.md`, `CLAUDE.md`, and matching `steering/*.md`.
+2. Run Harness through the CLI: `harness detect`, `harness plan`, `harness apply`, `harness doctor`, or `harness rollback`.
+3. Read `.harness/runs/<run-id>/` artifacts instead of recomputing project state in Cursor.
+4. Treat `summary.md` as the human preview, `plan.json` as the machine plan, `diff.patch` as the full diff, `recommendations.md` as the full recommendation report, and `result.json` as the apply or rollback result.
+5. Show the saved plan summary and wait for explicit user confirmation before applying changes.
+6. If artifacts are missing or inconsistent, run `harness doctor <target>` and report the issue rather than guessing.
+<!-- HARNESS_DYNAMIC_SECTION_END:CURSOR_ARTIFACT_WORKFLOW -->
+
+## Boundary
+
+Cursor commands and rules are compatibility surfaces. They do not replace root truth and they do not own Harness planning logic.

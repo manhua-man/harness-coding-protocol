@@ -185,11 +185,17 @@ copy_with_strategy "$source_root_dir/CLAUDE.md" "$target_dir/CLAUDE.md"
 sync_directory "$source_steering_dir" "$target_dir/steering"
 
 if $with_cursor; then
-  cursor_template_dir="$repo_root/templates/adapters/cursor/rules"
-  if [[ -d "$cursor_template_dir" ]]; then
-    sync_directory "$cursor_template_dir" "$target_dir/.cursor/rules"
+  cursor_rules_template_dir="$repo_root/templates/adapters/cursor/rules"
+  cursor_commands_template_dir="$repo_root/templates/adapters/cursor/commands"
+  if [[ -d "$cursor_rules_template_dir" ]]; then
+    sync_directory "$cursor_rules_template_dir" "$target_dir/.cursor/rules"
   else
-    echo "SKIP Cursor mirror: no bundled cursor template in this repository"
+    echo "SKIP Cursor rules mirror: no bundled cursor rules template in this repository"
+  fi
+  if [[ -d "$cursor_commands_template_dir" ]]; then
+    sync_directory "$cursor_commands_template_dir" "$target_dir/.cursor/commands"
+  else
+    echo "SKIP Cursor commands mirror: no bundled cursor commands template in this repository"
   fi
 fi
 
@@ -207,6 +213,7 @@ echo "  - $target_dir/steering/"
 if $with_cursor; then
   echo "Cursor mirror:"
   echo "  - $target_dir/.cursor/rules/"
+  echo "  - $target_dir/.cursor/commands/"
 fi
 if $with_kiro; then
   echo "Kiro mirror:"

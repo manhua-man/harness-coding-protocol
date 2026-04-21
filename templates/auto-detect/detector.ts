@@ -672,7 +672,7 @@ function getTopLevelDirs(state: ReturnType<typeof createState>) {
 }
 
 function readJson<T>(filePath: string): T {
-  return JSON.parse(fs.readFileSync(filePath, 'utf8')) as T;
+  return JSON.parse(fs.readFileSync(filePath, 'utf8').replace(/^\uFEFF/, '')) as T;
 }
 
 function isFile(filePath: string) {
@@ -695,6 +695,7 @@ function resolveConfigDir(currentModuleDir: string): string {
   const candidates = [
     path.join(currentModuleDir, 'config'),
     path.resolve(currentModuleDir, '..', 'templates', 'auto-detect', 'config'),
+    path.resolve(currentModuleDir, '..', '..', '..', 'templates', 'auto-detect', 'config'),
   ];
   const found = candidates.find((candidate) => isFile(path.join(candidate, 'patterns.json')) && isFile(path.join(candidate, 'mappers.json')));
   if (!found) {

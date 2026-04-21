@@ -7,45 +7,178 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.1.0] - 2026-04-21
 
-### Added
+### 🎯 Major Architecture Overhaul: Plan-First Design
 
-- **Reference Audit**: New `docs/references.md` documenting all reference projects with verification status
-- **CLI Commands**: 
-  - `harness detect <target>` - Detect project characteristics
-  - `harness setup <target>` - Smart installation with multiple modes
-  - `harness rollback <file>` - Rollback to previous backup
-- **Detection Enhancement**:
-  - New `frameworks` field in detection output
-  - New `commands` field extracting npm/yarn/pnpm scripts
-  - Enhanced framework detection (React, Next.js, Vite, NestJS, FastAPI, Django, etc.)
+This release transforms Harness from a template copier into a **plan-first, contract-driven AI coding adapter**. The new architecture prioritizes the `plan` layer as the stable contract between detection, generation, and execution.
+
+### ✨ Core Architecture Changes
+
+#### **Phase 1: Core Contract Layer**
+
+- **Run Contract System** (`run-contract.ts`):
+  - Every command generates a unique `run-id` with complete artifact persistence
+  - Stable schema version (`1.0.0`) for machine-readable contracts
+  - Artifacts stored in `.harness/runs/<run-id>/`:
+    - `manifest.json` - Run metadata and exit status
+    - `detection.json` - Project detection results
+    - `plan.json` - Complete plan with changes and risk assessment
+    - `diff.patch` - Full diff preview
+    - `summary.md` - Human-readable summary
+    - `recommendations.md` - Detailed tool recommendations
+  - Stable exit codes (0-6) for CI/CD integration
+
+- **Plan-First Command Structure**:
+  - `harness detect [target]` - Detect project characteristics, output run artifact
+  - `harness plan [target] [--from-run <id>]` - **Core command**: Generate plan from detection
+  - `harness apply [target] --plan <id>` - Execute a specific plan with backup support
+  - `harness rollback [target]` - Rollback last apply or specific file
+  - `harness doctor [target]` - Diagnose run artifacts and project health
+  - `harness setup [target]` - Composite command (detect + plan + apply)
+
+- **Simplified Recommendation Engine**:
+  - Default output: **top 3 only** (mustHave + suggested + warning)
+  - Full recommendations written to `recommendations.md`
+  - Confidence-based sorting and intelligent selection
+  - Ecosystem-aware recommendations (Node.js, Python, Go, generic)
+  - Bundle recommendations (Frontend Excellence, MCP Productivity, TDD+Quality, Browser Verification)
+
+- **Stdout Layering**:
+  - Terminal output: ≤5 lines (concise summary + run-id + artifact path)
+  - Detailed information: written to `.harness/runs/<run-id>/`
+  - `--json` flag: single-line machine-readable output for CI/CD
+
+#### **Phase 2: Interactive CLI**
+
+- **@clack/prompts Integration**:
+  - Interactive confirmation flow for `setup --mode confirm`
+  - Multi-select interface for choosing which changes to apply
+  - Spinner progress indicators for long-running operations
+  - Graceful Ctrl+C handling with `isCancel` detection
+
+- **Non-TTY Auto-Degradation**:
+  - Automatic detection of TTY environment
+  - Clear error messages when confirmation needed in non-TTY
+  - `--yes` flag for automated environments
+  - `--mode silent` for unattended execution
+
+#### **Phase 3: Claude Code Adapter (Thin Layer)**
+
+- **Minimal Adapter Design** (≤200 lines total):
+  - `.claude/commands/harness-detect.ts` - Wraps `harness detect --json`
+  - `.claude/commands/harness-setup.ts` - Orchestrates detect → plan → confirm → apply
+  - `.claude/commands/shared.ts` - Utility functions for artifact reading
+
+- **Adapter Principles**:
+  - Only calls CLI commands, never reimplements logic
+  - Only reads artifacts, never recalculates
+  - Only translates output, never makes decisions
+  - Supports custom `confirmApply` callback for user interaction
+
+#### **Phase 4: Cursor Adapter (Generator-Based)**
+
+- **Cursor Integration**:
+  - Generates `.cursor/rules/harness.mdc` when Cursor detected
+  - Generates `.cursor/commands/harness-detect.md` command
+  - Generates `.cursor/commands/harness-setup.md` command
+  - No separate command entry point (follows "thin adapter" principle)
+
+### 🚀 New Features
+
+- **Reference Audit**: `docs/references.md` documenting all reference projects with verification status
 - **Testing Infrastructure**:
   - Vitest test framework integration
   - `npm run test` and `npm run test:watch` scripts
   - Test fixtures for minimal, cursor-heavy, and claude-mcp repositories
 - **Build System**:
   - `npm run build` for TypeScript compilation
-  - Package bin entry point for CLI
+  - Package bin entry point: `dist/templates/auto-detect/cli.js`
   - Source maps for debugging
-- **Interactive Confirmation**: TTY-aware interactive mode for `confirm` setup
 
-### Changed
+### 📊 Detection Enhancements
 
-- Updated marketplace description to emphasize "root-truth-first adapter"
-- Improved detection engine performance with shallow scan mode
-- Enhanced diff reporter output format
-- Refined merge strategy defaults (incremental over overwrite)
+- New `frameworks` field in detection output
+- New `commands` field extracting npm/yarn/pnpm scripts
+- Enhanced framework detection (React, Next.js, Vite, NestJS, FastAPI, Django, etc.)
+- Shallow scan mode (`--shallow`) for large repositories
+- Configurable max depth (`--max-depth <n>`)
 
-### Fixed
+### 🔧 Changed
+
+- **Command Structure**: `plan` is now the core command, `setup` is a composite
+- **Recommendation Output**: Default shows top 3, full report in file
+- **Merge Strategy**: Defaults to incremental over overwrite
+- **Diff Reporter**: Enhanced output format with context preservation
+- **Marketplace Description**: Updated to emphasize "plan-first contract-driven adapter"
+
+### 🐛 Fixed
 
 - Script path references now align with actual directory structure
 - Validation logic consistency across all templates
 - PowerShell and Bash script behavior parity
+- Non-TTY environment handling
 
-### Documentation
+### 📚 Documentation
 
 - Added `docs/references.md` with attribution rules
-- Updated `ROADMAP.md` with v2.1.0 tasks and status
+- Updated `ROADMAP.md` with Phase 1-4 completion status
+- Updated `README.md` with new CLI contract and architecture
 - Clarified reference project usage (product reference only, no code copying)
+
+### 🎓 Migration Guide
+
+#### From 2.0.0 to 2.1.0
+
+**Breaking Changes**:
+- CLI command structure changed: `plan` is now separate from `setup`
+- Recommendation output format changed: default shows top 3 instead of full list
+- Artifact location changed: now in `.harness/runs/<run-id>/` instead of project root
+
+**Migration Steps**:
+
+1. **Update CLI usage**:
+   ```bash
+   # Old way (2.0.0)
+   harness setup /your/project --mode dry-run
+   
+   # New way (2.1.0) - recommended workflow
+   harness detect /your/project
+   harness plan /your/project --from-run <run-id>
+   # Review .harness/runs/<run-id>/summary.md
+   harness apply /your/project --plan <run-id> --backup
+   
+   # Or use composite command
+   harness setup /your/project --mode confirm
+   ```
+
+2. **Update scripts and CI/CD**:
+   ```bash
+   # Use --json for machine-readable output
+   harness detect /your/project --json
+   
+   # Check exit codes
+   # 0 = success, 1 = detection failed, 2 = plan failed, 
+   # 3 = apply failed, 4 = user cancelled, 5 = conflict detected, 6 = invalid input
+   ```
+
+3. **Update Claude Code integration**:
+   - Old commands still work but use new artifact structure
+   - Check `.harness/runs/<run-id>/` for detailed output
+   - Use `--json` flag for programmatic access
+
+4. **Clean up old artifacts** (optional):
+   ```bash
+   # Old artifacts were in project root
+   rm -f detected-report.json detected-tools.json
+   
+   # New artifacts are in .harness/runs/
+   # Use `harness doctor` to check artifact health
+   ```
+
+### 🔗 Links
+
+- [GitHub Repository](https://github.com/ManHua/harness-coding-protocol)
+- [Documentation](./docs/)
+- [Issue Tracker](https://github.com/ManHua/harness-coding-protocol/issues)
 
 ## [2.0.0] - 2026-04-20
 

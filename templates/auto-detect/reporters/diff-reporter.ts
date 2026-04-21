@@ -7,14 +7,19 @@ export interface DiffReporterInput {
 }
 
 export function renderDiffReport(input: DiffReporterInput): string {
-  const title = input.title ?? 'Installer Diff';
+  const title = input.title ?? 'Changes';
   const raw = asString(input.diff) ?? extractText(input.diff);
   if (raw) {
     return [title, repeat('=', title.length), normalizeDiff(raw)].join('\n').trim();
   }
 
   const changes = normalizeChanges(input.changes ?? input.diff);
-  const rendered = changes.map((change) => renderChange(change));
+  const rendered = changes.map((change) => renderChange(change)).filter(r => r.trim().length > 0);
+
+  // If no actual changes to show, return empty string
+  if (rendered.length === 0) {
+    return '';
+  }
 
   return [title, repeat('=', title.length), ...rendered].join('\n\n').trim();
 }
@@ -33,6 +38,15 @@ interface ChangeLike {
 }
 
 function renderChange(change: ChangeLike): string {
+  // Skip rendering if action is 'skip' and there's no content change
+  if (change.action === 'skip' && change.previousContent && change.content) {
+    const beforeNorm = change.previousContent.replace(/\r\n/g, '\n').trim();
+    const afterNorm = change.content.replace(/\r\n/g, '\n').trim();
+    if (beforeNorm === afterNorm) {
+      return ''; // Don't render anything for unchanged files
+    }
+  }
+
   const header = `${change.action.toUpperCase()} ${change.path}${change.conflict ? ' [conflict]' : ''}${change.risk ? ` [risk:${change.risk}]` : ''}`;
   const detail: string[] = [header];
 

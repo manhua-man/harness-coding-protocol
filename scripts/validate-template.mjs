@@ -109,11 +109,14 @@ function existsLocalToken(token, fileDir) {
 function resolveRepositorySourceToken(token) {
   const generatedTargetPaths = new Set([
     'steering/harness-recommendations.md',
-    'docs/ai-tool-recommendations.md'
+    'docs/ai-tool-recommendations.md',
+    '.cursor/rules/harness.mdc'
   ]);
   const optionalCompatibilityTargetPaths = new Set([
     '.cursor/rules/',
     './.cursor/rules/',
+    '.cursor/commands/',
+    './.cursor/commands/',
     '.kiro/steering/',
     './.kiro/steering/'
   ]);
@@ -122,6 +125,13 @@ function resolveRepositorySourceToken(token) {
   }
   if (optionalCompatibilityTargetPaths.has(token)) {
     return sourceTemplateRoot;
+  }
+  if (token === '.cursor/rules/harness-artifacts.mdc' || token === './.cursor/rules/harness-artifacts.mdc') {
+    return path.join(targetRoot, 'templates/adapters/cursor/rules/harness-artifacts.mdc');
+  }
+  if (token.startsWith('.cursor/commands/') || token.startsWith('./.cursor/commands/')) {
+    const normalizedToken = token.replace(/^\.\//, '');
+    return path.join(targetRoot, 'templates/adapters/cursor/commands', path.basename(normalizedToken));
   }
   if (token === 'AGENTS.md' || token === './AGENTS.md') {
     return path.join(sourceTemplateRoot, 'AGENTS.md');
@@ -159,7 +169,7 @@ function shouldCheckToken(token) {
     return false;
   }
   return /(^|\/)(AGENTS\.md|CLAUDE\.md|README(?:\.en)?\.md|plugin\.json|marketplace\.json)$/.test(token)
-    || /^(\.\/|\.\.\/|\.claude-plugin\/|docs\/|examples\/|scripts\/|steering\/|templates\/|\.cursor\/rules\/|\.kiro\/steering\/)/.test(token)
+    || /^(\.\/|\.\.\/|\.claude-plugin\/|docs\/|examples\/|scripts\/|steering\/|templates\/|\.cursor\/rules\/|\.cursor\/commands\/|\.kiro\/steering\/)/.test(token)
     || token.includes('*');
 }
 
@@ -170,6 +180,7 @@ function extractPathCandidates(text) {
     /\[[^\]]+\]\(([^)]+)\)/g,
     /\b(?:\.claude-plugin|docs|examples|scripts|steering|templates)(?:\/[A-Za-z0-9._*:-]+)+/g,
     /\.cursor\/rules\/[A-Za-z0-9._*-]+/g,
+    /\.cursor\/commands\/[A-Za-z0-9._*-]+/g,
     /\.kiro\/steering\/[A-Za-z0-9._*-]+/g,
     /\b(?:AGENTS\.md|CLAUDE\.md|README(?:\.en)?\.md|plugin\.json|marketplace\.json)\b/g
   ];

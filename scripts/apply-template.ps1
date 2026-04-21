@@ -179,12 +179,19 @@ Copy-WithStrategy (Join-Path $sourceRootDir "CLAUDE.md") (Join-Path $targetDir "
 Sync-Directory $sourceSteeringDir (Join-Path $targetDir "steering")
 
 if ($withCursor) {
-    $cursorTemplateDir = Join-Path $repoRoot "templates\adapters\cursor\rules"
-    if (Test-Path -LiteralPath $cursorTemplateDir -PathType Container) {
-        Sync-Directory $cursorTemplateDir (Join-Path $targetDir ".cursor\rules")
+    $cursorRulesTemplateDir = Join-Path $repoRoot "templates\adapters\cursor\rules"
+    $cursorCommandsTemplateDir = Join-Path $repoRoot "templates\adapters\cursor\commands"
+    if (Test-Path -LiteralPath $cursorRulesTemplateDir -PathType Container) {
+        Sync-Directory $cursorRulesTemplateDir (Join-Path $targetDir ".cursor\rules")
     }
     else {
-        Write-Host "SKIP Cursor mirror: no bundled cursor template in this repository"
+        Write-Host "SKIP Cursor rules mirror: no bundled cursor rules template in this repository"
+    }
+    if (Test-Path -LiteralPath $cursorCommandsTemplateDir -PathType Container) {
+        Sync-Directory $cursorCommandsTemplateDir (Join-Path $targetDir ".cursor\commands")
+    }
+    else {
+        Write-Host "SKIP Cursor commands mirror: no bundled cursor commands template in this repository"
     }
 }
 
@@ -202,6 +209,7 @@ Write-Host "  - $(Join-Path $targetDir 'steering')"
 if ($withCursor) {
     Write-Host "Cursor mirror:"
     Write-Host "  - $(Join-Path $targetDir '.cursor\rules')"
+    Write-Host "  - $(Join-Path $targetDir '.cursor\commands')"
 }
 if ($withKiro) {
     Write-Host "Kiro mirror:"

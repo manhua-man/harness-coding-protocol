@@ -1,43 +1,51 @@
-# Publishing Guide
+# Publishing Guide for Harness Coding Protocol v2.1.0
 
-This guide explains how to publish Harness Coding Protocol to various platforms.
+## Pre-Publishing Checklist
 
-## Pre-Publishing Steps
+### 1. Code Quality
+- [x] TypeScript compiles without errors
+- [x] All tests pass
+- [ ] Manual CLI testing complete
 
-1. Complete RELEASE_CHECKLIST.md
-2. Update version in package.json
-3. Update CHANGELOG.md with release date
-4. Run final tests
+### 2. Documentation
+- [x] CHANGELOG.md updated
+- [x] README.md updated
+- [x] marketplace.json updated
 
-## Publishing to GitHub
+### 3. Package Configuration
+- [x] package.json version is 2.1.0
+- [x] bin entry points to dist/templates/auto-detect/cli.js
 
+## Publishing Steps
+
+### Step 1: Final Build
 ```bash
-git add .
-git commit -m "chore: prepare v2.1.0 release"
-git tag -a v2.1.0 -m "Release v2.1.0"
-git push origin master
+npm run build
+```
+
+### Step 2: Test Locally
+```bash
+npm pack
+```
+
+### Step 3: Git Tag
+```bash
+git tag -a v2.1.0 -m "Release v2.1.0: Plan-first architecture"
 git push origin v2.1.0
 ```
 
-Then create GitHub Release via web interface.
-
-## Publishing to npm
-
+### Step 4: Publish to npm
 ```bash
 npm login
 npm publish --dry-run
 npm publish
-npm info harness-coding-protocol
 ```
 
-## Publishing to Claude Code Marketplace
+### Step 5: Verify
+```bash
+npm view harness-coding-protocol@2.1.0
+```
 
-1. Verify .claude-plugin/marketplace.json
-2. Submit via marketplace portal
-3. Wait for review
-
-## Post-Publishing
-
-1. Test installation: `npm install -g harness-coding-protocol@latest`
-2. Verify CLI works: `harness --help`
-3. Announce release
+---
+**Version**: 2.1.0
+**Status**: Ready

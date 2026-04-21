@@ -10,7 +10,7 @@ Adaptation means mapping a repository's root truth to the tooling around it with
 |------------------|------|----------|
 | Claude Code | Reads root truth and protocol | Do not treat its private files as the repository source of truth |
 | Codex | Reads root truth and steering guidance | Keep generated recommendations previewable |
-| Cursor | Uses root truth plus optional mirrors | Mirrors are compatibility surfaces only |
+| Cursor | Uses root truth plus optional rules and command mirrors | Rules and commands must call the CLI and read artifacts, not recompute Harness logic |
 | Kiro | Uses root truth plus optional mirrors | Mirrors are compatibility surfaces only |
 | MCP tools | Provide integrations and context | Do not imply full lifecycle automation unless verified |
 
@@ -29,6 +29,7 @@ Adaptation means mapping a repository's root truth to the tooling around it with
 - A generated draft for the relevant files
 - A clear diff or preview
 - A merge decision that can be accepted, declined, or deferred
+- Cursor command drafts for `harness detect` and `harness setup` when Cursor is detected
 
 ## Boundary Notes
 
@@ -36,3 +37,4 @@ Adaptation means mapping a repository's root truth to the tooling around it with
 - Third-party workflows should be described as recommended options, not hidden dependencies
 - If a tool only works via mirror files, that mirror still sits below root truth
 - If a compatibility path is uncertain, the docs should say so instead of smoothing it over
+- Cursor adapter files are a thin orchestration layer: they call `harness detect/plan/apply --json`, read `.harness/runs/<run-id>/`, and present saved artifacts to the user

@@ -6,6 +6,7 @@ import {
   type GeneratorContext,
   type RecommendationItem,
 } from './base-generator.js';
+import type { RecommendationSummaryItem, SimplifiedRecommendation } from '../run-contract.js';
 
 function nodeRecommendations(contextName: string): RecommendationItem[] {
   return [
@@ -204,4 +205,55 @@ export function recommendEcosystem(context: GeneratorContext): EcosystemRecommen
   };
 }
 
+export function selectSimplifiedRecommendation(
+  context: GeneratorContext,
+  recommendation: EcosystemRecommendation,
+  fullReport: string,
+): SimplifiedRecommendation {
+  const sorted = [...recommendation.recommendations].sort((a, b) => b.confidence - a.confidence);
+  const fallback = sorted[0] ?? {
+    id: 'root-truth',
+    title: 'Add root truth files',
+    why: 'Harness needs a small canonical fact and protocol layer before tool-specific mirrors are useful.',
+    tips: [],
+    hookCode: '',
+    confidence: recommendation.score,
+  };
+  return {
+    mustHave: toSummaryItem(fallback),
+    suggested: toSummaryItem(sorted.find((item) => item.id !== fallback.id) ?? fallback),
+    warning: inferTopWarning(context),
+    fullReport,
+  };
+}
+
 export default recommendEcosystem;
+
+function toSummaryItem(item: RecommendationItem): RecommendationSummaryItem {
+  return {
+    id: item.id,
+    title: item.title,
+    why: item.why,
+    confidence: item.confidence,
+  };
+}
+
+function inferTopWarning(context: GeneratorContext): string {
+  const files = new Set((context.existingFiles ?? []).map((item) => item.toLowerCase()));
+  const tools = new Set(context.detected.tools.map((item) => item.toLowerCase()));
+
+  if ((files.has('agents.md') || files.has('claude.md')) && tools.has('cursor')) {
+    return 'Existing root truth and Cursor rules should stay aligned; review conflicts before applying updates.';
+  }
+  if (tools.has('claude-code') && tools.has('cursor')) {
+    return 'Multiple AI tool surfaces detected; keep AGENTS.md and CLAUDE.md as the source of truth.';
+  }
+  if (recommendationHasSparseSignals(context)) {
+    return 'Detection signals are sparse; review summary.md before applying generated files.';
+  }
+  return 'Review conflicts and non-low-risk changes before applying the plan.';
+}
+
+function recommendationHasSparseSignals(context: GeneratorContext): boolean {
+  return context.detected.tools.length <= 1 && context.detected.frameworks.length === 0 && context.detected.commands.length === 0;
+}

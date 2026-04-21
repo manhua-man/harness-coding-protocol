@@ -5,35 +5,63 @@
     "name": "ManHua"
   },
   "metadata": {
-    "description": "Root-truth-first AI coding environment adapter with static templates, auto-detect, dry-run generation, safe merge, rollback helpers, and full-stack recommendations.",
+    "description": "Plan-first AI coding adapter: detect → plan → apply with stable run contracts, artifact persistence, simplified recommendations, and thin Claude/Cursor integration.",
     "version": "2.1.0"
   },
   "plugins": [
     {
       "name": "harness-coding-protocol",
       "source": "./",
-      "description": "Root-truth-first adapter for AI coding environments with AGENTS.md, CLAUDE.md, steering/, auto-detect, dry-run diff previews, safe compatibility mirrors, rollback-aware setup, and recommendation bundles.",
+      "description": "Plan-first contract-driven adapter for AI coding environments. Core: detect project → generate plan → apply changes. Features: stable run artifacts (.harness/runs/<id>/), simplified recommendations (top 3 default), incremental merge, backup/rollback, thin Claude adapter. Root truth: AGENTS.md + CLAUDE.md + steering/. CLI-first with IDE integration.",
       "version": "2.1.0",
       "author": {
         "name": "ManHua"
       },
       "keywords": [
-        "guidelines",
-        "governance",
-        "starter-kit",
-        "workflow",
-        "auto-detect",
-        "rollback",
-        "bundles",
+        "plan-first",
+        "contract-driven",
+        "run-artifacts",
+        "detect-plan-apply",
+        "root-truth",
+        "incremental-merge",
+        "backup-rollback",
+        "claude-adapter",
+        "cursor-adapter",
+        "cli-first",
         "riper5",
         "protocol",
-        "claude",
-        "cursor",
-        "codex",
         "mcp",
-        "full-stack"
+        "governance"
       ],
-      "category": "workflow"
+      "category": "workflow",
+      "features": [
+        "🎯 Plan-first architecture: stable contract between detect/generate/execute",
+        "📦 Run artifact persistence: every command generates .harness/runs/<id>/",
+        "🔍 Smart detection: frameworks, tools, commands, tech stack",
+        "📋 Simplified recommendations: top 3 default (must/suggested/warning)",
+        "🔄 Incremental merge: safe updates with conflict detection",
+        "💾 Backup & rollback: automatic backups with restore capability",
+        "🎨 Interactive CLI: @clack/prompts with TTY auto-degradation",
+        "🤖 Thin Claude adapter: calls CLI, reads artifacts, translates output",
+        "📊 Stable exit codes: 0-6 for CI/CD integration",
+        "🛡️ Root truth priority: AGENTS.md + CLAUDE.md as canonical sources"
+      ],
+      "commands": [
+        "harness detect [target] - Detect project and generate run artifact",
+        "harness plan [target] --from-run <id> - Generate plan from detection",
+        "harness apply [target] --plan <id> - Execute plan with backup",
+        "harness rollback [target] - Rollback last apply",
+        "harness doctor [target] - Diagnose run artifacts",
+        "harness setup [target] - Composite: detect + plan + apply"
+      ],
+      "useCases": [
+        "First-time setup: harness setup /project --mode confirm",
+        "Review before apply: harness detect → plan → review → apply",
+        "CI/CD integration: harness detect --json && harness plan --json",
+        "Safe experimentation: harness setup --mode dry-run",
+        "Automated setup: harness setup --mode silent --backup",
+        "Rollback mistakes: harness rollback /project"
+      ]
     }
   ]
 }

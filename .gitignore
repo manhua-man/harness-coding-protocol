@@ -12,3 +12,4 @@ coverage/
 # Harness generated diagnostics
 detected-report.json
 detected-tools.json
+.harness/

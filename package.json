@@ -20,12 +20,15 @@
     "templates/",
     "scripts/",
     "docs/",
+    ".claude/",
     ".claude-plugin/"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "node -e \"fs.rmSync('dist',{recursive:true,force:true})\" && tsc",
     "validate": "node scripts/validate-template.mjs",
     "detect": "tsx templates/auto-detect/cli.ts detect",
+    "plan": "tsx templates/auto-detect/cli.ts plan",
+    "apply": "tsx templates/auto-detect/cli.ts apply",
     "smart": "tsx templates/auto-detect/cli.ts setup",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
@@ -33,9 +36,10 @@
     "typecheck": "tsc --noEmit"
   },
   "bin": {
-    "harness": "dist/cli.js"
+    "harness": "dist/templates/auto-detect/cli.js"
   },
   "dependencies": {
+    "@clack/prompts": "^1.2.0",
     "chalk": "^5.3.0",
     "commander": "^11.0.0",
     "diff": "^5.1.0",

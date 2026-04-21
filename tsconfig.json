@@ -16,6 +16,7 @@
     "sourceMap": true
   },
   "include": [
+    ".claude/commands/**/*.ts",
     "templates/auto-detect/**/*.ts"
   ],
   "exclude": [
