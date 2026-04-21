@@ -1,6 +1,6 @@
 {
   "name": "harness-coding-protocol",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Project-centric AI coding ecosystem adapter with root truth templates, detection, generation, and safe setup helpers.",
   "type": "module",
   "license": "MIT",
