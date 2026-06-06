@@ -1,0 +1,46 @@
+{
+  "runId": "20260101-000000-aabbcc",
+  "schemaVersion": "2.0.0",
+  "timestamp": "2026-01-01T00:00:00.000Z",
+  "targetPath": "/TARGET",
+  "detectRunId": "20260101-000000-abcdef",
+  "entries": [
+    {
+      "path": "/TARGET/AGENTS.md",
+      "action": "overwrite",
+      "content": "# Cursor-heavy AGENTS\n\nRoot truth.\n\n## Dynamic Workflow Hooks\n\n<!-- Agent inserts workflow recommendations here -->\n",
+      "contentSha256": "7bc435eff73bbe8f0557fa075d830ddd612923202d3e5055d959bc2f2a74954c",
+      "evidenceReason": "Existing AGENTS.md is minimal; overwrite with scaffold"
+    },
+    {
+      "path": "/TARGET/CLAUDE.md",
+      "action": "overwrite",
+      "content": "# Cursor heavy protocol\n",
+      "contentSha256": "e725c1b36a3def261669ed5bf76da3dba61cf32511b069f9f5019aeb3ac34c66",
+      "evidenceReason": "Existing CLAUDE.md has no harness-managed sections; overwrite with scaffold"
+    },
+    {
+      "path": "/TARGET/steering/harness-recommendations.md",
+      "action": "create",
+      "content": "# Steering\n\nLocal overrides.\n",
+      "contentSha256": "d70e4308a98519fee5684c2f6503fb6b4d3ac8ee5491a223a208f02e081be4f7",
+      "evidenceReason": "No existing steering file; create default"
+    },
+    {
+      "path": "/TARGET/.cursor/rules/harness.mdc",
+      "action": "create",
+      "content": "# Cursor rules\n\nHarness-generated Cursor rule.\n",
+      "contentSha256": "bc294c305ed6c7c1d64b83c9321147c6d338fb1ce2c3a05c2a0df0b61fc36989",
+      "evidenceReason": "Cursor-heavy fixture; create harness rule for Cursor"
+    },
+    {
+      "path": "/TARGET/.cursor/commands/harness-init.md",
+      "action": "create",
+      "content": "# Harness Init\n\nCursor command.\n",
+      "contentSha256": "8e166ff844ad2812fc1dc15a923a0878ca8071de8c39dbb4b3dbdc421613e6d0",
+      "evidenceReason": "Cursor-heavy fixture; create harness init command for Cursor"
+    }
+  ],
+  "skipped": [],
+  "summary": "AGENTS.md | overwrite | evidence: minimal existing\nCLAUDE.md | overwrite | evidence: no harness-managed sections\nsteering/harness-recommendations.md | create | evidence: new file\n.cursor/rules/harness.mdc | create | evidence: cursor fixture\n.cursor/commands/harness-init.md | create | evidence: cursor fixture"
+}

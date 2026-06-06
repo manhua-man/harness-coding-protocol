@@ -1,0 +1,8 @@
+{
+  "servers": {
+    "memory": {
+      "command": "node",
+      "args": ["mcp-memory.js"]
+    }
+  }
+}

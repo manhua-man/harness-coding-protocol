@@ -1,0 +1,18 @@
+{
+  "name": "@node-monorepo-fixture/api",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "build": "tsc",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "express": "^4.19.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.0.0"
+  }
+}

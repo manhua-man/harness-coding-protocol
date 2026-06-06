@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "types": [
+      "node"
+    ],
+    "noEmit": true
+  },
+  "include": [
+    ".claude/commands/**/*.ts",
+    "templates/auto-detect/**/*.ts"
+  ],
+  "exclude": [
+    "templates/auto-detect/fixtures/**"
+  ]
+}

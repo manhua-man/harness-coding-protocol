@@ -1,0 +1,41 @@
+{
+  "runId": "20260101-000000-aabbcc",
+  "schemaVersion": "2.0.0",
+  "timestamp": "2026-01-01T00:00:00.000Z",
+  "targetPath": "/TARGET",
+  "detectRunId": "20260101-000000-abcdef",
+  "entries": [
+    {
+      "path": "/TARGET/AGENTS.md",
+      "action": "overwrite",
+      "content": "# Claude MCP AGENTS\n\nRoot truth for a Claude Code repo with MCP traces.\n\n## Dynamic Workflow Hooks\n\nMCP traces detected; preserve root truth as the project authority.\n",
+      "contentSha256": "14c0b686e1030256309c021b6d87366862df2e9d092a219fdff5d285ee1bde45",
+      "evidenceReason": "Claude Code and MCP traces detected; overwrite existing fixture root truth"
+    },
+    {
+      "path": "/TARGET/CLAUDE.md",
+      "action": "overwrite",
+      "content": "# Claude MCP protocol\n\nUse Claude Code project instructions with MCP traces as supporting context, not as root truth.\n",
+      "contentSha256": "7338be346e5ead9e4db549c2da4a3232f9a45f9d487d72644f579ddc888b6337",
+      "evidenceReason": "Existing CLAUDE.md is minimal; overwrite with Claude Code protocol fixture"
+    },
+    {
+      "path": "/TARGET/steering/harness-recommendations.md",
+      "action": "create",
+      "content": "# Steering\n\nClaude Code and MCP local overrides.\n",
+      "contentSha256": "d2db841518744a3b2a809b253dfa7edb1c1b11fdcb636707f416de8b0b1d77fb",
+      "evidenceReason": "No existing steering file; create local override fixture"
+    }
+  ],
+  "skipped": [
+    {
+      "path": "/TARGET/.cursor/rules/harness.mdc",
+      "reason": "No Cursor pair in this fixture"
+    },
+    {
+      "path": "/TARGET/.cursor/commands/harness-init.md",
+      "reason": "No Cursor pair in this fixture"
+    }
+  ],
+  "summary": "AGENTS.md | overwrite | evidence: Claude Code and MCP traces\nCLAUDE.md | overwrite | evidence: minimal existing protocol\nsteering/harness-recommendations.md | create | evidence: no existing file"
+}

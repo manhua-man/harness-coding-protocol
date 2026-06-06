@@ -1,0 +1,24 @@
+# Maintainer-only internal docs (reviews, decision matrices, doc-governance checklists)
+internal/
+
+# Cursor IDE working scratch
+.cursor/plans/
+
+# Node / TypeScript local outputs
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Harness generated diagnostics
+detected-report.json
+detected-tools.json
+.harness/
+
+# Claude Code runtime files
+CLAUDE.local.md
+**/CLAUDE.local.md
+
+# Claude Code per-developer permission whitelist
+.claude/settings.local.json
+.kiro/

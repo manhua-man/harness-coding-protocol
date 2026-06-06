@@ -1,0 +1,7 @@
+{
+  "name": "claude-mcp",
+  "private": true,
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  }
+}

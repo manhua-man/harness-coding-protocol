@@ -1,0 +1,20 @@
+{
+  "name": "node-monorepo-fixture",
+  "private": true,
+  "packageManager": "pnpm@8.15.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck"
+  },
+  "devDependencies": {
+    "turbo": "^1.13.0",
+    "typescript": "^5.4.0"
+  }
+}

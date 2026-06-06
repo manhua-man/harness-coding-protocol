@@ -1,0 +1,35 @@
+{
+  "name": "harness-coding-protocol",
+  "owner": {
+    "name": "ManHua"
+  },
+  "metadata": {
+    "description": "IDE-first harness: install from GitHub, run /harness-init (no npm package, no terminal CLI).",
+    "version": "2.1.0"
+  },
+  "plugins": [
+    {
+      "name": "harness-coding-protocol",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/manhua-man/harness-coding-protocol.git"
+      },
+      "description": "Clone or reference this repo as a Claude plugin. /harness-init grounds itself by reading repo files; the IDE_Agent reads, judges, and writes root-truth files (AGENTS.md, CLAUDE.md, steering/, Cursor adapters) after one user confirmation. No Node/npm/npx prerequisite for users.",
+      "version": "2.1.0",
+      "author": {
+        "name": "ManHua"
+      },
+      "keywords": [
+        "harness-init",
+        "ide-first",
+        "root-truth",
+        "run-artifacts",
+        "claude-adapter",
+        "cursor-adapter",
+        "protocol",
+        "governance"
+      ],
+      "category": "workflow"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "python-fastapi-fixture"
+version = "0.0.1"
+description = "Fixture: poetry + ruff + black + pytest + FastAPI"
+authors = ["fixture <fixture@example.com>"]
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.110.0"
+uvicorn = "^0.29.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
+ruff = "^0.4.0"
+black = "^24.0.0"
+
+[build-system]
+requires = ["poetry-core>=1.5.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 100
+
+[tool.black]
+line-length = 100
