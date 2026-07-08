@@ -1,1 +1,0 @@
-# Cursor heavy protocol

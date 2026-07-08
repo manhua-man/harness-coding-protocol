@@ -20,5 +20,5 @@ CLAUDE.local.md
 **/CLAUDE.local.md
 
 # Claude Code per-developer permission whitelist
-.claude/settings.local.json
+ai-ide/settings.local.json
 .kiro/

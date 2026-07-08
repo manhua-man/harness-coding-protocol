@@ -1,3 +1,0 @@
-# Subagent
-
-Subagent trace sample.

@@ -1,117 +1,249 @@
 # Harness Coding Protocol
 
-让 AI 编码 Agent 用一个 IDE 命令给任意仓库完成协作铺底。
+IDE 插件：在**你的业务仓库**里铺底并维护 AI 协作入口（`AGENTS.md` / `CLAUDE.md`）。
 
-在目标仓库里运行 **`/harness-init`**，Agent 会先读真实项目文件，再起草根级协作文件，最后只在你确认后写入磁盘。
+**[中文](#中文)** · **[English](#english)**
 
-这不是 npm 包，也不是终端 CLI。普通使用者不需要 `npm install`，不需要 `npx`，目标仓库也不需要有 `package.json`。
+---
 
-## 你会得到什么
+## 中文
 
-`/harness-init` 会根据仓库证据决定创建、更新或跳过这些文件：
+### 这是什么
 
-| 文件 | 作用 | 什么时候生成 |
-| --- | --- | --- |
-| `AGENTS.md` | 事：项目事实、目录、命令、技术栈、模块 | 默认处理 |
-| `CLAUDE.md` | 法：协作协议、决策顺序、冲突处理、工作习惯 | 默认处理 |
-| `DESIGN.md` | 设：UI、品牌、产品体验、文案、设计 token、DX 体验 | 有 UI / 产品体验 / 品牌 / 组件库 / 文档站 / 插件界面 / DX 设计证据，或你明确要求时 |
-| `steering/harness-recommendations.md` | 局部补充规则 | 有项目特定建议时 |
-| `.cursor/rules/`、`.cursor/commands/` | Cursor 规则和 `/harness-init` 镜像 | 检测到 Cursor 配置时 |
+一条命令流，让 AI 在**目标仓库**（例如 `servers`）里：
 
-如果是纯后端、库、CLI、infra 或数据管线项目，且没有设计面证据，Agent 会在摘要里把 `DESIGN.md` 标为 `skip`，不会生成空泛模板。
+1. 读懂项目现状  
+2. 生成或更新根目录 **事/法** 入口文件  
+3. 经你确认后写入  
 
-## 使用流程
+**不是** npm 包，**不是**终端 `harness` CLI。目标仓不需要 `package.json`，也不需要为插件单独 `npm install`。
 
-1. 克隆本仓库。
+### 两个仓库，别搞混
 
-   ```bash
-   git clone https://github.com/manhua-man/harness-coding-protocol.git
-   ```
+| | **本仓库**（harness-coding-protocol） | **目标业务仓**（你的项目） |
+|---|---|---|
+| 你是谁 | 装插件的人 | 日常写代码的人 |
+| 该读什么 | **本 README** | 根目录 `AGENTS.md` + `CLAUDE.md` |
+| AI 真值 | 无（本仓不铺根 `AGENTS`/`CLAUDE`） | `AGENTS.md` + `CLAUDE.md` |
+| 人类长文档 | `docs/maintainers/`（维护者用，**插件用户不必读**） | `docs/`（背景资料，**不能压过**事/法） |
 
-2. 在 AI IDE 中把本仓库作为插件或技能来源。
+本仓库提供：**`ai-ide/`（AI IDE 插件目录）**、**`templates/` 模具**。模具写出的是**目标仓**里的文件，不是本仓库自己的文档。
 
-   - Claude Code：通过 `.claude-plugin/` 发现命令。
-   - Cursor / Codex / Antigravity / opencode / Hermes：把 [`.claude/skills/harness-init/SKILL.md`](.claude/skills/harness-init/SKILL.md) 作为执行流程交给 Agent。
+### 三步上手
 
-3. 打开你真正想初始化的目标仓库。
-
-4. 在 IDE 中运行：
-
-   ```text
-   /harness-init
-   ```
-
-5. Agent 会执行五个阶段：
-
-   1. **Ground**：读取 README、manifest、配置、现有 AI 工具痕迹、项目结构。
-   2. **Read**：读取已有 root-truth 文件和必要证据。
-   3. **Judge & Draft**：在内存中判断每个文件该 create / patch-section / overwrite / skip。
-   4. **Show & Confirm**：只展示一行一个文件的摘要，并问一次 `yes` / `no`。
-   5. **Apply**：只有你回复 `yes` 后，才写入确认过的 Draft 字节。
-
-## 安全边界
-
-- 不会在确认前写入 root-truth 文件。
-- 不会要求你运行终端 `harness` 命令。
-- 不会要求目标仓库安装 Node.js、npm、tsx 或本项目依赖。
-- 不会把 `.harness/runs/` 作为用户路径的必要产物。
-- `patch-section` 只改目标 `##` section，保留 section 外用户内容。
-- `steering/harness-recommendations.md` 和 `DESIGN.md` 都是条件型目标，不会为了凑文件而生成空内容。
-
-## 支持的 Agent
-
-核心流程是 Agent-native：只要 Agent 能读写目标仓库文件，就可以执行。
-
-| Agent | 使用方式 |
-| --- | --- |
-| Claude Code | 安装为插件，运行 `/harness-init` |
-| Cursor | 让 Agent 按 `SKILL.md` 执行 |
-| Codex | 同 Cursor |
-| Antigravity | 同 Cursor |
-| opencode | 同 Cursor |
-| Hermes | 同 Cursor |
-
-`.claude-plugin/` 和 `.claude/skills/` 只是 Claude Code 的发现层；协议本身不绑定单一 IDE。
-
-## 什么时候会生成 DESIGN.md
-
-会生成或更新：
-
-- 目标仓库已有 `DESIGN.md`。
-- 你明确要求设计系统、UI 规范、品牌规范、产品体验或 DX 设计入口。
-- Agent 读到前端 UI、移动端 UI、游戏 UI、文档站、浏览器扩展、IDE/插件界面、设计系统、组件库、Storybook、视觉资源、CSS/theme tokens、截图等证据。
-
-会跳过：
-
-- 纯后端服务。
-- 通用库。
-- CLI 工具。
-- infra / IaC 仓库。
-- 数据管线。
-- 没有设计面证据的未知项目。
-
-## 维护者验证
-
-普通使用者不需要运行这些命令。维护者修改 detector / HRP / apply 内部实现时，可以运行：
-
-```bash
-npx tsx scripts/smoke-suite.mjs
-npx tsx scripts/harness-detect.mjs templates/auto-detect/fixtures/node-monorepo
+```text
+① 全机安装插件（一次）  →  ② 打开业务仓跑 /harness-init  →  ③ 日常用维护命令
 ```
 
-当前 smoke suite 覆盖：
+**① 安装（全机一次，Cursor / Grok / Codex / Claude Code 共用）**
 
-- 6 个 fixture 的 detection。
-- HRP schema / apply round-trip / failure continuation / backup / no-HRP-no-write 等 property tests。
-- `SKILL.md` 静态 guard，包括条件型 `DESIGN.md` 行为。
-- golden HRP apply round-trip。
+在 Claude Code 执行：
 
-## 文档入口
+```text
+/plugin marketplace add manhua-man/harness-coding-protocol
+/plugin install harness-coding-protocol@harness-coding-protocol
+```
 
-- [`.claude/skills/harness-init/SKILL.md`](.claude/skills/harness-init/SKILL.md)：用户路径权威。
-- [docs/architecture.md](docs/architecture.md)：系统形状。
-- [docs/run-contract.md](docs/run-contract.md)：行为契约。
-- [docs/capabilities/](docs/capabilities/)：C1 Grounding、C2 Agent Authoring、C3 Apply。
-- [CONTRIBUTING.md](CONTRIBUTING.md)：维护者贡献与验证规则。
+不在 Anthropic 默认市场，需手动添加上述 GitHub 源。  
+验证：`claude plugin list` 有 `harness-coding-protocol@harness-coding-protocol`；任意已接入 IDE 里 `/` 能补全下面四条命令。
 
-License: MIT.
+**② 在业务仓铺底**
+
+1. 用 IDE 打开**目标仓库**（不是本协议仓）  
+2. 首次或大重置时运行 `/harness-init`，看摘要后回复 `yes` / `no`  
+3. 已有 `AGENTS.md` + `CLAUDE.md` 的仓：**跳过** init，直接用维护命令  
+
+**③ 日常维护**
+
+| 命令 | 何时用 |
+| --- | --- |
+| `/revise-ai-docs` | 会话结束，把经验写回 AI 入口 |
+| `/project-ai-docs-steward` | 定期体检（先报告，确认后再改） |
+| `/update-docs` | 人类 `docs/`、`README` 落后时（**不改** AI 真值层） |
+
+小改用 `/revise-ai-docs`，**不要**为改几个字反复 `plugin install`。偶尔升级插件：
+
+```text
+/plugin marketplace update harness-coding-protocol
+/plugin update harness-coding-protocol@harness-coding-protocol
+```
+
+### `/harness-init` 会写什么
+
+| 文件 | 角色 |
+| --- | --- |
+| `AGENTS.md` | **事** — 端口、命令、目录、模块等可核对事实 |
+| `CLAUDE.md` | **法** — 协作方式、决策优先级、冲突裁决 |
+| `DESIGN.md` | **设** — 有 UI/体验证据或你要求时才写 |
+| `steering/` | 局部规则（路径/任务级补丁） |
+| `.cursor/rules/`、`.cursor/commands/` | 检测到 Cursor 时的镜像 |
+
+铺底后的分层（在**目标仓**）：
+
+```text
+法 (CLAUDE.md) → 事 (AGENTS.md) → steering/ → docs/（人类长文，非 AI 真值）
+```
+
+纯后端 / CLI / 库且无 UI 证据时，默认**跳过** `DESIGN.md`。
+
+### `/harness-init` 做什么
+
+在**业务仓库**里跑的一条铺底命令（不是改本协议仓）：
+
+| 阶段 | 做什么 |
+|------|--------|
+| 1 Ground | 读 README、manifest、现有 `AGENTS`/`CLAUDE`、工具痕迹，形成项目画像 |
+| 2 Read | 在预算内继续读证据文件 |
+| 3 Draft | 在内存里起草 `AGENTS.md`（事）、`CLAUDE.md`（法）等 |
+| 4 Confirm | 展示「每个文件打算怎么改」，等你回复 `yes` / `no` |
+| 5 Apply | **只写**你确认过的内容；不偷偷覆盖 |
+
+可选输出：`DESIGN.md`（有 UI 证据时）、`steering/`、Cursor 适配（已有 `.cursor/` 时）。**写入前必须你确认。**
+
+### 命令放在哪
+
+**本插件仓库：** 用户面在 [`ai-ide/`](ai-ide/)（AI IDE）— `commands/` + `skills/`。
+
+**业务仓：** slash command 放哪由你定 — `ai-ide/commands/`、`commands/`、`.cursor/commands/`、`.claude/commands/` 等，按你的 IDE 发现路径选一处。
+
+### 需要点进看的文件
+
+| 目的 | 文件 |
+| --- | --- |
+| 铺底流程真值 | [`ai-ide/skills/harness-init/SKILL.md`](ai-ide/skills/harness-init/SKILL.md) |
+| 铺底命令入口 | [`ai-ide/commands/harness-init.md`](ai-ide/commands/harness-init.md) |
+| 增量维护 | [`ai-ide/commands/revise-ai-docs.md`](ai-ide/commands/revise-ai-docs.md) |
+| 全量审计 | [`ai-ide/skills/project-ai-docs-steward/SKILL.md`](ai-ide/skills/project-ai-docs-steward/SKILL.md) |
+
+### 注意
+
+- 写入前会展示摘要，必须你确认  
+- 维护命令**不替代**业务仓自己的领域 skill（发版、支付等）  
+- 改协议仓本身：clone 本仓库，维护者入口见下  
+
+### 维护本仓库
+
+<details>
+<summary>协议仓维护者（点击展开）</summary>
+
+| 入口 | 路径 |
+| --- | --- |
+| 维护者索引 | [`docs/maintainers/README.md`](docs/maintainers/README.md) |
+| 贡献约定 | [`CONTRIBUTING.md`](CONTRIBUTING.md) |
+
+```bash
+改协议仓前：在**目标测试仓**跑一遍 `/harness-init`（见 CONTRIBUTING）。
+```
+
+</details>
+
+MIT License.
+
+---
+
+## English
+
+### What this is
+
+An IDE plugin that bootstraps and maintains AI entry docs in **your target repository** — root `AGENTS.md` (facts) and `CLAUDE.md` (protocol).
+
+Not an npm package. Not a terminal CLI. The target repo does not need `package.json`.
+
+### Two repos — do not mix them up
+
+| | **This repo** (harness-coding-protocol) | **Your app repo** |
+|---|---|---|
+| Audience | Plugin installer | Daily development |
+| Read | **This README** | Root `AGENTS.md` + `CLAUDE.md` |
+| AI truth | None at protocol root | `AGENTS.md` + `CLAUDE.md` |
+| Long docs | `docs/maintainers/` (maintainers only) | `docs/` (human background, not AI truth) |
+
+This repo ships the **`ai-ide/`** (AI IDE) plugin surface — commands + skills — and `templates/` molds. Molds produce files **in your app repo**, not extra root truth files here.
+
+### Quick start
+
+```text
+① Install plugin once  →  ② /harness-init in your app repo  →  ③ Maintenance commands
+```
+
+**① Install once (shared across Cursor, Grok, Codex, Claude Code)**
+
+```text
+/plugin marketplace add manhua-man/harness-coding-protocol
+/plugin install harness-coding-protocol@harness-coding-protocol
+```
+
+Verify: `claude plugin list` shows the plugin; `/` completes all four commands in any connected IDE.
+
+**② Bootstrap the target repo**
+
+Open your **app repo** (not this protocol repo). Run `/harness-init` on first setup or major reset; confirm `yes` / `no`. If `AGENTS.md` and `CLAUDE.md` already exist, skip init and use maintenance commands only.
+
+**③ Day to day**
+
+| Command | When |
+| --- | --- |
+| `/revise-ai-docs` | End of session — write learnings back |
+| `/project-ai-docs-steward` | Periodic audit (report first) |
+| `/update-docs` | Sync human `docs/` and README (not AI truth) |
+
+Occasional upgrade: `/plugin marketplace update harness-coding-protocol` then `/plugin update harness-coding-protocol@harness-coding-protocol`.
+
+### What `/harness-init` does
+
+Run in your **app repo** (not this protocol repo):
+
+| Phase | Action |
+|-------|--------|
+| 1 Ground | Read README, manifests, existing entry docs, tool traces |
+| 2 Read | Gather more evidence within budget |
+| 3 Draft | Prepare `AGENTS.md` (facts) and `CLAUDE.md` (protocol) in memory |
+| 4 Confirm | Show per-file plan; wait for `yes` / `no` |
+| 5 Apply | Write **only** confirmed files |
+
+Optional: `DESIGN.md`, `steering/`, Cursor adapters when `.cursor/` exists. **Nothing writes without your confirmation.**
+
+### What `/harness-init` writes
+
+| File | Role |
+| --- | --- |
+| `AGENTS.md` | Facts — ports, commands, layout, modules |
+| `CLAUDE.md` | Protocol — collaboration and conflict rules |
+| `DESIGN.md` | Design — conditional |
+| `steering/` | Scoped overrides |
+| `.cursor/*` | Cursor mirror when detected |
+
+Layer stack in the **target repo**:
+
+```text
+Protocol (CLAUDE.md) → Facts (AGENTS.md) → steering/ → docs/ (human only)
+```
+
+### Where commands live
+
+**This plugin repo:** user surface is [`ai-ide/`](ai-ide/) — `commands/` + `skills/`.
+
+**Your app repo:** pick one path your IDE discovers — `ai-ide/commands/`, `commands/`, `.cursor/commands/`, `.claude/commands/`, etc.
+
+### Go deeper
+
+| Need | Path |
+| --- | --- |
+| Init procedure | [`ai-ide/skills/harness-init/SKILL.md`](ai-ide/skills/harness-init/SKILL.md) |
+| Init command entry | [`ai-ide/commands/harness-init.md`](ai-ide/commands/harness-init.md) |
+| Incremental maintenance | [`ai-ide/commands/revise-ai-docs.md`](ai-ide/commands/revise-ai-docs.md) |
+| Full audit | [`ai-ide/skills/project-ai-docs-steward/SKILL.md`](ai-ide/skills/project-ai-docs-steward/SKILL.md) |
+
+### Maintainers
+
+<details>
+<summary>Expand</summary>
+
+| Entry | Path |
+| --- | --- |
+| Maintainer index | [`docs/maintainers/README.md`](docs/maintainers/README.md) |
+| Contributing | [`CONTRIBUTING.md`](CONTRIBUTING.md) |
+
+</details>
+
+MIT License.

@@ -3,42 +3,58 @@ description: AI entry document — project facts, commands, ports, conventions
 alwaysApply: true
 ---
 
-# AGENTS.md（事 · Facts）
+# AGENTS.md (Facts · 事)
 
-> 本文件是**事（Facts）**：回答“这个仓库是什么样”。  
-> 只存放可核对的项目事实（目录结构、命令、端口、模块、接口、提交规范等）。  
-> 协作方法、决策优先级、工作流规则见同级的 `CLAUDE.md`。
+> This file is **Facts (事)**: it answers "what is this repository?"  
+> Store only verifiable project facts (layout, commands, ports, modules, APIs, commit conventions, etc.).  
+> Collaboration methods, decision priorities, and workflow rules live in sibling `CLAUDE.md`.
 
-**仓库真值入口固定为根目录的 `AGENTS.md`、`CLAUDE.md`、`steering/`。如项目包含 UI、品牌、体验或 DX 设计约束，使用 `DESIGN.md` 记录“设”。**
-**Harness 角色**：Harness 是 IDE 插件 + AI 编排的根级铺底协议。在目标仓库内运行 `/harness-init`，由 Agent 检测项目现状、生成最少但更正确的真值文件，并在用户最小确认后落盘——不是终端 CLI，也不发布 npm 包。
+**Repo truth entry is fixed at root `AGENTS.md`, `CLAUDE.md`, and `steering/`. If the project has UI, brand, experience, or DX design constraints, use `DESIGN.md` for Design (设).**
 
 ---
 
-## 与 CLAUDE.md / DESIGN.md 的分工
+## AI Entry Documentation (Division of Labor)
 
-| 汉字 | 文件          | 职责 |
+**事 (Facts) vs 法 (Protocol).** This file is **事** — *what this repository **is*** (structure, commands, ports, checkable conventions). Root **`CLAUDE.md`** is **法** — *how we **work** in this repository* (priorities, session protocol, collaboration habits). **Every AI tool must load both**; they are not alternative audiences. If only **`AGENTS.md`** is injected, the model tends to **write code without following repo protocol**; if only **`CLAUDE.md`** is injected, it tends to **reason without grounding in repo facts**.
+
+**Conceptual stack (layers, not install docs):**
+
+```text
+法 (CLAUDE.md)     — how to collaborate
+  → 事 (AGENTS.md) — what the repository is
+  → steering/      — scoped local overrides
+  → docs/          — human long-form background (NOT an AI truth source)
+```
+
+**AI truth sources:** **`AGENTS.md` + `CLAUDE.md` only.** Topic-specific overrides live in **`steering/`** (or `.kiro/steering/` when the project uses that layout). **`docs/`** is human background — useful context, but if it conflicts with 事/法, fix the entry docs or the long doc; do not treat `docs/` as authority over `AGENTS.md` / `CLAUDE.md`.
+
+**Decision tradeoffs** (testability vs readability vs …) live **only** in **`CLAUDE.md`** — not duplicated here.
+
+| Character | File | Responsibility |
 |------|---------------|------|
-| **事** | **`AGENTS.md`（本文件）** | 布局、命令、端口、模块、端点、提交/PR 规范；索引 `steering/` 与其他文档 |
-| **法** | `CLAUDE.md`   | 决策优先级、冲突解析、RIPER-5、协作习惯与输出要求 |
-| **设** | `DESIGN.md`（按需） | 产品气质、视觉 token、布局、组件、动效、文案、品牌与体验反模式 |
+| **Facts (事)** | **`AGENTS.md` (this file)** | Layout, commands, ports, modules, endpoints, commit/PR conventions; index `steering/` and `docs/` |
+| **Protocol (法)** | `CLAUDE.md` | Decision priority, conflict resolution, RIPER-5, collaboration habits and output requirements |
+| **Design (设)** | `DESIGN.md` (on demand) | Product tone, visual tokens, layout, components, motion, copy, brand, and experience anti-patterns |
+
+Body prose language must match the resolved locale in sibling `CLAUDE.md` (see **Language & Tone** there).
 
 ---
 
 ## Project Overview
 
-<!-- 用 2-3 句话简述项目目标、主要用户和技术边界（由生成器或用户填写） -->
+<!-- 2-3 sentences on project goals, primary users, and technical boundaries (filled by generator or user) -->
 
 ## Workspace Layout
 
-<!-- 只列真实存在、对协作有用的目录（由生成器自动检测并填充） -->
+<!-- List only real directories useful for collaboration (auto-detected and filled by generator) -->
 
 ## Key Technologies
 
-<!-- 自动识别到的技术栈（由 Agent Grounding 填充） -->
+<!-- Detected stack (filled by Agent Grounding) -->
 
 ## Module Architecture
 
-<!-- 主要模块及各自职责（可手动补充或由生成器填充） -->
+<!-- Main modules and responsibilities (manual supplement or generator fill) -->
 
 ## Service Ports
 
@@ -48,22 +64,22 @@ alwaysApply: true
 
 ## Build, Test & Development Commands
 
-<!-- 可直接复制执行的命令，保持与 `package.json` / Makefile / CI 一致（由生成器同步） -->
+<!-- Copy-paste commands consistent with package.json / Makefile / CI (synced by generator) -->
 
 ## Coding Style & Naming Conventions
 
-<!-- 仓库侧可核对的约束（缩进、命名法、lint/formatter、类型约束等） -->
+<!-- Repo-verifiable constraints (indent, naming, lint/formatter, type rules, etc.) -->
 
 ## Commit & PR Guidelines
 
-<!-- 示例：
+<!-- Examples:
 - Conventional Commits: `type(scope): subject`
-- PR 需包含风险说明、测试结果、截图（如适用）
+- PR should include risk notes, test results, screenshots (if applicable)
 -->
 
 ## Configuration & Secrets
 
-<!-- 环境变量模板、secrets 保护规则、本地与生产配置差异等 -->
+<!-- Env templates, secrets protection, local vs production config differences, etc. -->
 
 ## Quick Reference
 
@@ -80,28 +96,26 @@ alwaysApply: true
 | Project governance     | `CLAUDE.md`                   |
 | Design system          | `DESIGN.md`                   |
 | Steering rules index   | `steering/`                   |
-| Karpathy coding examples | `steering/karpathy-examples.md` |
+| Human long-form docs   | `docs/` (background only)     |
 
 ---
 
-## 第三方 AI 工具适配建议（动态生成）
+## AI Assistant Tool Index (dynamic)
 
-> 本章节由 `/harness-init` 的 **Agent Grounding** 阶段基于项目现有技术栈、AI 工具痕迹和根级真值生成。
-> Harness 不默认安装第三方工具，仅负责读取、推荐、解释并给出可审查的适配钩子。
+> Generated by `/harness-init` **Agent Grounding** from existing stacks, AI tool traces, and repo evidence.
+> List only tools, skills, and scripts that **physically exist in this repository** or are named in project ops docs.
 
-_Agent 在 Phase 2–3 基于 Grounding_Summary 和已读证据在此插入工作流推荐表格。_
-
-**想引入新的工作流？**  
-请先在 IDE 中运行 `/harness-init` 查看检测、计划与推荐 diff，再决定是否把建议合并到根级真值或工具兼容层。
+_Agent inserts skill/command routing tables here in Phases 2–3 based on Grounding_Summary and read evidence._
 
 ---
 
 ## Detailed Rule Files
 
-> `steering/` 只存放**局部 override**：仅针对特定路径或任务的补充规则，不重复根级事实或协议。
+> `steering/` holds **local overrides** only: scoped supplements for specific paths or tasks, not duplicate root facts or protocol.
 
 | Topic                          | File                          | Scope                  |
 |--------------------------------|-------------------------------|------------------------|
-| Karpathy coding examples       | `steering/karpathy-examples.md` | always               |
+| Steering index                 | `steering/project-index.md` or `.kiro/steering/project.md` | when present |
+| Karpathy coding examples       | `steering/karpathy-examples.md` | when present       |
 
 ---

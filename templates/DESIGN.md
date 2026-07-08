@@ -29,20 +29,20 @@ tokens:
     medium: "220ms ease"
 ---
 
-# DESIGN.md（设 · Design）
+# DESIGN.md (Design · 设)
 
-> 本文件是**设（Design）**：回答“这个产品、界面或开发者体验应该是什么样”。  
-> 工程事实见 `AGENTS.md`；协作协议见 `CLAUDE.md`；局部规则见 `steering/`。
+> This file is **Design (设)**: it answers "what should this product, interface, or developer experience look and feel like?"  
+> Engineering facts: `AGENTS.md`; collaboration protocol: `CLAUDE.md`; local rules: `steering/`.
 
-`.od/`（如果使用 Open Design 本地工具）是运行态目录，只保存 SQLite、会话、预览和临时产物，**不提交 Git**。需要沉淀的视觉、交互或体验结论写回本文件；需要进入产品的资源放入 `assets/` 或项目约定目录。
+`.od/` (when using Open Design local tools) is a runtime directory for SQLite, sessions, previews, and temp artifacts — **not committed to Git**. Visual, interaction, or experience conclusions that should persist go in this file; product assets go in `assets/` or project-convention directories.
 
-如果项目没有图形 UI，也可以用本文件记录 CLI、API、文档站、插件或开发者体验的设计原则。不要把可核对的工程事实、命令、端口或模块清单写进这里。
+If the project has no graphical UI, this file can still record design principles for CLI, API, doc sites, plugins, or developer experience. Do not put verifiable engineering facts, commands, ports, or module inventories here.
 
 ---
 
 ## 1. Design Intent
 
-<!-- 用 2-4 句话说明产品气质、目标用户、核心体验与非目标。 -->
+<!-- 2-4 sentences on product tone, target users, core experience, and non-goals. -->
 
 - **Audience:** ...
 - **Primary experience:** ...
@@ -51,27 +51,27 @@ tokens:
 
 ## 2. Color
 
-<!-- 记录颜色语义，而不只是色值。色值应与 CSS / Tailwind / design tokens 保持一致。 -->
+<!-- Record color semantics, not just values. Values should match CSS / Tailwind / design tokens. -->
 
 | Role | Token | Usage |
 |------|-------|-------|
-| Background | `bg` | 全页基底 |
-| Surface | `surface` / `surface_raised` | 面板、工具区、列表容器 |
-| Text | `text` / `muted` | 正文、辅助信息 |
-| Accent | `accent` | 主要操作、链接、focus |
-| Success | `success` | 成功、恢复、正向状态 |
-| Warning | `warning` | 警告、待处理、风险提示 |
-| Danger | `danger` | 删除、失败、破坏性操作 |
+| Background | `bg` | Full-page base |
+| Surface | `surface` / `surface_raised` | Panels, tool areas, list containers |
+| Text | `text` / `muted` | Body copy, secondary information |
+| Accent | `accent` | Primary actions, links, focus |
+| Success | `success` | Success, recovery, positive states |
+| Warning | `warning` | Warnings, pending, risk hints |
+| Danger | `danger` | Delete, failure, destructive actions |
 
 Rules:
 
-- 大面积背景要服务内容，不用抽象装饰替代真实状态。
-- 语义色保持少而稳定；新增颜色先说明用途。
-- 对比度优先于氛围，尤其是表格、表单、按钮和错误信息。
+- Large backgrounds should serve content, not replace real state with abstract decoration.
+- Semantic colors stay few and stable; explain purpose before adding new colors.
+- Contrast beats atmosphere, especially for tables, forms, buttons, and errors.
 
 ## 3. Typography
 
-<!-- 记录字体栈、字号密度、标题风格和代码/数字排版规则。 -->
+<!-- Font stacks, density, heading style, code/numeric typography rules. -->
 
 - UI text: system sans.
 - Code, paths, IDs, slugs, hashes: mono.
@@ -80,7 +80,7 @@ Rules:
 
 ## 4. Spacing & Layout
 
-<!-- 说明第一屏、主要导航、面板关系、响应式策略和固定格式元素。 -->
+<!-- First screen, primary nav, panel relationships, responsive strategy, fixed-format elements. -->
 
 - First screen: ...
 - Primary navigation: ...
@@ -90,27 +90,27 @@ Rules:
 
 Rules:
 
-- 页面区块不要层层套卡片。
-- hover、selected、loading、disabled 状态不能导致布局跳动。
-- 移动端优先保证文字不溢出、按钮不挤压、关键操作不被遮挡。
+- Do not nest cards within cards across page sections.
+- Hover, selected, loading, disabled states must not cause layout shift.
+- On mobile, prioritize text overflow, button squeeze, and unobstructed primary actions.
 
 ## 5. Components
 
-<!-- 列出项目已有或应优先复用的组件语言。 -->
+<!-- Existing or preferred component language in the project. -->
 
 | Component | Usage | Notes |
 |-----------|-------|-------|
-| Primary action | 关键推进、保存、确认 | 高对比，不只靠文字强调 |
-| Secondary action | 返回、取消、轻量切换 | 低视觉权重 |
-| Data table / list | 可扫读的信息集合 | 列宽、排序、空状态稳定 |
-| Dialog / sheet | 阻断式确认或局部编辑 | 有明确关闭路径 |
-| Toast / inline feedback | 成功、失败、保存状态 | 短句，指出下一步 |
+| Primary action | Key advance, save, confirm | High contrast; not text-only emphasis |
+| Secondary action | Back, cancel, light toggle | Low visual weight |
+| Data table / list | Scannable information sets | Stable column width, sort, empty states |
+| Dialog / sheet | Blocking confirm or local edit | Clear close path |
+| Toast / inline feedback | Success, failure, save state | Short copy; state next step |
 
 States to define: default, hover, active, focus, disabled, loading, empty, error.
 
 ## 6. Interaction & Motion
 
-<!-- 动效只用于反馈、转场和状态变化，不用于填空。 -->
+<!-- Motion for feedback, transitions, and state change only — not filler. -->
 
 Recommended:
 
@@ -126,7 +126,7 @@ Avoid:
 
 ## 7. Content & Voice
 
-<!-- 记录 UI 文案风格、语言选择、错误信息和空状态原则。 -->
+<!-- UI copy style, language choice, errors, empty states. -->
 
 - UI copy should be short and action-oriented.
 - Error messages should say what failed and what the user can do next.
@@ -135,7 +135,7 @@ Avoid:
 
 ## 8. Assets & Brand
 
-<!-- 记录品牌识别、图片/图标/插画/视频/音频资源的使用边界。 -->
+<!-- Brand identity, image/icon/illustration/video/audio usage boundaries. -->
 
 - Brand signals: ...
 - Primary visual assets: ...

@@ -1,1 +1,0 @@
-# Claude MCP protocol

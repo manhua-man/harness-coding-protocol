@@ -1,49 +1,49 @@
 ```markdown
 ---
-description: Karpathy 编码原则详细示例 — LLM 常见错误与正确做法
+description: Karpathy coding principles — detailed examples of common LLM mistakes and correct approaches
 ---
 
-# Karpathy 编码原则（详细示例）
+# Karpathy Coding Principles (Detailed Examples)
 
-> Andrej Karpathy 对 LLM 编码行为的观察 + 真实代码修正示例。  
-> 本文件是 **steering/** 下的补充说明，仅供参考。核心决策仍以 `CLAUDE.md` 中的 Decision Priority 和 RIPER-5 为准。
-
----
-
-## 常见问题
-
-> "模型会替用户做出错误假设，然后跟着执行而不检查。它们不管理自己的困惑，不寻求澄清，不呈现权衡，不在应该反驳时反驳。"
-
-> "它们真的喜欢过度复杂化代码和API，膨胀抽象，不清理死代码...实现了1000行的臃肿结构，而100行就够了。"
+> Andrej Karpathy's observations on LLM coding behavior + real code correction examples.  
+> This file is supplementary under **steering/**; for reference only. Core decisions still follow Decision Priority and RIPER-5 in `CLAUDE.md`.
 
 ---
 
-## 编码原则
+## Common Problems
 
-| 原则 | 解决的问题 |
+> "Models make wrong assumptions for the user, then follow through without checking. They don't manage their own confusion, don't seek clarification, don't present trade-offs, don't push back when they should."
+
+> "They really like to over-complicate code and APIs, inflate abstractions, not clean up dead code... implementing a 1000-line bloated structure when 100 lines would do."
+
+---
+
+## Coding Principles
+
+| Principle | Problem Addressed |
 |------|-----------|
-| **Think Before Coding** | 错误假设、隐藏困惑、缺失权衡 |
-| **Simplicity First** | 过度复杂、臃肿抽象、可读性差 |
-| **Surgical Changes** | 正交编辑、触碰不该改的代码 |
-| **Goal-Driven Execution** | 测试优先、可验证成功标准 |
-| **Explicit Dependencies** | 隐式状态、魔法依赖、不可测试 |
+| **Think Before Coding** | Wrong assumptions, hidden confusion, missing trade-offs |
+| **Simplicity First** | Over-complexity, bloated abstractions, poor readability |
+| **Surgical Changes** | Orthogonal edits, touching code that shouldn't change |
+| **Goal-Driven Execution** | Test-first, verifiable success criteria |
+| **Explicit Dependencies** | Implicit state, magic dependencies, untestable code |
 
 ---
 
-## 1. Think Before Coding（三思而后行）
+## 1. Think Before Coding
 
-**不要假设。不要隐藏困惑。表面权衡。**
+**Don't assume. Don't hide confusion. Surface trade-offs.**
 
-- **显式声明假设** — 如果不确定，先问而非猜测
-- **呈现多种解释** — 存在歧义时不要静默选择
-- **在必要时反驳** — 如果存在更简单的方案，说出来
-- **困惑时停止** — 说出不清楚的地方，请求澄清
+- **State assumptions explicitly** — if unsure, ask rather than guess
+- **Present multiple interpretations** — when ambiguous, don't silently pick one
+- **Push back when needed** — if a simpler approach exists, say so
+- **Stop when confused** — name what's unclear and ask for clarification
 
-### 隐藏假设
+### Hidden Assumptions
 
-**用户请求：** "添加导出用户数据的功能"
+**User request:** "Add a feature to export user data"
 
-**❌ 错误：** 隐式假设范围、字段、格式
+**❌ Wrong:** Implicitly assume scope, fields, format
 
 ```python
 def export_users(format='json'):
@@ -59,9 +59,9 @@ def export_users(format='json'):
     return f"Exported {len(users)} users"
 ```
 
-隐式假设了：应导出所有用户（分页？隐私？）、文件位置、包含哪些字段、CSV字段名。
+Implicitly assumed: export all users (pagination? privacy?), file location, which fields, CSV column names.
 
-**✅ 正确：** 先问清楚再实现
+**✅ Correct:** Clarify before implementing
 
 ```
 Before implementing, I need to clarify:
@@ -77,11 +77,11 @@ Before implementing, I need to clarify:
 What's your preference?
 ```
 
-### 多重解释
+### Multiple Interpretations
 
-**用户请求：** "加快搜索速度"
+**User request:** "Make search faster"
 
-**❌ 错误：** 悄无声息地选择一个方案
+**❌ Wrong:** Silently pick one approach
 
 ```python
 @lru_cache(maxsize=1000)
@@ -89,7 +89,7 @@ async def search(query: str) -> List[Result]:
     # ... 200 lines of optimization code
 ```
 
-**✅ 正确：** 呈现多种方案及其权衡
+**✅ Correct:** Present options and trade-offs
 
 ```
 "Make the search faster" could mean:
@@ -112,24 +112,24 @@ Which aspect matters most for your use case?
 
 ---
 
-## 2. Simplicity First（简洁优先）
+## 2. Simplicity First
 
-**最小代码解决问题。没有投机性代码。可读性优先。**
+**Minimum code to solve the problem. No speculative code. Readability first.**
 
-- 不添加超出需求的功能
-- 不为单次使用的代码创建抽象
-- 不添加没有被要求的"灵活性"或"可配置性"
-- 不为不可能的场景添加错误处理
-- 如果200行能变成50行，重写它
-- 避免炫技式写法，优先可读性而非技巧性
+- Don't add features beyond requirements
+- Don't create abstractions for one-off code
+- Don't add unrequested "flexibility" or "configurability"
+- Don't add error handling for impossible scenarios
+- If 200 lines can become 50, rewrite
+- Avoid cleverness; prefer readability over tricks
 
-**检验：** 如果资深工程师说这个太复杂了？简化它。
+**Check:** Would a senior engineer say this is too complex? Simplify.
 
-### 过度抽象
+### Over-Abstraction
 
-**用户请求：** "添加计算折扣的函数"
+**User request:** "Add a function to calculate discount"
 
-**❌ 错误：** 用策略模式做简单折扣计算（过度工程）
+**❌ Wrong:** Strategy pattern for simple discount (over-engineering)
 
 ```python
 from abc import ABC, abstractmethod
@@ -151,7 +151,7 @@ class PercentageDiscount(DiscountStrategy):
 # ... 100+ lines for a simple discount calculation
 ```
 
-**✅ 正确：** 一个函数搞定
+**✅ Correct:** One function
 
 ```python
 def calculate_discount(amount: float, percent: float) -> float:
@@ -162,13 +162,13 @@ def calculate_discount(amount: float, percent: float) -> float:
 discount = calculate_discount(100.0, 10.0)  # $10 off
 ```
 
-何时增加复杂度：只有当你真正需要多种折扣类型时才会这样。
+Add complexity only when you truly need multiple discount types.
 
-### 推测性特征
+### Speculative Features
 
-**用户请求：** "将用户偏好保存到数据库"
+**User request:** "Save user preferences to the database"
 
-**❌ 错误：** 添加缓存、验证、通知等"未来可能用到"的功能
+**❌ Wrong:** Add caching, validation, notifications "for future use"
 
 ```python
 class PreferenceManager:
@@ -183,7 +183,7 @@ class PreferenceManager:
         # ... 50+ lines with caching, validation, notifications
 ```
 
-**✅ 正确：** 只做被要求的，后续按需添加
+**✅ Correct:** Do what was asked; add later as needed
 
 ```python
 def save_preferences(db, user_id: int, preferences: dict):
@@ -194,51 +194,53 @@ def save_preferences(db, user_id: int, preferences: dict):
     )
 ```
 
-### Clarity Over Cleverness（可读性优先）
+### Clarity Over Cleverness
 
-避免复杂 TypeScript 高级特性、tricky 装饰器、或隐式魔法行为，除非它们代表最简单的解决方案。
+Avoid complex TypeScript advanced features, tricky decorators, or implicit magic unless they are the simplest solution.
 
-**❌ 错误：** 用 Proxy + Reflect 重写一个简单的取值逻辑  
-**✅ 正确：** 直接 `obj.key` 读写
+**❌ Wrong:** Rewrite simple property access with Proxy + Reflect  
+**✅ Correct:** Direct `obj.key` read/write
 
-**❌ 错误：** 用复杂的函数组合子（compose/pipe）改写简单的顺序调用  
-**✅ 正确：** 按顺序调用，看起来像读自然语言
+**❌ Wrong:** Rewrite simple sequential calls with compose/pipe combinators  
+**✅ Correct:** Call in order; reads like natural language
 
-### Avoid Premature Abstraction（避免过早抽象）
+### Avoid Premature Abstraction
 
-除非能明确解决**至少两个现有、即时的问题**，否则不构建复杂的装饰器、拦截器或 Mixin。
+Don't build complex decorators, interceptors, or mixins unless they clearly solve **at least two existing, immediate problems**.
 
-YAGNI (You Ain't Gonna Need It)：不实现尚未被当前失败测试要求的功能。
+YAGNI (You Ain't Gonna Need It): don't implement features not required by a failing test today.
 
-**❌ 错误：** 三个不同函数有重复代码，立刻抽象成基类  
-**✅ 正确：** 确认重复会持续出现，再提炼；第一次出现只管它本身
+**❌ Wrong:** Three functions share code → immediately abstract to base class  
+**✅ Correct:** Confirm repetition will persist, then extract; handle the first case on its own
 
-**❌ 错误：** "这个以后会复用"——预先抽取工具函数到 `utils/`  
-**✅ 正确：** 等第二个地方真正用到再提炼
+**❌ Wrong:** "This will be reused later" — pre-extract utils to `utils/`  
+**✅ Correct:** Extract when a second real use appears
 
 ---
 
-## 3. Surgical Changes（手术式改动）
+## 3. Surgical Changes
 
-**只触碰必须改的。只清理自己造成的混乱。**
+**Touch only what you must. Clean up only your own mess.**
 
-编辑现有代码时：
-- 不要"改进"相邻的代码、注释或格式
-- 不要重构没有坏的东西
-- 匹配现有风格，即使你会用不同方式
-- 如果注意到无关的死代码，提出来 — 不要删除它
+When editing existing code:
 
-你的改动造成的孤儿：
-- 移除因你的改动而变得未使用的 import/变量/函数
-- 不要移除之前就存在的死代码，除非被要求
+- Don't "improve" adjacent code, comments, or formatting
+- Don't refactor what isn't broken
+- Match existing style even if you'd do it differently
+- If you notice unrelated dead code, mention it — don't delete it
 
-**检验：** 每行改动都应该能追溯到用户的请求。
+Orphans from your changes:
 
-### 顺便重构
+- Remove imports/variables/functions made unused by your change
+- Don't remove pre-existing dead code unless asked
 
-**用户请求：** "修复空邮件导致验证器崩溃的bug"
+**Check:** Every changed line should trace to the user's request.
 
-**❌ 错误：** 修复 bug 时顺便改进其他代码
+### Drive-By Refactor
+
+**User request:** "Fix bug where validator crashes on empty email"
+
+**❌ Wrong:** Fix bug while improving other code
 
 ```diff
   def validate_user(user_data):
@@ -267,7 +269,7 @@ YAGNI (You Ain't Gonna Need It)：不实现尚未被当前失败测试要求的�
       return True
 ```
 
-**✅ 正确：** 只改解决 bug 必需的
+**✅ Correct:** Change only what's needed for the bug
 
 ```diff
   def validate_user(user_data):
@@ -286,11 +288,11 @@ YAGNI (You Ain't Gonna Need It)：不实现尚未被当前失败测试要求的�
       return True
 ```
 
-### 风格漂移
+### Style Drift
 
-**用户请求：** "给上传函数添加日志"
+**User request:** "Add logging to upload function"
 
-**❌ 错误：** 添加日志时顺便改引号风格、添类型提示、重排空格
+**❌ Wrong:** Change quote style, add type hints, reorder whitespace while adding logs
 
 ```diff
 - def upload_file(file_path, destination):
@@ -321,7 +323,7 @@ YAGNI (You Ain't Gonna Need It)：不实现尚未被当前失败测试要求的�
           return False
 ```
 
-**✅ 正确：** 匹配现有风格（单引号、无类型提示、现有布尔模式）
+**✅ Correct:** Match existing style (single quotes, no type hints, existing boolean pattern)
 
 ```diff
 + import logging
@@ -348,31 +350,31 @@ YAGNI (You Ain't Gonna Need It)：不实现尚未被当前失败测试要求的�
 
 ---
 
-## 4. Goal-Driven Execution（目标驱动执行）
+## 4. Goal-Driven Execution
 
-**定义成功标准。循环直到验证。**
+**Define success criteria. Loop until verified.**
 
-把命令式任务转化为可验证目标：
+Turn imperative tasks into verifiable goals:
 
-| 不要... | 转化为... |
+| Don't... | Turn into... |
 |--------|-----------|
-| "添加验证" | "先写无效输入的测试，然后让它们通过" |
-| "修复bug" | "先写能复现它的测试，然后让测试通过" |
-| "重构X" | "确保重构前后测试都通过" |
+| "Add validation" | "Write tests for invalid input first, then make them pass" |
+| "Fix bug" | "Write a test that reproduces it, then make the test pass" |
+| "Refactor X" | "Ensure tests pass before and after refactor" |
 
-多步骤任务要声明简要计划：
+For multi-step tasks, declare a brief plan:
 
 ```
-1. [步骤] → 验证: [检查项]
-2. [步骤] → 验证: [检查项]
-3. [步骤] → 验证: [检查项]
+1. [step] → verify: [check]
+2. [step] → verify: [check]
+3. [step] → verify: [check]
 ```
 
-### 模糊 vs 可验证
+### Vague vs Verifiable
 
-**用户请求：** "修复认证系统"
+**User request:** "Fix the authentication system"
 
-**❌ 错误：** 模糊方法
+**❌ Wrong:** Vague approach
 
 ```
 I'll fix the authentication system by:
@@ -382,7 +384,7 @@ I'll fix the authentication system by:
 4. Testing the changes
 ```
 
-**✅ 正确：** 可验证目标
+**✅ Correct:** Verifiable goals
 
 ```
 To "fix authentication," I need to define success criteria.
@@ -407,11 +409,11 @@ Current test coverage for auth: [shows coverage]
 What's the specific auth issue you're seeing?
 ```
 
-### 多步骤验证
+### Multi-Step Verification
 
-**用户请求：** "给API添加限流"
+**User request:** "Add rate limiting to the API"
 
-**❌ 错误：** 一次全做，不声明验证步骤
+**❌ Wrong:** Do everything at once without verification steps
 
 ```python
 # Implements full rate limiting with Redis, multiple strategies,
@@ -419,7 +421,7 @@ What's the specific auth issue you're seeing?
 # No clear verification steps
 ```
 
-**✅ 正确：** 增量+验证
+**✅ Correct:** Incremental + verification
 
 ```
 Plan for rate limiting:
@@ -448,11 +450,11 @@ Each step is independently verifiable and deployable.
 Start with step 1?
 ```
 
-### 测试优先验证
+### Test-First Verification
 
-**用户请求：** "排序在有重复分数时出问题"
+**User request:** "Sorting breaks when scores are duplicated"
 
-**❌ 错误：** 不复现就修
+**❌ Wrong:** Fix without reproducing
 
 ```python
 # Immediately changes sort logic without confirming the bug
@@ -460,7 +462,7 @@ def sort_scores(scores):
     return sorted(scores, key=lambda x: (-x['score'], x['name']))
 ```
 
-**✅ 正确：** 先写能复现的测试
+**✅ Correct:** Write a reproducing test first
 
 ```python
 # 1. First, write a test that reproduces the issue
@@ -487,46 +489,46 @@ def sort_scores(scores):
 # Verify: Test passes consistently
 ```
 
-### Design for Testability（可测试性）
+### Design for Testability
 
-**❌ 错误：** Service 在 `constructor()` 里直接 `new ExternalService()`，导致无法 mock  
-**✅ 正确：** 依赖通过 constructor 注入，易于 mock 和替换
+**❌ Wrong:** Service does `new ExternalService()` inside `constructor()`, can't mock  
+**✅ Correct:** Dependencies injected via constructor, easy to mock and replace
 
 ---
 
-## 5. Explicit Dependencies（显式依赖）
+## 5. Explicit Dependencies
 
-**依赖关系和数据流要显式。避免隐式状态和魔法行为。**
+**Dependencies and data flow must be explicit. Avoid implicit state and magic behavior.**
 
-- 使用类型显式定义函数签名和类属性
-- 避免隐藏状态或隐式上下文传递
-- 避免隐式依赖（全局变量、魔法常量、环境变量直接引用）
-- 依赖注入优先于直接实例化
+- Use types for function signatures and class properties
+- Avoid hidden state or implicit context passing
+- Avoid implicit dependencies (globals, magic constants, direct env var reads)
+- Prefer dependency injection over direct instantiation
 
-### 隐式 this 状态
+### Implicit `this` State
 
-**用户请求：** "给用户服务添加审计日志"
+**User request:** "Add audit logging to user service"
 
-**❌ 错误：** 在类上挂未声明的数据，靠运行时约定访问
+**❌ Wrong:** Hang undeclared data on class; access by runtime convention
 
 ```typescript
 class UserService {
-  // 隐式依赖：auditLog 通过运行时约定注入
+  // Implicit dependency: auditLog injected by runtime convention
   async createUser(data: CreateUserDto) {
-    // 依赖 this.auditLog 存在，但类型系统无法约束
+    // Depends on this.auditLog existing, but types can't enforce it
     this.auditLog.log('user.created', data);
     return this.userRepo.save(data);
   }
 }
 ```
 
-**✅ 正确：** 数据作为参数传入或从明确来源获取
+**✅ Correct:** Pass data as parameters or from explicit sources
 
 ```typescript
 class UserService {
   constructor(
     private userRepo: UserRepository,
-    private auditLog: AuditLogger, // 显式依赖，类型安全
+    private auditLog: AuditLogger, // explicit dependency, type-safe
   ) {}
 
   async createUser(data: CreateUserDto) {
@@ -536,51 +538,51 @@ class UserService {
 }
 ```
 
-### 全局状态隐式依赖
+### Global State Implicit Dependency
 
-**用户请求：** "实现一个发送邮件的功能"
+**User request:** "Implement email sending"
 
-**❌ 错误：** 函数内部直接读取环境变量，全局状态隐式依赖
+**❌ Wrong:** Function reads env vars internally; implicit global dependency
 
 ```python
 def send_email(to: str, subject: str, body: str):
-    # 隐式依赖 process.env.API_KEY，无处声明
+    # Implicit dependency on process.env.API_KEY, nowhere declared
     api_key = process.env.API_KEY
     client = EmailClient(api_key)
     return client.send(to, subject, body)
 ```
 
-**✅ 正确：** 配置作为参数传入，来源清晰可追溯
+**✅ Correct:** Config passed as parameter; source clear and traceable
 
 ```python
 def send_email(to: str, subject: str, body: str, config: EmailConfig):
-    # config.api_key 显式传入，调用方负责来源
+    # config.api_key passed explicitly; caller owns source
     client = EmailClient(config.api_key)
     return client.send(to, subject, body)
 ```
 
-### 隐式创建依赖
+### Implicit Dependency Creation
 
-**用户请求：** "添加一个获取用户详情的 HTTP 客户端"
+**User request:** "Add HTTP client to fetch user details"
 
-**❌ 错误：** 在函数内部直接实例化 HTTP 客户端，无法 mock
+**❌ Wrong:** Instantiate HTTP client inside function; can't mock
 
 ```python
 def get_user(user_id: int) -> User:
-    # 隐式依赖 HTTP 客户端，无法替换
+    # Implicit HTTP client dependency, can't replace
     response = requests.get(f'https://api.example.com/users/{user_id}')
     return User.parse_obj(response.json())
 ```
 
-**✅ 正确：** 通过参数注入，便于测试和替换
+**✅ Correct:** Inject via parameter for test and replacement
 
 ```python
 def get_user(user_id: int, http_client: HttpClient = None) -> User:
-    client = http_client or requests  # 支持注入默认实现
+    client = http_client or requests  # supports injecting default impl
     response = client.get(f'https://api.example.com/users/{user_id}')
     return User.parse_obj(response.json())
 
-# 测试时可以轻松 mock
+# Easy to mock in tests
 def test_get_user():
     mock_client = MockHttpClient(user_data={'id': 1, 'name': 'Alice'})
     user = get_user(1, http_client=mock_client)
@@ -589,56 +591,58 @@ def test_get_user():
 
 ---
 
-## 反模式总结
+## Anti-Pattern Summary
 
-| 原则 | 反模式 | 修复 |
+| Principle | Anti-pattern | Fix |
 |------|--------|------|
-| Think Before Coding | 默认可选文件格式、字段、范围 | 明确列出假设，要求澄清 |
-| Simplicity First | 单一折扣计算用策略模式 | 在真正需要复杂度之前，只用一个函数 |
-| Surgical Changes | 重排引号、添类型提示、同时修无关错误 | 只更换能解决报告问题的行 |
-| Goal-Driven Execution | "我会审查并改进代码" | "写测试漏洞X → 让它通过 → 验证没有回归" |
-| Explicit Dependencies | `this` 挂隐式数据、环境变量直接引用 | 通过参数/DI 传入，类型约束 |
+| Think Before Coding | Silently assume format, fields, scope | List assumptions; ask for clarification |
+| Simplicity First | Strategy pattern for single discount | One function until complexity is truly needed |
+| Surgical Changes | Requote, add types, fix unrelated errors | Change only lines that fix the reported issue |
+| Goal-Driven Execution | "I'll review and improve the code" | "Write test for gap X → make it pass → verify no regression" |
+| Explicit Dependencies | Implicit `this` data, direct env reads | Pass via parameters/DI with type constraints |
 
 ---
 
-## 关键见解
+## Key Insight
 
-**"过于复杂"的例子并不明显错误** — 它们遵循设计模式和最佳实践。问题在于**时机**：在需要之前就增加了复杂性。
+**"Too complex" examples aren't obviously wrong** — they follow design patterns and best practices. The problem is **timing**: complexity added before it's needed.
 
-这导致：
-- 代码更难理解
-- 引入更多bug
-- 实施时间更长
-- 更难测试
+That leads to:
 
-**"简单"版本有：**
-- 更容易理解
-- 实现更快
-- 更容易测试
-- 当需要复杂度时，可以进行重构
+- Harder-to-understand code
+- More bugs
+- Longer implementation
+- Harder testing
 
-**好的代码是能简单解决当下问题的代码，而不是过早地解决明天的问题。**
+**The "simple" version has:**
 
----
+- Easier understanding
+- Faster implementation
+- Easier testing
+- Room to refactor when complexity is actually needed
 
-## 权衡说明
-
-这些原则偏向**谨慎而非速度**。对于琐碎任务（简单typo修复、明显的单行修改），使用判断力——不是每个改动都需要全套流程。目标是减少非平凡工作中的高成本错误，而非拖慢简单任务。
+**Good code solves today's problem simply, not tomorrow's problem prematurely.**
 
 ---
 
-## 检验标准
+## Trade-off Note
 
-这些原则生效时你会看到：
-
-- diff中不必要的改动更少
-- 过度复杂化导致的重写更少
-- 澄清问题出现在实现之前，而非错误之后
-- PR干净，最小化 — 没有顺便的重构或"改进"
+These principles bias toward **caution over speed**. For trivial tasks (simple typo fix, obvious one-liner), use judgment — not every change needs the full process. The goal is fewer high-cost mistakes in non-trivial work, not slowing simple tasks.
 
 ---
 
-**在本项目中的使用建议**  
-- 与 `CLAUDE.md` 中的 **Decision Priority** 和 **RIPER-5** 结合使用  
-- 在 **PLAN** 和 **EXECUTE** 模式中严格遵循  
-- steering/ 局部规则优先级高于本文件  
+## Success Criteria
+
+When these principles work, you'll see:
+
+- Fewer unnecessary changes in diffs
+- Fewer rewrites from over-complication
+- Clarifying questions before implementation, not after errors
+- Clean, minimal PRs — no drive-by refactors or "improvements"
+
+---
+
+**Usage in this project**  
+- Combine with **Decision Priority** and **RIPER-5** in `CLAUDE.md`  
+- Follow strictly in **PLAN** and **EXECUTE** modes  
+- Local `steering/` rules outrank this file when scoped  

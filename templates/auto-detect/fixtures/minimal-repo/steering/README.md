@@ -1,3 +1,0 @@
-# Steering
-
-Local steering placeholder.
