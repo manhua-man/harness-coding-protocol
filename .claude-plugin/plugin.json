@@ -1,7 +1,7 @@
 {
   "name": "harness-coding-protocol",
   "description": "AI-driven harness protocol plugin — IDE /harness-init for agent-native grounding, root-truth generation, and confirmed apply",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "author": {
     "name": "ManHua"
   },
