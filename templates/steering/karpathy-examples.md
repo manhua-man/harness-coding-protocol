@@ -1,12 +1,7 @@
-```markdown
----
-description: Karpathy coding principles — detailed examples of common LLM mistakes and correct approaches
----
-
 # Karpathy Coding Principles (Detailed Examples)
 
 > Andrej Karpathy's observations on LLM coding behavior + real code correction examples.  
-> This file is supplementary under **steering/**; for reference only. Core decisions still follow Decision Priority and RIPER-5 in `CLAUDE.md`.
+> This file is supplementary under **steering/** and reference-only by default. It does not become mandatory protocol merely because it exists. Core decisions follow the target repository's `CLAUDE.md`.
 
 ---
 
@@ -21,7 +16,7 @@ description: Karpathy coding principles — detailed examples of common LLM mist
 ## Coding Principles
 
 | Principle | Problem Addressed |
-|------|-----------|
+| --- | --- |
 | **Think Before Coding** | Wrong assumptions, hidden confusion, missing trade-offs |
 | **Simplicity First** | Over-complexity, bloated abstractions, poor readability |
 | **Surgical Changes** | Orthogonal edits, touching code that shouldn't change |
@@ -357,7 +352,7 @@ Orphans from your changes:
 Turn imperative tasks into verifiable goals:
 
 | Don't... | Turn into... |
-|--------|-----------|
+| --- | --- |
 | "Add validation" | "Write tests for invalid input first, then make them pass" |
 | "Fix bug" | "Write a test that reproduces it, then make the test pass" |
 | "Refactor X" | "Ensure tests pass before and after refactor" |
@@ -594,7 +589,7 @@ def test_get_user():
 ## Anti-Pattern Summary
 
 | Principle | Anti-pattern | Fix |
-|------|--------|------|
+| --- | --- | --- |
 | Think Before Coding | Silently assume format, fields, scope | List assumptions; ask for clarification |
 | Simplicity First | Strategy pattern for single discount | One function until complexity is truly needed |
 | Surgical Changes | Requote, add types, fix unrelated errors | Change only lines that fix the reported issue |
@@ -642,7 +637,9 @@ When these principles work, you'll see:
 
 ---
 
-**Usage in this project**  
-- Combine with **Decision Priority** and **RIPER-5** in `CLAUDE.md`  
-- Follow strictly in **PLAN** and **EXECUTE** modes  
-- Local `steering/` rules outrank this file when scoped  
+**Usage in this project**
+
+- Adapt examples to real project paths, assets, risks, and invariants before relying on them.
+- Combine with **Decision Priority** and any risk-tiered RIPER Gate in `CLAUDE.md`.
+- Treat `m5-engineering-principles.md` as a sibling, independently selectable reference when present.
+- Treat matching project-specific `steering/` rules as more specific than these generic examples.

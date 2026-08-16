@@ -1,15 +1,30 @@
 <!-- Style scaffold extracted from claude.generator.ts during agent-as-writer task 3.1. Reference material — final bytes are agent-written. -->
 # CLAUDE.md (Protocol · 法)
 
-> Project protocol: this file answers "how do we do things in this repository?"
+> This file is **Protocol (法)**: it answers "how do we work in this repository?"
+> Store decision order, conflict resolution, session protocol, output requirements, and collaboration habits only.
+> Project facts live in sibling `AGENTS.md`. Product, visual, interaction, and developer-experience design live in sibling `DESIGN.md` when the project needs them.
+
+**Repo truth entry is fixed at root `AGENTS.md`, `CLAUDE.md`, and scoped `steering/`. Design system entry is `DESIGN.md` on demand.**
 
 ## Layered Model (法 → 事 → steering → docs)
 
 ```text
-法 (this file) → 事 (AGENTS.md) → steering/ → docs/ (human background, NOT AI truth)
+法 (this file)   — how to collaborate; how to read and update 事
+  → 事 (AGENTS.md) — what the repository is
+  → steering/      — scoped local patches or reference cases
+  → docs/          — human long-form background (NOT AI truth)
 ```
 
-**Read both 事 and 法 every session.** Layering describes the stack; on factual conflict **`AGENTS.md` wins over this file** after your explicit instruction (see Conflict Resolution).
+**Read both 事 and 法 every session.** If only one is injected, actively read the other. Layering describes responsibilities; verifiable source/manifests/runtime evidence wins factual conflicts and `AGENTS.md` must then be corrected.
+
+## Division of Labor with AGENTS.md / DESIGN.md
+
+| Character | File | Responsibility |
+| --- | --- | --- |
+| Facts (事) | `AGENTS.md` | Verifiable layout, commands, ports, modules, APIs, and repository conventions |
+| Protocol (法) | `CLAUDE.md` | Decision priority, conflict resolution, risk-tiered RIPER Gate, collaboration, and output habits |
+| Design (设) | `DESIGN.md` on demand | Product tone, visual tokens, layout, components, motion, copy, brand, and experience anti-patterns |
 
 ## Language & Tone
 
@@ -37,18 +52,31 @@ Within one `/harness-init` run, `AGENTS.md`, `CLAUDE.md`, conditional `DESIGN.md
 
 ## Decision Priority
 
-1. Testability
-2. Readability
-3. Consistency
-4. Simplicity
-5. Reversibility
+1. Correctness, safety, and authorization boundaries
+2. Testability and verifiability
+3. Consistency with repository and product truth
+4. Simplicity, readability, and maintainability
+5. Reversibility and minimal necessary change
 
 ## Development Principles
 
-- **Incremental Progress** — Prefer small, verifiable, reversible changes
-- **Context First** — Understand the existing implementation before proposing
-- **Pragmatism Over Dogma** — Real project constraints win over abstract rules
-- **Update Before Create** — Update existing docs and rules before introducing new ones
+- **Incremental Progress** — Prefer small, verifiable, reversible changes.
+- **Context First** — Understand the existing implementation before proposing.
+- **Pragmatism Over Dogma** — Real project constraints win over abstract rules.
+- **Update Before Create** — Update existing docs and rules before introducing duplicate sources.
+- Optional engineering methods such as M5 and Karpathy examples belong in explicitly selected, reference-only `steering/` files rather than mandatory protocol.
+
+## Risk-Tiered RIPER Gate
+
+RIPER is a reasoning gate for high-risk tasks, not a mandatory response-mode ceremony.
+
+1. **Research** — verify source, call paths, data flow, tests, and current truth.
+2. **Invariants** — state what safety, data, compatibility, and authorization boundaries must remain true.
+3. **Plan** — define the minimal write scope, owner, verification, and rollback or failure handling.
+4. **Execute** — implement only the confirmed scope and preserve user changes.
+5. **Review** — inspect the actual diff and verify invariants with tests, builds, logs, or runtime evidence.
+
+Use the full gate for auth, secrets, user data, migrations, payments, deploys, destructive actions, or cross-boundary contracts. Use `understand → implement → verify` for low-risk reversible work. Do not require `[MODE: ...]` declarations.
 
 ## Collaboration
 

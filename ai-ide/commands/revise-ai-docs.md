@@ -2,7 +2,7 @@
 description: >-
   Write session learnings back into AI entry docs (AGENTS.md, CLAUDE.md, steering).
   Lightweight incremental companion to /project-ai-docs-steward.
-allowed-tools: Read, Edit, Glob
+allowed-tools: Read, Edit, Write, Glob
 ---
 
 Review this session for durable learnings about working with AI in **the current target repository**. Update the **minimal set** of files so future sessions load correct context.
@@ -29,8 +29,10 @@ One line per durable learning. Do not paste session logs.
 ## Step 3: Route
 
 - Commands / layout / ports → `AGENTS.md`
+- Tool routing → `AGENTS.md` § AI Assistant Tool Index; separate repository-owned tools from recommended external/global tools
 - Collaboration norms → `CLAUDE.md`
-- Narrow technical convention → matching steering file
+- Narrow technical convention or optional reference rule → matching steering file; keep reference-only material clearly labelled and do not silently promote it into mandatory protocol
+- Create a new `steering/*.md` reference only when the user explicitly asks for it or explicitly approves a proposed project-specific casebook. Adapt examples to real project paths and invariants; never copy a generic template verbatim.
 - Unsure → brief bullet under `CLAUDE.md` **Session notes** (still minimal)
 
 **Locale:** If the user explicitly requests a language change, apply it. Otherwise match the existing body language of each file you edit; do not switch locale silently.
@@ -41,4 +43,4 @@ For each file: **Why** (one line) + minimal diff.
 
 ## Step 5: Apply with approval
 
-Edit only what the user approves. If steering folder is missing, report gap; suggest `/harness-init` or minimal index file — do not invent a full steering tree.
+Edit or create only what the user approves. For a new steering reference, show its full proposed path, purpose, and content before writing. If the steering folder is missing, report the gap and suggest `/harness-init` or one minimal approved file — do not invent a full steering tree.

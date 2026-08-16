@@ -1,8 +1,3 @@
----
-description: AI collaboration protocol — decision priority, conflict resolution, workflow
-alwaysApply: true
----
-
 # CLAUDE.md (Protocol · 法)
 
 > This file is **Protocol (法)**: it answers "how do we work in this repository?"  
@@ -32,9 +27,9 @@ alwaysApply: true
 ## Division of Labor with AGENTS.md / DESIGN.md
 
 | Character | File | Responsibility |
-|------|------|------|
+| --- | --- | --- |
 | **Facts (事)** | `AGENTS.md` | Verifiable structure, commands, ports, modules, endpoints, commit/PR conventions |
-| **Protocol (法)** | **`CLAUDE.md` (this file)** | Decision priority, conflict resolution, RIPER-5, session protocol, output habits |
+| **Protocol (法)** | **`CLAUDE.md` (this file)** | Decision priority, conflict resolution, risk-tiered RIPER Gate, session protocol, output habits |
 | **Design (设)** | `DESIGN.md` (on demand) | Product tone, visual tokens, layout, components, motion, copy, brand, experience anti-patterns |
 
 ---
@@ -78,24 +73,21 @@ When rules conflict, resolve in this order:
 
 ## Decision Priority
 
-1. **Testability** — Is it easy to write reliable automated tests?
-2. **Readability** — Can other developers understand quickly?
-3. **Consistency** — Does it follow existing project patterns and conventions?
-4. **Simplicity** — Is it the simplest solution for current needs?
+1. **Correctness, safety, and authorization** — Does it preserve user data, security boundaries, and current contracts?
+2. **Testability and verifiability** — Can reliable evidence prove the behavior?
+3. **Consistency** — Does it follow current repository and product truth?
+4. **Simplicity and readability** — Is it the clearest maintainable solution for current needs?
 5. **Reversibility** — If direction is wrong, how costly is rollback?
 
 ---
 
 ## Development Principles
 
-Detailed examples: `steering/karpathy-examples.md` when present.
-
-| Principle | Meaning |
-|-----------|------|
-| Incremental Progress | Prefer small, verifiable, reversible changes |
-| Context First | Understand existing implementation fully before proposing solutions |
-| Pragmatism Over Dogma | Follow project reality, not theoretical optimality |
-| Update Before Create | Update existing docs and rules before creating duplicate sources |
+- **Incremental Progress** — Prefer small, verifiable, reversible changes.
+- **Context First** — Understand the existing implementation before proposing.
+- **Pragmatism Over Dogma** — Real project constraints win over abstract rules.
+- **Update Before Create** — Update existing docs and rules before introducing duplicate sources.
+- Optional engineering methods such as M5 and Karpathy examples belong in explicitly selected, reference-only `steering/` files rather than mandatory protocol.
 
 ---
 
@@ -105,31 +97,21 @@ Tool and workflow suggestions may appear in `AGENTS.md` §AI Assistant Tool Inde
 
 - Route through this repo's root truth and conflict resolution order
 - Third-party workflows identify, map, and suggest — they do not replace 事/法
-- On conflict, fall back to Decision Priority and RIPER-5 in this file
+- On conflict, fall back to Decision Priority and the risk-tiered RIPER Gate in this file
 
 ---
 
-## RIPER-5 Protocol
+## Risk-Tiered RIPER Gate
 
-### Mode Declaration
+RIPER is a reasoning gate for high-risk tasks, not a mandatory response-mode ceremony.
 
-For complex tasks, declare mode at response start: `[MODE: MODE_NAME]`. Default: `RESEARCH`.
+1. **Research** — verify source, call paths, data flow, tests, and current truth.
+2. **Invariants** — state what safety, data, compatibility, and authorization boundaries must remain true.
+3. **Plan** — define the minimal write scope, owner, verification, and rollback or failure handling.
+4. **Execute** — implement only the confirmed scope and preserve user changes.
+5. **Review** — inspect the actual diff and verify invariants with tests, builds, logs, or runtime evidence.
 
-### Modes
-
-| Mode | Purpose | Allowed | Forbidden |
-|------|------|---------|-----------|
-| RESEARCH | Information gathering and understanding | Read files, analyze structure, ask clarifying questions | Planning, implementation, implying solutions |
-| INNOVATE | Solution exploration | Compare paths, weigh trade-offs | Concrete implementation plans, code writing |
-| PLAN | Form complete specification | File paths, interfaces, data flow, test plan | Implementation, example code |
-| EXECUTE | Implement approved plan | Execute per plan, verify | Deviate from plan, scope creep |
-| REVIEW | Verify consistency | Check deviation, risk, tests, quality | Hide problems, skip verification |
-
-### Execute Mode Requirements
-
-- Each change: minimal necessary delta only
-- If deviating from plan, explain reason and impact first
-- Comments explain "why," not "what"
+Use the full gate for auth, secrets, user data, migrations, payments, deploys, destructive actions, or cross-boundary contracts. Use `understand → implement → verify` for low-risk reversible work. Do not require `[MODE: ...]` declarations.
 
 ---
 
@@ -146,7 +128,7 @@ For complex tasks, declare mode at response start: `[MODE: MODE_NAME]`. Default:
 When the harness-coding-protocol plugin is installed, keep entry docs accurate from **this repository**:
 
 | Command | When |
-|---------|------|
+| --- | --- |
 | `/revise-ai-docs` | End of session — learnings back to AGENTS / CLAUDE / steering |
 | `/project-ai-docs-steward` | Periodic audit — report before edits |
 | `/update-docs` | Sync human `docs/` and README (not AI truth) |

@@ -54,7 +54,7 @@ If the project has no graphical UI, this file can still record design principles
 <!-- Record color semantics, not just values. Values should match CSS / Tailwind / design tokens. -->
 
 | Role | Token | Usage |
-|------|-------|-------|
+| --- | --- | --- |
 | Background | `bg` | Full-page base |
 | Surface | `surface` / `surface_raised` | Panels, tool areas, list containers |
 | Text | `text` / `muted` | Body copy, secondary information |
@@ -99,7 +99,7 @@ Rules:
 <!-- Existing or preferred component language in the project. -->
 
 | Component | Usage | Notes |
-|-----------|-------|-------|
+| --- | --- | --- |
 | Primary action | Key advance, save, confirm | High contrast; not text-only emphasis |
 | Secondary action | Back, cancel, light toggle | Low visual weight |
 | Data table / list | Scannable information sets | Stable column width, sort, empty states |
@@ -175,5 +175,5 @@ Before shipping a visible change:
 ## Change Log
 
 | Date | Change | Notes |
-|------|--------|-------|
+| --- | --- | --- |
 | YYYY-MM-DD | Initial design entry | Based on existing product, UI, brand, or DX evidence. |

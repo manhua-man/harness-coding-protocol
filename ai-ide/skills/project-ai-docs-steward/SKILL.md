@@ -4,7 +4,7 @@ description: >-
   Audit and improve a target repo's AI entry documentation (AGENTS.md, CLAUDE.md,
   steering, .cursor rules). Use after /harness-init or when AI context drifts.
   Generic harness protocol skill — parameterize paths to the open workspace.
-tools: Read, Glob, Grep, Edit
+allowed-tools: Read, Glob, Grep, Edit
 ---
 
 # Project AI Docs Steward
@@ -13,7 +13,7 @@ Maintain **structured entry documentation** so every AI tool reading the target 
 
 **事 = `AGENTS.md` (Facts)** · **法 = `CLAUDE.md` (Protocol)** — both are mandatory for AI context. Missing 法 → codes without collaboration rules; missing 事 → reasons without correct facts.
 
-**This skill edits tracked markdown only after a quality report and explicit user approval.** Prefer updating existing files over duplicates (`Update Before Create`).
+**This skill edits target-repo entry markdown only after a quality report and explicit user approval.** Files created by a confirmed `/harness-init` run may still be untracked and remain eligible; unknown untracked files are user-owned and out of scope unless the user names them. Prefer updating existing files over duplicates (`Update Before Create`).
 
 ## Layer model
 
@@ -54,8 +54,8 @@ Record: path, tier, exists/missing, broken links from cursor rules.
 
 Score each file (adapt claude-md-improver rubric):
 
-- **AGENTS.md:** commands vs manifests (`package.json`, `Cargo.toml`, …), ports, module paths, steering index
-- **CLAUDE.md:** decision priority once; links to AGENTS; no duplicate fact tables
+- **AGENTS.md:** commands vs manifests (`package.json`, `Cargo.toml`, …), ports, module paths, steering index, and an honest AI Assistant Tool Index separating repository-owned from external/global recommendations
+- **CLAUDE.md:** decision priority once; links to AGENTS; preserves the 法/事/设 division and layered model; no duplicate fact tables
 - **Steering:** inclusion scope (`always` / `fileMatch` / `manual`); overlap with AGENTS; broken frontmatter
 - **Cursor rules:** index table paths resolvable
 
@@ -78,6 +78,7 @@ Edit only after user confirmation. Facts belong in **AGENTS** before new top-lev
 | Learning type | Target |
 |---------------|--------|
 | Commands, ports, layout | `AGENTS.md` |
+| Repository-owned and recommended external tool routing | `AGENTS.md` tool index, with ownership labels |
 | Collaboration, modes, priorities | `CLAUDE.md` |
 | Stack-specific conventions | Matching steering file |
 | Domain (payment, infra, …) | `manual` steering file |

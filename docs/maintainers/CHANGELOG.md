@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Preserve the full Facts (事) / Protocol (法) / Design (设) division and layered model as required `/harness-init` output concepts rather than optional style hints.
+- Split `AGENTS.md` tool routing into repository-owned tools and explicitly labelled recommended external/global tools.
+- Move M5 to an opt-in, reference-only steering mold at the same level as Karpathy examples; replace mandatory RIPER mode declarations with a risk-tiered RIPER Gate in core protocol.
+- Keep `templates/` as full human-readable reference molds while removing plain-Markdown frontmatter conflicts and the whole-document fence around `karpathy-examples.md`.
+- Allow the docs steward to maintain confirmed `/harness-init` outputs before their first git commit while preserving unknown untracked files.
+- Rename the docs steward skill metadata key from `tools` to the valid `allowed-tools` field.
+- Allow `/revise-ai-docs` to create an explicitly approved, project-adapted, reference-only steering file without auto-copying generic examples.
+- Move duplicated inline scaffold bodies out of `harness-init/SKILL.md`; the skill now routes to the standalone scaffold files.
+
 ## 2.5.0 — 2026-07-16
 
 ### Changed

@@ -29,7 +29,7 @@ harness-coding-protocol/
 - **Do not** add root `AGENTS`/`CLAUDE` to this protocol repo.
 - **Do not** point plugin users at `docs/` — only README + `ai-ide/`.
 - Conflict order (this repo): user instruction → root `README.md` → `docs/maintainers/` → `CONTRIBUTING.md`.
-- Decision priority: Testability → Readability → Consistency → Simplicity → Reversibility.
+- Decision priority: Correctness/safety/authorization → testability/verifiability → repository consistency → simplicity/readability → reversibility.
 
 ## Change & verify
 
@@ -39,6 +39,14 @@ harness-coding-protocol/
 4. Log shipped work in [`CHANGELOG.md`](CHANGELOG.md). Future-only items in [`ROADMAP.md`](ROADMAP.md).
 
 `grep -rn "createPlan\|applyPlan\|runInitPlan\|merge-engine" ai-ide templates` must stay clean before release.
+
+Target-output format contracts must also stay clean:
+
+- no YAML frontmatter in reference `AGENTS.md`, `CLAUDE.md`, or plain `steering/*.md`;
+- no whole-document ````markdown` wrapper around steering references;
+- no mandatory `[MODE: ...]` or default-RESEARCH ceremony in target protocol molds;
+- no M5 section in the always-on CLAUDE mold; M5 stays an opt-in steering reference;
+- `AGENTS.md` scaffold keeps repository-owned and recommended external/global tools separate.
 
 ## Capability docs (kept minimal)
 

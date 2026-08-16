@@ -1,11 +1,12 @@
 # Steering Index
 
-> Local override index. Scope truth lives in each file's YAML frontmatter (`inclusion`, `fileMatchPattern`).
+> Local override and reference index. Plain `steering/*.md` files state applicability in their heading or opening scope note. Use YAML frontmatter only when a specific host format, such as a Cursor rule, requires it.
 
 | File | Typical scope | Topic |
-|------|---------------|-------|
+| --- | --- | --- |
 | `harness-recommendations.md` | project-specific | Paths, tools, conventions discovered at init |
-| `karpathy-examples.md` | manual or fileMatch | LLM coding pitfalls and fixes |
+| `m5-engineering-principles.md` | manual reference | Optional engineering decision heuristics; not mandatory protocol |
+| `karpathy-examples.md` | manual reference | LLM coding pitfalls and fixes; not mandatory protocol by default |
 
 **Conflict rule:** `AGENTS.md` + `CLAUDE.md` win over steering. `docs/` is human background only.
 

@@ -28,7 +28,7 @@ Day-to-day development
 | Character | File | Role |
 |------|------|------|
 | 事 (Facts) | `AGENTS.md` | Facts: commands, layout, ports |
-| 法 (Protocol) | `CLAUDE.md` | Protocol: priorities, modes, tone |
+| 法 (Protocol) | `CLAUDE.md` | Protocol: priorities, risk-tiered RIPER Gate, tone |
 | Local | `steering/` or `.kiro/steering/` | Scoped overrides |
 | Human | `docs/` | Background; not AI truth |
 
@@ -44,6 +44,8 @@ Commands and skills ship under **`ai-ide/`** (AI IDE) — `commands/` + `skills/
 In **target repos**, the user chooses where slash commands live — e.g. `ai-ide/commands/`, `commands/`, `.cursor/commands/`, or `.claude/commands/` — and may extend `update-docs.md` locally with an optional code-path → doc-path mapping table.
 
 `ai-ide/skills/project-ai-docs-steward/` holds the audit workflow authority.
+
+Tool indexes distinguish repository-owned tools from recommended external/global tools. External recommendations are allowed when intentionally selected, but must be labelled as not bundled and availability-dependent.
 
 ## Non-goals
 

@@ -3,7 +3,7 @@ name: harness-init
 description: Bootstrap a target repo via /harness-init — ground, read, judge, confirm, apply. The IDE_Agent itself reads, judges, and writes the root-truth files after one confirmation, without requiring Node/npm/npx/tsx.
 ---
 
-# Harness Init (v2.1.0 — agent-native)
+# Harness Init — agent-native
 
 You are the IDE_Agent. `/harness-init` runs in five phases against the user's target repository:
 
@@ -50,6 +50,12 @@ Capture at least:
 - detected AI tool traces: `.claude/`, `.claude-plugin/`, `.cursor/`, `.kiro/`, `AGENTS.md`, `CLAUDE.md`, `mcp.json`, etc.
 - detected design-surface evidence: UI/frontend/game/documentation site/plugin UI/design system/DX-experience signals, or no such evidence
 - existing Root_Truth_Files and whether they contain harness-managed sections
+- existing assets and product surfaces that should be reused rather than recreated
+- current-vs-archive documentation boundaries when the repo contains legacy, recovery, generated, or mirrored docs
+- capability boundaries visible from repo evidence: external network calls, secrets, user data, auth/license/update, deployment, or destructive operations
+- current product or delivery stage when an authoritative roadmap, execution plan, or release checklist exists
+- dirty-worktree status when available; treat uncommitted changes as user-owned evidence, never disposable scratch
+- active/global tool capabilities separately from repository-owned tools; availability in the current IDE does not make a tool part of the target repo
 - evidence paths for each claim
 
 If the user asked for detection/grounding only ("just show me what you found"), stop after Phase 1 and report the `Grounding_Summary`. Phases 2–5 are skipped.
@@ -127,10 +133,26 @@ Rules:
 - If the target is a pure backend service, library, CLI, infrastructure repo, data pipeline, or unknown project with no design-surface evidence, choose `skip` for `DESIGN.md` with a concrete reason. Do not create generic design boilerplate.
 - `steering/harness-recommendations.md`: do not create this file solely because it is part of the Harness structure. Create it only when there are project-specific recommendations or local overrides that do not belong in `AGENTS.md` or `CLAUDE.md`. If it would be empty or generic, choose `skip`. Never create placeholder text such as `(no harness-managed overrides for this project yet)`.
 
-- **AI trace disambiguation** (read evidence paths before naming `AGENTS.md` sections):
+### Required conceptual blocks
+
+For new `AGENTS.md` and `CLAUDE.md` files, preserve the following concepts from the reference templates even though the final prose is project-adapted:
+
+- `CLAUDE.md (Protocol · 法)` defines how work is done and routes facts to sibling `AGENTS.md` and design/experience decisions to conditional `DESIGN.md`.
+- The layered model is explicit: `法 → 事 → steering → docs`; every session reads both 法 and 事, and `docs/` is human background rather than an automatic truth override.
+- A short division-of-labor table distinguishes Facts (事), Protocol (法), and Design (设).
+- `AGENTS.md (Facts · 事)` states that it contains verifiable repository facts and routes collaboration rules back to `CLAUDE.md`.
+- `AGENTS.md` contains an `AI Assistant Tool Index`, even when the honest project-local result is “none detected.” Keep repository-owned tools separate from recommended external/global tools.
+
+Do not collapse these concepts into a single generic sentence. Do not copy placeholder project values from a template.
+
+- **AI trace and tool-index disambiguation** (read evidence paths before naming `AGENTS.md` sections):
   - `hooks` under `lib/hooks/`, `src/hooks/`, `hooks/`, or React/Next component source → label as **Code Hooks (React)** (or equivalent factual heading). These are application hooks, not Harness workflow adapters.
   - `hooks` under `.claude/hooks/`, `.codex/hooks/`, or explicit IDE/tool hook config → workflow/IDE hooks; only then use workflow-adapter wording.
-  - `skills` → use heading `## AI Assistant Tool Index`; list only skills that physically exist under the target repo (for example `.codex/skills/`, `.claude/skills/`, `.agents/skills/`). Never list plugin-provided `harness-init` unless the target repo contains its own copy.
+  - Use a heading beginning with `## AI Assistant Tool Index`; a locale-matched explanatory suffix such as `（技能工具箱）` is allowed. Split it into two evidence classes when needed:
+    - **Repository-owned tools**: skills, commands, and scripts that physically exist under the target repo or are declared by its manifests/ops docs.
+    - **Recommended external/global tools**: include only when the user explicitly selects them, authoritative project docs route to them, or the active IDE exposes them and the user asks to preserve that toolbox. Label them as not bundled and availability-dependent; never claim they are installed project dependencies.
+  - Plugin-provided commands such as `/harness-init` may appear only in the external/global subsection unless the target repo contains its own copy.
+  - If no project-local skills exist, say so briefly instead of omitting the tool index.
   - If a trace is ambiguous, prefer a factual path-based description over inventing adapter terminology.
 
 - **Cursor pair contract**: `.cursor/rules/harness.mdc` and `.cursor/commands/harness-init.md` must describe the agent-native five-phase flow. They must **not** instruct users or agents to require Node/npm/npx/tsx or `.harness/runs/` for onboarding.
@@ -264,7 +286,7 @@ These rules override everything else. Stop and report if you find yourself doing
 | 5 | Writing any Root_Truth_File before the user answers `yes` in Phase 4 | The write set is confirmed before apply. Pre-yes writes bypass user consent. |
 | 6 | Touching bytes outside the target `##` heading section when the action is `patch-section` | `patch-section` is the safe boundary between user-owned and harness-owned content. Preserves all content outside the target section verbatim. |
 | 7 | Running Node/npm/npx/tsx as a required user onboarding step | `/harness-init` must work through agent file inspection and file writes. Maintainer smoke scripts are separate from the user path. |
-| 8 | Treating plugin-provided skills as target-repo installed skills | Tool indexes describe the target repository only. The `harness-init` skill from this plugin is not a target skill unless the target repo actually contains it under its own `.claude/skills/`. |
+| 8 | Treating plugin-provided or global skills as target-repo installed skills | Keep repository-owned and recommended external/global tools in separate labelled subsections. External tools may be recommended, but they are not bundled project dependencies. |
 | 9 | Adding helper files like `.gitkeep`, supplementary docs, or "integration markers" to round out the apply | The Confirmed_Write_Set is the contract. Anything not in it does not get written. |
 | 10 | Writing Node/script onboarding steps into Cursor pair or user-facing docs | User path is agent-native writes after one `yes`; no npx/tsx prerequisite |
 | 11 | Mislabeling React `lib/hooks` as "Dynamic Workflow Hooks" | Read the evidence path. Application code hooks are not Harness workflow adapters. |
@@ -284,300 +306,12 @@ Root-level `AGENTS.md`, `CLAUDE.md`, and `steering/*.md` are plain Markdown for 
 
 ## Style Scaffolds
 
-These are stylistic references, not output. Final bytes are agent-written.
-
-The scaffolds below live alongside this file under `ai-ide/skills/harness-init/scaffolds/`. They show the canonical heading structure and tone — your Drafts should feel similar but reflect this project's actual facts, protocol, and design evidence. Do not paste these verbatim.
-
-<!-- file: ai-ide/skills/harness-init/scaffolds/agents.md -->
-
-```markdown
-<!-- Style scaffold extracted from agents.generator.ts during agent-as-writer task 3.1. Reference material — final bytes are agent-written. -->
-# AGENTS.md (Facts)
-
-> Project facts: this file answers "what does this repository look like?" Only verifiable facts go here.
-
-## Project Overview
-
-`acme-web` is a typescript / javascript monorepo project. Primary frameworks: react, vite, express.
-
-## Workspace Layout
-
-- `apps/`
-- `packages/`
-- `scripts/`
-- `docs/`
-
-## Key Technologies
-
-- Languages: typescript, javascript
-- Runtimes: node
-- Frameworks: react, vite, express
-- Package managers: pnpm
-
-## Build, Test & Development Commands
-
-| Name | Command | Source |
-| --- | --- | --- |
-| dev | `pnpm dev` | package.json |
-| build | `pnpm build` | package.json |
-| test | `pnpm test` | package.json |
-| lint | `pnpm lint` | package.json |
-
-## Quick Reference
-
-- **Project governance:** `CLAUDE.md`
-- **Design system:** `DESIGN.md` when UI/product/DX design evidence exists
-- **Steering rules index:** `steering/`
-- **Harness recommendations:** `steering/harness-recommendations.md`
-
-## AI Assistant Tool Index
-
-> HARNESS_DYNAMIC skill index block
-
-### .claude/skills/
-
-- `example-skill` — Include only if this skill physically exists under the target repository's `.claude/skills/`.
-
-Do not list plugin-provided `harness-init` here.
-
-## Code Hooks (React) — or skip this section
-
-> HARNESS_DYNAMIC code-hooks block
-Use this heading when grounding finds React/application hooks (for example `lib/hooks/`).
-Describe the actual path and purpose. Do not call them workflow adapters.
-
-If grounding finds IDE/tool hooks instead (for example `.claude/hooks/`), use a factual heading such as `IDE Workflow Hooks` and cite the config path.
-
-If no hook evidence exists, omit this section entirely.
-
-## Detailed Rule Files
-
-- **Harness recommendations:** `steering/harness-recommendations.md` (only when that file exists with real overrides)
-- **Design system:** `DESIGN.md` (conditional; product, visual, interaction, brand, content, or DX design)
-```
-
-<!-- file: ai-ide/skills/harness-init/scaffolds/claude.md -->
-
-```markdown
-<!-- Style scaffold extracted from claude.generator.ts during agent-as-writer task 3.1. Reference material — final bytes are agent-written. -->
-# CLAUDE.md (Protocol)
-
-> Project protocol: this file answers "how do we do things in this repository?"
-
-## Language & Tone
-
-Resolved locale for this file and sibling AI entry docs — **#1 is a hard override**:
-
-1. Explicit user locale instruction this session — overrides 2–4 even when existing entry docs use another language.
-2. Primary language of existing root `AGENTS.md`, `CLAUDE.md`, or `DESIGN.md` body prose.
-3. Evidence from `README`, `docs/`, comments, and commit samples the agent read.
-4. Language of the current `/harness-init` conversation.
-5. If still unclear — ask once; do not silently default to Chinese or English.
-
-Within one `/harness-init` run, `AGENTS.md`, `CLAUDE.md`, conditional `DESIGN.md`, and `steering/harness-recommendations.md` body prose share the same resolved locale.
-
-- Be direct, fact-based, friendly without emoji.
-
-## Conflict Resolution
-
-1. Explicit user instruction in the current turn
-2. Root-level `AGENTS.md`
-3. Root-level `CLAUDE.md`
-4. Root-level `DESIGN.md` for design and experience decisions
-5. Matching `steering/*.md`
-6. Tool adapter files
-
-## Decision Priority
-
-1. Testability
-2. Readability
-3. Consistency
-4. Simplicity
-5. Reversibility
-
-## Development Principles
-
-- **Incremental Progress** — Prefer small, verifiable, reversible changes
-- **Context First** — Understand the existing implementation before proposing
-- **Pragmatism Over Dogma** — Real project constraints win over abstract rules
-- **Update Before Create** — Update existing docs and rules before introducing new ones
-
-## Harness Collaboration
-
-> HARNESS collaboration-principles block
-Follow the user's explicit instruction in the current turn first.
-Root AGENTS.md provides facts; CLAUDE.md provides protocol.
-DESIGN.md provides design and experience direction only when the project has a visible/product/DX surface.
-Third-party workflows only identify, map, and suggest — they never replace the truth layer.
-Harness is initialized only via `/harness-init` inside the IDE; never instruct the user to run terminal `harness`, `npm install`, or maintainer TypeScript scripts.
-On user `yes`, write only the confirmed Draft bytes directly; do not require Node/npm/npx/tsx or `.harness/runs/` artifacts for onboarding.
-Default to incremental merge (`patch-section`) so existing user content is preserved.
-```
-
-<!-- file: ai-ide/skills/harness-init/scaffolds/design.md -->
-
-```markdown
-<!-- Style scaffold for conditional DESIGN.md. Reference material — final bytes are agent-written. -->
-# DESIGN.md (Design)
-
-> Product and experience design: this file answers "what should this product, UI, brand, content, or DX feel like?"
-> Project facts belong in `AGENTS.md`; collaboration protocol belongs in `CLAUDE.md`.
-
-## Design Intent
-
-- **Audience:** users of this project's visible or experiential surface.
-- **Primary experience:** describe the actual work surface, gameplay, documentation flow, plugin UI, or developer workflow.
-- **Not this:** name the visual or UX direction the project should avoid.
-
-## Color
-
-- Background:
-- Surface:
-- Text:
-- Accent:
-- Status colors:
-
-## Typography
-
-- UI text:
-- Code, paths, IDs:
-- Headings:
-- Dense surfaces:
-
-## Layout
-
-- First screen:
-- Primary navigation:
-- Main work surface:
-- Responsive behavior:
-- Stable fixed-format elements:
-
-## Components
-
-| Component | Usage | Notes |
-| --- | --- | --- |
-| Primary action | Key progress, save, confirm | High contrast |
-| Secondary action | Cancel, back, lightweight toggle | Lower weight |
-| Feedback | Save, error, loading, empty state | Short and actionable |
-
-## Motion
-
-- Use motion for feedback and state changes.
-- Avoid decorative motion unrelated to product state.
-
-## Voice
-
-- UI copy:
-- Error copy:
-- Empty states:
-
-## Brand & Assets
-
-- Brand signals:
-- Primary assets:
-- Icon style:
-- Asset source of truth:
-
-## Accessibility
-
-- Keyboard:
-- Focus:
-- Contrast:
-- Touch/mobile:
-
-## Anti-patterns
-
-- Do not create a generic landing page when the product needs a usable work surface.
-- Do not add decorative gradients, orbs, bokeh, or glass effects without product meaning.
-- Do not compress long text into buttons, cards, table cells, or fixed tiles.
-- Do not commit `.od/` runtime data.
-
-## Change Log
-
-| Date | Change | Notes |
-| --- | --- | --- |
-| YYYY-MM-DD | Initial design entry | Based on repo evidence. |
-```
-
-<!-- file: ai-ide/skills/harness-init/scaffolds/steering-harness-recommendations.md -->
-
-```markdown
-<!-- Style scaffold — SKIP unless you have real project-specific overrides. No frontmatter. -->
-# steering/harness-recommendations.md
-
-> Local overrides for project-specific behaviour only.
-> If you have nothing concrete to add, choose `skip` for this file instead of creating it.
-
-## Scope
-
-- Applies to: `<path-or-area>`
-- Does not replace AGENTS.md or CLAUDE.md.
-
-## Override: <topic>
-
-- Rule that belongs here because it is path-specific or task-specific.
-- Evidence: `<file or directory that triggered this override>`
-```
-
-<!-- file: ai-ide/skills/harness-init/scaffolds/cursor-pair.md -->
-
-```markdown
-<!-- Style scaffold extracted from cursor.generator.ts during agent-as-writer task 3.1. Reference material — final bytes are agent-written. -->
-
-<!-- file: .cursor/rules/harness.mdc -->
----
-description: Cursor rule pack generated from Harness grounding
-alwaysApply: true
----
-
-# Cursor Harness Rules
-
-> Cursor-private rules complement the root truth layer; they do not replace it.
-
-## Grounding Summary
-
-- shape: monorepo · languages: typescript, javascript · frameworks: react, vite, express · commands: dev, build, test, lint
-
-## Recommended Files
-
-| Path | Purpose |
-| --- | --- |
-| AGENTS.md | Project facts |
-| CLAUDE.md | Collaboration protocol |
-| DESIGN.md | Conditional design system when UI/product/DX evidence exists |
-| steering/*.md | Local overrides |
-| .cursor/commands/harness-init.md | The single Cursor entry point: `/harness-init` |
-
-## Harness Cursor Guidance
-
-> HARNESS Cursor adapter block
-Read the root-level AGENTS.md / CLAUDE.md / DESIGN.md before applying any Cursor-private rule.
-Harness is initialized only via `/harness-init` inside the IDE; never instruct the user to run terminal `harness` commands.
-The agent orchestrates grounding, read, judge & draft, one yes/no confirm, and apply. It does not require Node/npm/npx/tsx or `.harness/runs/` artifacts for user onboarding.
-On user `yes`, freeze the Confirmed_Write_Set and write only those files.
-Default to incremental merge so existing user content is preserved.
-
-<!-- file: .cursor/commands/harness-init.md -->
-# Harness Init
-
-Target project: `acme-web`.
-
-## Detected Context
-
-- shape: monorepo · languages: typescript, javascript · frameworks: react, vite, express · commands: dev, build, test, lint
-
-## Cursor Command Contract
-
-> HARNESS Cursor init command
-This is the only Harness onboarding command. Do not ask the user to run terminal `harness`, `npm install`, or `npm run smart`.
-Step 1 — Grounding: establish stacks, frameworks, and AI tool traces from repo inspection.
-Step 2 — Read & Judge: read Root_Truth_Files, apply Sanity_Floor / Section_Boundary / Empty_Draft checks.
-Step 3 — Draft & Confirm: prepare drafts, present summary, ask one yes/no.
-Step 4 — Confirm Write Set: on `yes`, freeze the exact Draft bytes.
-Step 5 — Apply: write confirmed files only — no re-grounding, no plan recomputation.
-Do not require `.harness/runs/` artifacts or TypeScript maintainer scripts for this command.
-
-## Confirmation Rule
-
-Apply only after the user explicitly confirms in chat. Do not show file-level Plan internals unless the user asks. If the user declines, leave target configuration files unchanged.
-```
+Read the relevant scaffold file completely before drafting its target:
+
+- [agents.md](scaffolds/agents.md) — required Facts (事) structure, division of labor, and two-class tool index
+- [claude.md](scaffolds/claude.md) — required Protocol (法) structure, layered model, decision priorities, and risk-tiered RIPER Gate
+- [design.md](scaffolds/design.md) — conditional Design (设) structure
+- [steering-harness-recommendations.md](scaffolds/steering-harness-recommendations.md) — conditional project-specific overrides
+- [cursor-pair.md](scaffolds/cursor-pair.md) — optional Cursor adapter
+
+The complete human-readable reference molds under `../../../templates/` preserve fuller explanations and optional reference material. Use them to retain the 法/事/设 concepts, but adapt every output to target-repo evidence and never copy placeholder bytes or generic examples as project facts.
