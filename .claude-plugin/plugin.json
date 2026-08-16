@@ -18,6 +18,7 @@
   ],
   "skills": [
     "./ai-ide/skills/harness-init",
-    "./ai-ide/skills/project-ai-docs-steward"
+    "./ai-ide/skills/project-ai-docs-steward",
+    "./ai-ide/skills/documentation-architecture"
   ]
 }

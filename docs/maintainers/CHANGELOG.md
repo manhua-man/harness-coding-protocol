@@ -12,6 +12,7 @@
 - Rename the docs steward skill metadata key from `tools` to the valid `allowed-tools` field.
 - Allow `/revise-ai-docs` to create an explicitly approved, project-adapted, reference-only steering file without auto-copying generic examples.
 - Move duplicated inline scaffold bodies out of `harness-init/SKILL.md`; the skill now routes to the standalone scaffold files.
+- Add the `documentation-architecture` skill for lifecycle-aware human-doc inventory, ownership convergence, migration, and relative-link validation without imposing a preset directory tree.
 
 ## 2.5.0 — 2026-07-16
 

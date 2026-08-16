@@ -116,6 +116,7 @@ IDE 插件：在**你的业务仓库**里铺底并维护 AI 协作入口（`AGEN
 | 铺底命令入口 | [`ai-ide/commands/harness-init.md`](ai-ide/commands/harness-init.md) |
 | 增量维护 | [`ai-ide/commands/revise-ai-docs.md`](ai-ide/commands/revise-ai-docs.md) |
 | 全量审计 | [`ai-ide/skills/project-ai-docs-steward/SKILL.md`](ai-ide/skills/project-ai-docs-steward/SKILL.md) |
+| 人类文档架构收敛 | [`ai-ide/skills/documentation-architecture/SKILL.md`](ai-ide/skills/documentation-architecture/SKILL.md) |
 
 ### 注意
 
@@ -237,6 +238,7 @@ Protocol (CLAUDE.md) → Facts (AGENTS.md) → steering/ → docs/ (human only)
 | Init command entry | [`ai-ide/commands/harness-init.md`](ai-ide/commands/harness-init.md) |
 | Incremental maintenance | [`ai-ide/commands/revise-ai-docs.md`](ai-ide/commands/revise-ai-docs.md) |
 | Full audit | [`ai-ide/skills/project-ai-docs-steward/SKILL.md`](ai-ide/skills/project-ai-docs-steward/SKILL.md) |
+| Human docs architecture convergence | [`ai-ide/skills/documentation-architecture/SKILL.md`](ai-ide/skills/documentation-architecture/SKILL.md) |
 
 ### Maintainers
 

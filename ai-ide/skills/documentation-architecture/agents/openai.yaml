@@ -1,0 +1,4 @@
+interface:
+  display_name: "Documentation Architecture"
+  short_description: "Converge project docs by lifecycle and ownership"
+  default_prompt: "Use $documentation-architecture to audit and converge this repository's documentation structure."
