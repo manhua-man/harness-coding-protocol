@@ -40,6 +40,12 @@
 - **Frameworks:** react, vite, express
 - **Package managers:** pnpm
 
+<!-- Add only evidence-supported conditional sections when they help an unfamiliar Agent:
+Module Architecture, Architecture Contract, Runtime Boundaries, Storage and Truth Boundaries,
+Service Ports, Deployment Boundaries, Targeted Validation, Current Trusted Baseline,
+Data Scale, Configuration and Secrets, or UI/DX Design Surface.
+Do not emit empty headings or generic placeholders. -->
+
 ## Build, Test & Development Commands
 
 | Name | Command | Source |
@@ -56,29 +62,35 @@
 - **Steering rules index:** `steering/` (only when real overrides exist)
 - **Human docs:** `docs/` (background only)
 
-## AI Assistant Tool Index
+## Tool and Documentation Routing
+
+The routing below should let an unfamiliar Agent choose the correct project entry without confusing bundled and external capabilities.
+
+### AI Assistant Tool Index
 
 > HARNESS_DYNAMIC skill index block
 
-### Repository-owned tools
+#### Repository-native commands and scripts
 
-- `example-skill` — Include only when the skill physically exists in this repository or is declared by its manifests/ops docs.
+- `pnpm test` — Include commands/scripts declared by manifests, CI, or authoritative ops docs, with their task and evidence source.
+
+#### Repository-owned AI skills and commands
+
+- `example-skill` — Include only when the Skill/command/workflow physically exists in this repository.
 
 If none exist, state that explicitly.
 
-### Recommended external / global tools
+#### Recommended external / global tools
 
 - `example-external-skill` — Include only when selected by the user, routed by authoritative project docs, or intentionally preserved from the active IDE catalog.
 
 Label this subsection as not bundled and availability-dependent. Do not claim external tools are installed project dependencies.
 
-## Code Hooks (React) — or skip this section
+### Documentation Routes
 
-> HARNESS_DYNAMIC code-hooks block
-Use when grounding finds React/application hooks (for example `lib/hooks/`).
-Describe the actual path and purpose. Do not call them workflow adapters.
+- Link only documents an unfamiliar Agent needs as an authority or navigation entry.
+- Label each link as current truth, target design, or historical material when that distinction matters.
+- Omit long-form material that is not needed for navigation; never copy iteration logs, large test output, stale snapshots, or sensitive credentials into `AGENTS.md`.
 
-## Detailed Rule Files
-
-- **Steering index:** `steering/project-index.md` or `.kiro/steering/project.md` when present
-- **Design system:** `DESIGN.md` (conditional)
+<!-- Conditional example: if grounding finds React/application hooks under lib/hooks/ or src/hooks/,
+add a factual Code Hooks (React) section. Do not call application hooks workflow adapters. -->

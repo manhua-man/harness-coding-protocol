@@ -133,6 +133,50 @@ Rules:
 - If the target is a pure backend service, library, CLI, infrastructure repo, data pipeline, or unknown project with no design-surface evidence, choose `skip` for `DESIGN.md` with a concrete reason. Do not create generic design boilerplate.
 - `steering/harness-recommendations.md`: do not create this file solely because it is part of the Harness structure. Create it only when there are project-specific recommendations or local overrides that do not belong in `AGENTS.md` or `CLAUDE.md`. If it would be empty or generic, choose `skip`. Never create placeholder text such as `(no harness-managed overrides for this project yet)`.
 
+### AGENTS generation quality contract
+
+The final `AGENTS.md` must help an unfamiliar Agent answer these questions from current repository evidence:
+
+1. What is this project now?
+2. How do Facts (事), Protocol (法), Design (设), and long-form docs divide responsibility?
+3. Where is the owner for a capability that needs to change?
+4. Which current boundary is easiest to misread?
+5. Which commands should be run?
+6. Which gate protects which contract?
+7. Which project tool should be used for a given task?
+8. Which capabilities are repository-owned, and which are only recommended external/global tools?
+9. Which long-form documents describe current truth, target design, or historical material?
+
+Section titles and ordering may vary with the resolved locale and project evidence. The Draft must answer the questions, not reproduce a fixed essay.
+
+Use these **core sections** for every new `AGENTS.md`, with locale-matched headings:
+
+- Project Overview
+- AI entry documentation / division of labor
+- Workspace Layout
+- Key Technologies
+- Commands
+- Quick Reference
+- Tool and Documentation Routing
+
+Add these **conditional sections only when current repository evidence supports them**:
+
+- Module Architecture
+- Architecture Contract
+- Runtime Boundaries
+- Storage and Truth Boundaries
+- Service Ports
+- Deployment Boundaries
+- Targeted Validation
+- Current Trusted Baseline
+- Data Scale
+- Configuration and Secrets
+- UI/DX Design Surface
+
+Do not emit an empty conditional heading or generic placeholder to make the Draft look complete.
+
+Long-form material is omitted by default. Do not copy roadmaps, iteration logs, historical validation snapshots, full design/release manuals, large test output, fast-changing runtime status, or sensitive credentials into `AGENTS.md`. Link a long-form document only when an unfamiliar Agent needs it as an authority or navigation entry; when linked, label its role and status, such as current truth, target design, or historical material.
+
 ### Required conceptual blocks
 
 For new `AGENTS.md` and `CLAUDE.md` files, preserve the following concepts from the reference templates even though the final prose is project-adapted:
@@ -141,15 +185,16 @@ For new `AGENTS.md` and `CLAUDE.md` files, preserve the following concepts from 
 - The layered model is explicit: `法 → 事 → steering → docs`; every session reads both 法 and 事, and `docs/` is human background rather than an automatic truth override.
 - A short division-of-labor table distinguishes Facts (事), Protocol (法), and Design (设).
 - `AGENTS.md (Facts · 事)` states that it contains verifiable repository facts and routes collaboration rules back to `CLAUDE.md`.
-- `AGENTS.md` contains an `AI Assistant Tool Index`, even when the honest project-local result is “none detected.” Keep repository-owned tools separate from recommended external/global tools.
+- `AGENTS.md` contains Tool and Documentation Routing, including an `AI Assistant Tool Index`, even when the honest project-local result is “none detected.” Keep repository-native commands/scripts, repository-owned AI skills/commands, and recommended external/global tools distinct.
 
 Do not collapse these concepts into a single generic sentence. Do not copy placeholder project values from a template.
 
 - **AI trace and tool-index disambiguation** (read evidence paths before naming `AGENTS.md` sections):
   - `hooks` under `lib/hooks/`, `src/hooks/`, `hooks/`, or React/Next component source → label as **Code Hooks (React)** (or equivalent factual heading). These are application hooks, not Harness workflow adapters.
   - `hooks` under `.claude/hooks/`, `.codex/hooks/`, or explicit IDE/tool hook config → workflow/IDE hooks; only then use workflow-adapter wording.
-  - Use a heading beginning with `## AI Assistant Tool Index`; a locale-matched explanatory suffix such as `（技能工具箱）` is allowed. Split it into two evidence classes when needed:
-    - **Repository-owned tools**: skills, commands, and scripts that physically exist under the target repo or are declared by its manifests/ops docs.
+  - Use a heading labelled `AI Assistant Tool Index`; a locale-matched explanatory suffix such as `（技能工具箱）` is allowed. Nest it under Tool and Documentation Routing when that core section is present, and split it into three evidence classes:
+    - **Repository-native commands and scripts**: executable commands or scripts declared by target-repo manifests, CI, or authoritative ops docs.
+    - **Repository-owned AI skills and commands**: Skill/command/workflow files that physically exist under the target repo. If none exist, say so briefly.
     - **Recommended external/global tools**: include only when the user explicitly selects them, authoritative project docs route to them, or the active IDE exposes them and the user asks to preserve that toolbox. Label them as not bundled and availability-dependent; never claim they are installed project dependencies.
   - Plugin-provided commands such as `/harness-init` may appear only in the external/global subsection unless the target repo contains its own copy.
   - If no project-local skills exist, say so briefly instead of omitting the tool index.
@@ -180,6 +225,22 @@ Resolve one **resolved locale** for body prose before drafting.
 ### Sanity_Floor self-check
 
 For every Draft, cross-reference it against `Grounding_Summary` and the evidence paths you read. The Draft's claims about declared languages, frameworks, package managers, repo shape, detected AI-tool traces, and design-surface evidence MUST be supported by those repo facts. If a Draft contradicts grounded evidence, either patch the Draft to match or classify the run as `Sanity_Floor_Violation`, stop before Phase 4, and report which file and which fact diverged.
+
+### Draft Quality Check
+
+Before Phase 4, review the completed Drafts. Fix every detected issue before showing the summary:
+
+1. Verify every referenced project path exists.
+2. Re-read dynamic facts included in the Draft, such as versions, ports, commands, tool counts, and current capability/status claims.
+3. Do not present roadmap, target design, historical, deprecated, generated, or compatibility-only material as current implementation.
+4. Remove any section that lacks project evidence; do not preserve empty conditional headings.
+5. When current repository evidence defines owners or responsibility boundaries, ensure the Draft preserves them instead of listing directories alone.
+6. When current repository evidence defines validation gates, explain which contract each gate protects instead of listing test commands without scope.
+7. Keep external/plugin/global tools out of repository-owned subsections.
+8. Remove copied iteration logs, large test output, stale snapshots, fast-changing status, and sensitive credentials unless a short current fact is essential and directly verified.
+9. Confirm there is no placeholder steering and no duplicated or conflicting Facts/Protocol/Design responsibility.
+
+Checks 5 and 6 are evidence-conditional: do not invent owners, boundaries, or gates when the repository does not define them. If an issue cannot be corrected from the evidence already read, classify the run as `Draft_Quality_Failure`, stop before Phase 4, and report the failed check without writing files.
 
 ### Empty_Draft_Failure
 
@@ -265,6 +326,7 @@ If the user says "undo", "revert", "rollback", or similar after a successful app
 | `Grounding_Failure` | end of Phase 1 | report unreadable target or zero repo evidence, stop |
 | `Read_Phase_Failure` (zero reads) | start of Phase 3 | report, write nothing, stop |
 | `Sanity_Floor_Violation` | end of Phase 3 | name file + diverging fact, write nothing, stop |
+| `Draft_Quality_Failure` | end of Phase 3 | name the failed quality check, write nothing, stop |
 | `Empty_Draft_Failure` | end of Phase 3 | report empty Drafts, write nothing, stop |
 | `Root_Frontmatter_Failure` | end of Phase 3 | remove root Markdown frontmatter, rerun checks, no write until fixed |
 | User declines | Phase 4 | write nothing |
@@ -286,7 +348,7 @@ These rules override everything else. Stop and report if you find yourself doing
 | 5 | Writing any Root_Truth_File before the user answers `yes` in Phase 4 | The write set is confirmed before apply. Pre-yes writes bypass user consent. |
 | 6 | Touching bytes outside the target `##` heading section when the action is `patch-section` | `patch-section` is the safe boundary between user-owned and harness-owned content. Preserves all content outside the target section verbatim. |
 | 7 | Running Node/npm/npx/tsx as a required user onboarding step | `/harness-init` must work through agent file inspection and file writes. Maintainer smoke scripts are separate from the user path. |
-| 8 | Treating plugin-provided or global skills as target-repo installed skills | Keep repository-owned and recommended external/global tools in separate labelled subsections. External tools may be recommended, but they are not bundled project dependencies. |
+| 8 | Treating plugin-provided or global skills as target-repo installed skills | Keep repository-native commands/scripts, repository-owned AI skills/commands, and recommended external/global tools in separate labelled subsections. External tools may be recommended, but they are not bundled project dependencies. |
 | 9 | Adding helper files like `.gitkeep`, supplementary docs, or "integration markers" to round out the apply | The Confirmed_Write_Set is the contract. Anything not in it does not get written. |
 | 10 | Writing Node/script onboarding steps into Cursor pair or user-facing docs | User path is agent-native writes after one `yes`; no npx/tsx prerequisite |
 | 11 | Mislabeling React `lib/hooks` as "Dynamic Workflow Hooks" | Read the evidence path. Application code hooks are not Harness workflow adapters. |
@@ -308,7 +370,7 @@ Root-level `AGENTS.md`, `CLAUDE.md`, and `steering/*.md` are plain Markdown for 
 
 Read the relevant scaffold file completely before drafting its target:
 
-- [agents.md](scaffolds/agents.md) — required Facts (事) structure, division of labor, and two-class tool index
+- [agents.md](scaffolds/agents.md) — required Facts (事) core structure, evidence-conditional sections, and three-class tool/document routing
 - [claude.md](scaffolds/claude.md) — required Protocol (法) structure, layered model, decision priorities, and risk-tiered RIPER Gate
 - [design.md](scaffolds/design.md) — conditional Design (设) structure
 - [steering-harness-recommendations.md](scaffolds/steering-harness-recommendations.md) — conditional project-specific overrides
