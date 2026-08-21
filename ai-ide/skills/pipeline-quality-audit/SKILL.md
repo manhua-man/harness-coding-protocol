@@ -112,6 +112,37 @@ description: >-
    - [ ] 前置检查 fail-closed
    - [ ] 交付契约覆盖分辨率/fps/时长/音频
 
+## 连贯性三前提（跨镜头一致性，2026-08-21 实战）
+
+"镜头间连贯"不会因为管线支持 FL2VA 就自动成立。真实生成暴露：三个前提缺一不可，
+任何一个不满足，所谓"连贯"都是假象。
+
+**前提 1：统一画幅契约（aspect ratio）**
+- 现象：shot_007 是 960x544（16:9），shot_008 是 736x736（1:1）——画幅不同，
+  FL2VA 接力毫无意义（横图塞进方图，比例变形）。
+- 根因：管线从不注入 aspect_ratio，模板默认各跑各的（不同模板默认画幅不同）。
+- 修法：从 storyboard production.target_aspect_ratio 读取，注入 ResolutionSelector
+  节点，全片强制同一画幅。**坑**：ResolutionSelector 的 COMBO 值要精确匹配模板
+  选项（如 ComfyUI 0.33.0 是 `9:16 (Portrait Widescreen)`，不是 `9:16 (Portrait)`），
+  用 MCP `validate_workflow` 验证，`unknown_enum_value` 一抓一个准。
+
+**前提 2：FL2VA 首帧锁定（不是"参考后重画"）**
+- 现象：FL2VA 把前一镜头 last_frame 当"参考"喂给下一镜头，模型自由发挥重画，
+  画面只是"风格相似"，不是"画面延续"。
+- 正确语义：下一镜头的首帧 = 前一镜头的末帧（像素级），模型在锁定首帧上续画。
+- 验证：对比输入锚（shot_N 末帧）vs 输出首帧（shot_N+1）像素差——
+  <5/255 才算真连贯（实测 3.6/255），>20/255 说明是"参考后重画"。
+
+**前提 3：分辨率/时长契约**
+- 除了画幅，分辨率（megapixels）和时长也要统一，否则首帧继承后画面比例对不上。
+- 时长用 H3 的 17k+5 帧网格对齐（duration snap）。
+
+**验证清单（连贯性专项）**
+- [ ] 所有镜头输出分辨率一致（ffprobe/cv2 逐个查）
+- [ ] FL2VA 接力镜头：输入锚 vs 输出首帧像素差 < 5/255
+- [ ] aspect_ratio 值通过 MCP validate_workflow（无 unknown_enum_value）
+- [ ] 参考图数量 ≤ 模板实际槽数（capabilities 要与真实模板对齐，不能拍脑袋写 9）
+
 ## 常见陷阱
 
 1. **把文本规范当门禁**：SKILL.md 写"黑屏应拦截"≠ 代码 raise。LLM 会自我合理化绕过文本。
