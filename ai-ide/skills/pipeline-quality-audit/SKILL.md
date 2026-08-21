@@ -143,6 +143,37 @@ description: >-
 - [ ] aspect_ratio 值通过 MCP validate_workflow（无 unknown_enum_value）
 - [ ] 参考图数量 ≤ 模板实际槽数（capabilities 要与真实模板对齐，不能拍脑袋写 9）
 
+## 工具使用经验（2026-08-21 实战验证）
+
+**1. MCP validate_workflow 是"试错加速器"**
+- 改模板/参数后先 validate 再跑生成：秒级发现 `unknown_enum_value`（COMBO 值错）、
+  类型不匹配，而不是等 GPU 跑几分钟才失败。
+- 工作流：`改配置 → validate → 再生成`。省掉大量无效 GPU 时间。
+- 案例：aspect_ratio 写 `9:16 (Portrait)` 报错，validate 直接给出 8 个合法选项
+  （`9:16 (Portrait Widescreen)` 才对），一次修复。
+
+**2. 数值指标是"断层定位器"，不是"质量裁判"**
+- 像素差（相邻镜头首末帧）：<5/255 无缝，>20/255 断裂——快速定位"哪段断了"。
+- 亮度/边缘密度：指出"内容空"（低边缘=没实体）或"太暗"（高近黑占比）。
+- 但"叙事顺不顺"只有人眼能判。**先用数值定位，再让人眼确认**，不要用数值假装质量。
+
+**3. 后台任务 + 通知是并行关键**
+- 生成长任务（分钟级）：background + notify_on_complete 挂着，期间做别的
+  （改分镜/写文档/查资料），完成自动回来。不干等。
+
+**4. system_stats 是"开工前检查"**
+- 跑生成前查显存/内存：确认 GPU 够用，避免跑到一半 OOM。
+- 大模型（16GB VRAM 类）尤其重要——峰值可能吃掉全部显存。
+
+**5. fail-closed 是"朋友"**
+- 管线正确拦截（如参考图超模板槽数）比跑出垃圾强。
+- **看错误信息比看成功日志更值钱**——错误精确指出根因（"Template exposes only 3
+  image reference slots; requested 4"），顺着改就行。
+
+**6. 背景进程里 bash 转义坑（Windows）**
+- `p.split('\\')` 在 bash -c 里会报 SyntaxError（反斜杠转义）。用 `os.path.basename
+  (os.path.dirname(p))` 或正斜杠，别手写 `\\`。
+
 ## 常见陷阱
 
 1. **把文本规范当门禁**：SKILL.md 写"黑屏应拦截"≠ 代码 raise。LLM 会自我合理化绕过文本。
