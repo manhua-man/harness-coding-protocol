@@ -4,6 +4,9 @@
 
 ### Changed
 
+- Make always-on protocol prioritize correctness, explicit authorization, user-owned data, and complexity that is justified by observed recurring work.
+- Add opt-in stateful-operation guidance for idempotent install, path-independent artifact identity, short recoverable units, cancellation, clean, automatic GC, and scoped writers; `/harness-init` suggests it only from repository evidence.
+- Require `/revise-ai-docs` and the docs steward to prove recurrence, future decision value, and net simplicity before promoting a learning into durable rules.
 - Preserve the full Facts (事) / Protocol (法) / Design (设) division and layered model as required `/harness-init` output concepts rather than optional style hints.
 - Split `AGENTS.md` tool routing into repository-owned tools and explicitly labelled recommended external/global tools.
 - Move M5 to an opt-in, reference-only steering mold at the same level as Karpathy examples; replace mandatory RIPER mode declarations with a risk-tiered RIPER Gate in core protocol.

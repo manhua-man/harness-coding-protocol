@@ -27,7 +27,7 @@ IDE 插件：在**你的业务仓库**里铺底并维护 AI 协作入口（`AGEN
 | AI 真值 | 无（本仓不铺根 `AGENTS`/`CLAUDE`） | `AGENTS.md` + `CLAUDE.md` |
 | 人类长文档 | `docs/maintainers/`（维护者用，**插件用户不必读**） | `docs/`（背景资料，**不能压过**事/法） |
 
-本仓库提供：**`ai-ide/`（AI IDE 插件目录）**、**`templates/` 参考模具**。模具保留法/事/设分层和风险分级 RIPER 等核心协议，并把 M5、Karpathy 等方法放在 opt-in steering 参考层；`/harness-init` 会根据目标仓证据改写，不会逐字复制占位内容。模具描述的是**目标仓**里的文件，不是本仓库自己的根真值。
+本仓库提供：**`ai-ide/`（AI IDE 插件目录）**、**`templates/` 参考模具**。模具保留法/事/设分层和风险分级 RIPER 等核心协议，并把 M5、stateful operations、Karpathy 等方法放在 opt-in steering 参考层；`/harness-init` 会根据目标仓证据改写，不会逐字复制占位内容。模具描述的是**目标仓**里的文件，不是本仓库自己的根真值。
 
 ### 三步上手
 
@@ -100,7 +100,7 @@ IDE 插件：在**你的业务仓库**里铺底并维护 AI 协作入口（`AGEN
 
 可选输出：`DESIGN.md`（有 UI 证据时）、`steering/`、Cursor 适配（已有 `.cursor/` 时）。**写入前必须你确认。**
 
-`/harness-init` 在 `steering/` 下只会按项目证据条件式生成 `harness-recommendations.md`。`templates/steering/m5-engineering-principles.md`、`karpathy-examples.md` 等是供用户选择和改写的参考规则，不会自动变成目标仓的强制协议。
+`/harness-init` 在 `steering/` 下只会按项目证据条件式生成 `harness-recommendations.md`。`templates/steering/m5-engineering-principles.md`、`stateful-operations.md`、`karpathy-examples.md` 等是供用户选择和改写的参考规则，不会自动变成目标仓的强制协议。只有检测到真实 installer、migration、cache/build state 或 resumable job 时，才会建议 stateful operations 规则。
 
 ### 命令放在哪
 
@@ -206,7 +206,7 @@ Run in your **app repo** (not this protocol repo):
 
 Optional: `DESIGN.md`, `steering/`, Cursor adapters when `.cursor/` exists. **Nothing writes without your confirmation.**
 
-Under `steering/`, `/harness-init` conditionally writes only `harness-recommendations.md` from project evidence. References such as `templates/steering/m5-engineering-principles.md` and `karpathy-examples.md` are opt-in material for users to adapt; they do not automatically become mandatory target-repo protocol.
+Under `steering/`, `/harness-init` conditionally writes only `harness-recommendations.md` from project evidence. References such as `templates/steering/m5-engineering-principles.md`, `stateful-operations.md`, and `karpathy-examples.md` are opt-in material for users to adapt; they do not automatically become mandatory target-repo protocol. Stateful-operation guidance is suggested only when the target actually owns an installer, migration, cache/build lifecycle, resumable job, or persistent service state.
 
 ### What `/harness-init` writes
 

@@ -29,7 +29,7 @@ harness-coding-protocol/
 - **Do not** add root `AGENTS`/`CLAUDE` to this protocol repo.
 - **Do not** point plugin users at `docs/` — only README + `ai-ide/`.
 - Conflict order (this repo): user instruction → root `README.md` → `docs/maintainers/` → `CONTRIBUTING.md`.
-- Decision priority: Correctness/safety/authorization → testability/verifiability → repository consistency → simplicity/readability → reversibility.
+- Decision priority: Correctness/explicit authorization/user-owned data → testability/verifiability → repository consistency → earned simplicity/readability → reversibility.
 
 ## Change & verify
 
@@ -55,5 +55,6 @@ Target-output format contracts must also stay clean:
 | C5 maintenance lifecycle | [`capabilities/maintenance.md`](capabilities/maintenance.md) |
 | IDE entry smoke probes (target repos) | [`capabilities/entry-smoke-probes.md`](capabilities/entry-smoke-probes.md) |
 | Init authority | [`ai-ide/skills/harness-init/SKILL.md`](../../ai-ide/skills/harness-init/SKILL.md) |
+| Optional stateful operations | [`templates/steering/stateful-operations.md`](../../templates/steering/stateful-operations.md) |
 
 Behavior obligations live in **skills**, not duplicate maintainer theory docs.

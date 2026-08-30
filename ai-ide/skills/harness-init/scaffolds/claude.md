@@ -52,7 +52,7 @@ Within one `/harness-init` run, `AGENTS.md`, `CLAUDE.md`, conditional `DESIGN.md
 
 ## Decision Priority
 
-1. Correctness, safety, and authorization boundaries
+1. Correctness, explicit authorization, and user-owned data
 2. Testability and verifiability
 3. Consistency with repository and product truth
 4. Simplicity, readability, and maintainability
@@ -64,6 +64,8 @@ Within one `/harness-init` run, `AGENTS.md`, `CLAUDE.md`, conditional `DESIGN.md
 - **Context First** — Understand the existing implementation before proposing.
 - **Pragmatism Over Dogma** — Real project constraints win over abstract rules.
 - **Update Before Create** — Update existing docs and rules before introducing duplicate sources.
+- **Complexity Must Be Earned** — Prefer deletion and standard primitives. Add permanent state, locks, hashes, receipts, caches, wrappers, or gates only when observed recurring work justifies their ongoing cost.
+- **Scoped Ownership** — Parallel work uses one writer per module or file set; do not lock the whole repository when write scopes are disjoint.
 - Optional engineering methods such as M5 and Karpathy examples belong in explicitly selected, reference-only `steering/` files rather than mandatory protocol.
 
 ## Risk-Tiered RIPER Gate
@@ -71,12 +73,12 @@ Within one `/harness-init` run, `AGENTS.md`, `CLAUDE.md`, conditional `DESIGN.md
 RIPER is a reasoning gate for high-risk tasks, not a mandatory response-mode ceremony.
 
 1. **Research** — verify source, call paths, data flow, tests, and current truth.
-2. **Invariants** — state what safety, data, compatibility, and authorization boundaries must remain true.
+2. **Invariants** — state what data, compatibility, current contract, and authorization boundaries must remain true.
 3. **Plan** — define the minimal write scope, owner, verification, and rollback or failure handling.
 4. **Execute** — implement only the confirmed scope and preserve user changes.
 5. **Review** — inspect the actual diff and verify invariants with tests, builds, logs, or runtime evidence.
 
-Use the full gate for auth, secrets, user data, migrations, payments, deploys, destructive actions, or cross-boundary contracts. Use `understand → implement → verify` for low-risk reversible work. Do not require `[MODE: ...]` declarations.
+Use the full gate for auth, secrets, user data, migrations, payments, deploys, destructive actions, explicit threat-model work, or cross-boundary contracts. Use `understand → implement → verify` for low-risk reversible work. Do not turn generic safety/security concerns into work without a concrete boundary or request. Do not require `[MODE: ...]` declarations.
 
 ## Collaboration
 

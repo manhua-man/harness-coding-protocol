@@ -57,6 +57,7 @@ Score each file (adapt claude-md-improver rubric):
 - **AGENTS.md:** commands vs manifests (`package.json`, `Cargo.toml`, …), ports, module paths, steering index, and an honest AI Assistant Tool Index separating repository-owned from external/global recommendations
 - **CLAUDE.md:** decision priority once; links to AGENTS; preserves the 法/事/设 division and layered model; no duplicate fact tables
 - **Steering:** inclusion scope (`always` / `fileMatch` / `manual`); overlap with AGENTS; broken frontmatter
+- **Rule value:** each durable rule has current evidence, an owner/caller, demonstrated recurrence or future decision value, and lower ongoing cost than the problem it prevents
 - **Cursor rules:** index table paths resolvable
 
 **Grades:** A–F (90+ = A).
@@ -91,6 +92,10 @@ Edit only after user confirmation. Facts belong in **AGENTS** before new top-lev
 3. **Stale scripts** — manifest scripts drift vs AGENTS
 4. **Always-on steering bloat** — large `inclusion: always` files; prefer `fileMatch`
 5. **Broken frontmatter** — invalid YAML on steering files
+6. **Incident promotion** — a one-off failure, temporary workaround, or uncertain note became durable protocol without recurrence evidence
+7. **Governance overgrowth** — a rule adds more permanent state, gates, hashes, receipts, or maintenance than the observed problem
+
+When recommending removal or consolidation, identify the simpler counterfactual and the rule owner that becomes unnecessary. Do not retain a rule merely because it once had a plausible rationale.
 
 ## Related commands
 

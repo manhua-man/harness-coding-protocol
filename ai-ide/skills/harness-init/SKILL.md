@@ -53,6 +53,7 @@ Capture at least:
 - existing assets and product surfaces that should be reused rather than recreated
 - current-vs-archive documentation boundaries when the repo contains legacy, recovery, generated, or mirrored docs
 - capability boundaries visible from repo evidence: external network calls, secrets, user data, auth/license/update, deployment, or destructive operations
+- stateful-operation evidence: installers or update commands, database migrations, build caches, resumable jobs, generated artifacts, persistent service state, cleanup commands, or none detected
 - current product or delivery stage when an authoritative roadmap, execution plan, or release checklist exists
 - dirty-worktree status when available; treat uncommitted changes as user-owned evidence, never disposable scratch
 - active/global tool capabilities separately from repository-owned tools; availability in the current IDE does not make a tool part of the target repo
@@ -132,6 +133,7 @@ Rules:
   - repo evidence shows a user-facing surface such as frontend UI, mobile UI, game UI, documentation site, browser extension, IDE/plugin UI, design system, component library, storybook, visual assets, CSS/theme tokens, or substantial screenshots.
 - If the target is a pure backend service, library, CLI, infrastructure repo, data pipeline, or unknown project with no design-surface evidence, choose `skip` for `DESIGN.md` with a concrete reason. Do not create generic design boilerplate.
 - `steering/harness-recommendations.md`: do not create this file solely because it is part of the Harness structure. Create it only when there are project-specific recommendations or local overrides that do not belong in `AGENTS.md` or `CLAUDE.md`. If it would be empty or generic, choose `skip`. Never create placeholder text such as `(no harness-managed overrides for this project yet)`.
+- Recommend stateful-operation steering only when Phase 1 found a real installer, migration, build/cache lifecycle, resumable job, persistent service state, or cleanup owner. Adapt the recommendation to the observed commands and files; do not copy `templates/steering/stateful-operations.md` into a target repo or invent operational state for a stateless project.
 
 ### AGENTS generation quality contract
 
@@ -183,6 +185,7 @@ For new `AGENTS.md` and `CLAUDE.md` files, preserve the following concepts from 
 
 - `CLAUDE.md (Protocol · 法)` defines how work is done and routes facts to sibling `AGENTS.md` and design/experience decisions to conditional `DESIGN.md`.
 - The layered model is explicit: `法 → 事 → steering → docs`; every session reads both 法 and 事, and `docs/` is human background rather than an automatic truth override.
+- Core protocol keeps correctness, explicit authorization, user-owned data, and current contracts ahead of optional methods. It requires complexity to be justified by observed recurring work and uses module/file-set single-writer boundaries for parallel work.
 - A short division-of-labor table distinguishes Facts (事), Protocol (法), and Design (设).
 - `AGENTS.md (Facts · 事)` states that it contains verifiable repository facts and routes collaboration rules back to `CLAUDE.md`.
 - `AGENTS.md` contains Tool and Documentation Routing, including an `AI Assistant Tool Index`, even when the honest project-local result is “none detected.” Keep repository-native commands/scripts, repository-owned AI skills/commands, and recommended external/global tools distinct.
@@ -239,6 +242,7 @@ Before Phase 4, review the completed Drafts. Fix every detected issue before sho
 7. Keep external/plugin/global tools out of repository-owned subsections.
 8. Remove copied iteration logs, large test output, stale snapshots, fast-changing status, and sensitive credentials unless a short current fact is essential and directly verified.
 9. Confirm there is no placeholder steering and no duplicated or conflicting Facts/Protocol/Design responsibility.
+10. For every proposed operational rule, confirm a current owner/caller and recurring decision value; reject a rule that adds more permanent state or maintenance than the observed problem.
 
 Checks 5 and 6 are evidence-conditional: do not invent owners, boundaries, or gates when the repository does not define them. If an issue cannot be corrected from the evidence already read, classify the run as `Draft_Quality_Failure`, stop before Phase 4, and report the failed check without writing files.
 
@@ -353,6 +357,7 @@ These rules override everything else. Stop and report if you find yourself doing
 | 10 | Writing Node/script onboarding steps into Cursor pair or user-facing docs | User path is agent-native writes after one `yes`; no npx/tsx prerequisite |
 | 11 | Mislabeling React `lib/hooks` as "Dynamic Workflow Hooks" | Read the evidence path. Application code hooks are not Harness workflow adapters. |
 | 12 | Creating empty or placeholder `steering/harness-recommendations.md` | Steering is conditional. Skip until there is project-specific override content. |
+| 13 | Copying generic stateful-operation rules into a repo with no installer, migration, cache, resumable job, or persistent service evidence | Operational steering is opt-in and evidence-driven; do not manufacture lifecycle complexity. |
 
 Reporting an anti-pattern that you considered but did not attempt is allowed and does not stop the run.
 
@@ -377,3 +382,4 @@ Read the relevant scaffold file completely before drafting its target:
 - [cursor-pair.md](scaffolds/cursor-pair.md) — optional Cursor adapter
 
 The complete human-readable reference molds under `../../../templates/` preserve fuller explanations and optional reference material. Use them to retain the 法/事/设 concepts, but adapt every output to target-repo evidence and never copy placeholder bytes or generic examples as project facts.
+`../../../templates/steering/stateful-operations.md` is an opt-in maintainer reference only when Grounding found a real stateful-operation owner.
