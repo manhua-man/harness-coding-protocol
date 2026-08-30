@@ -4,6 +4,7 @@
 
 ### Changed
 
+- Rewrite `pipeline-quality-audit` around detect → repair/retry/fallback → quarantine/diagnose → terminal non-delivery, removing project incident dumps and generic hard-rejection doctrine.
 - Make always-on protocol prioritize correctness, explicit authorization, user-owned data, and complexity that is justified by observed recurring work.
 - Add opt-in stateful-operation guidance for idempotent install, path-independent artifact identity, short recoverable units, cancellation, clean, automatic GC, and scoped writers; `/harness-init` suggests it only from repository evidence.
 - Require `/revise-ai-docs` and the docs steward to prove recurrence, future decision value, and net simplicity before promoting a learning into durable rules.
