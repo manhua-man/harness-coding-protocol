@@ -4,6 +4,7 @@
 
 ### Changed
 
+- Add Ablation Verification (消融推演) to the opt-in M5 mold as the operating procedure for Counterfactual Deletion: after a first draft, inline or delete the extra layer if core logic and tests still hold and there is no real polymorphism.
 - Rewrite `pipeline-quality-audit` around detect → repair/retry/fallback → quarantine/diagnose → terminal non-delivery, removing project incident dumps and generic hard-rejection doctrine.
 - Make always-on protocol prioritize correctness, explicit authorization, user-owned data, and complexity that is justified by observed recurring work.
 - Add opt-in stateful-operation guidance for idempotent install, path-independent artifact identity, short recoverable units, cancellation, clean, automatic GC, and scoped writers; `/harness-init` suggests it only from repository evidence.

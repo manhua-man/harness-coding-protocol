@@ -7,7 +7,7 @@
 | Principle | Review question |
 | --- | --- |
 | Correctness-Constrained KISS | Is this the simplest standard solution that still preserves correctness, explicit authorization, user-owned data, and current contracts? |
-| Counterfactual Deletion | Can deleting the mechanism or using a standard primitive solve the recurrence? |
+| Counterfactual Deletion | After the first draft, can deleting or inlining the extra layer leave the core logic intact and tests passing? |
 | Complexity Must Match Observed Value | Which repeated work is removed, and is that value larger than the ongoing cost of new state, locks, caches, receipts, cleanup, and validation? |
 | Choose The Boring Solution | Can existing repository capabilities or standard primitives solve the problem directly? |
 | YAGNI And Complexity Proof | Is there a current caller and evidence that the simpler design is insufficient? |
@@ -15,9 +15,21 @@
 | Observability Before Ceremony | Can an operator directly see real process, service, data, and failure state without reconstructing internal tokens or receipts? |
 | Named Threat Requirement | For security hardening, who is the attacker, what is the attack mode, which asset is protected, and what evidence makes the mechanism proportionate? |
 
+## Ablation Verification (消融推演)
+
+This is the operating procedure for **Counterfactual Deletion**. Use it after a first design or implementation exists. It is not a reason to add another layer.
+
+1. Name the extra abstraction, wrapper, or intermediate transform.
+2. Assume it is removed or inlined.
+3. Check whether the remaining core logic still holds, and whether existing tests would still pass.
+4. If yes, and there is no current real polymorphism (multiple live implementations that must switch), flatten it.
+
+Do not keep a layer because it might be useful later. If the design is self-consistent without it, the layer was overhead.
+
 ## Use
 
 - Apply only when the current task or user explicitly opts into M5.
+- After a first draft, run Ablation Verification before keeping a new wrapper or intermediate transform.
 - Replace generic examples with project-specific evidence before relying on them.
 - Keep authorization, release gates, and mandatory workflows in `CLAUDE.md`; this reference does not override them.
 - Do not promote speculative hardening into always-on protocol. Threat-model work remains opt-in unless the repository has a concrete, current boundary.
