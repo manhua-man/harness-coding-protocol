@@ -6,7 +6,7 @@
 
 ## AI Entry Documentation (Division of Labor)
 
-**事 (Facts) vs 法 (Protocol).** This file is **事**; sibling **`CLAUDE.md`** is **法**. **Every AI tool must load both.** They are not alternative entry files.
+**事 (Facts) vs 法 (Protocol).** This file is **事**; sibling **`CLAUDE.md`** is **法**. They are complementary entry docs — read them **as the task requires**, not as a mandatory full pre-read before every edit.
 
 **Conceptual stack:**
 
@@ -62,6 +62,10 @@ Do not emit empty headings or generic placeholders. -->
 - **Steering rules index:** `steering/` (only when real overrides exist)
 - **Human docs:** `docs/` (background only)
 
+## Routing Not Recipes
+
+Route to facts, commands, ports, ownership, and targeted validation. Do not store step-by-step workflows, blanket pre-read requirements, or collaboration philosophy here.
+
 ## Tool and Documentation Routing
 
 The routing below should let an unfamiliar Agent choose the correct project entry without confusing bundled and external capabilities.
@@ -76,9 +80,11 @@ The routing below should let an unfamiliar Agent choose the correct project entr
 
 #### Repository-owned AI skills and commands
 
-- `example-skill` — Include only when the Skill/command/workflow physically exists in this repository.
+- `example-skill` — Include only when the Skill/command/workflow physically exists in this repository. Keep descriptions short and narrow; use the root skill as a router to deeper docs/scripts.
 
 If none exist, state that explicitly.
+
+When review or ops skills exist, split them into **mandatory gates**, **user-invoked production ops**, and **on-demand tools** — not one flat pre-commit table.
 
 #### Recommended external / global tools
 

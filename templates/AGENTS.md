@@ -10,7 +10,7 @@
 
 ## AI Entry Documentation (Division of Labor)
 
-**事 (Facts) vs 法 (Protocol).** This file is **事** — *what this repository **is*** (structure, commands, ports, checkable conventions). Root **`CLAUDE.md`** is **法** — *how we **work** in this repository* (priorities, session protocol, collaboration habits). **Every AI tool must load both**; they are not alternative audiences. If only **`AGENTS.md`** is injected, the model tends to **write code without following repo protocol**; if only **`CLAUDE.md`** is injected, it tends to **reason without grounding in repo facts**.
+**事 (Facts) vs 法 (Protocol).** This file is **事** — *what this repository **is*** (structure, commands, ports, checkable conventions). Root **`CLAUDE.md`** is **法** — *how we **work** in this repository* (priorities, session protocol, collaboration habits). They are complementary entry docs, not alternative audiences. Read them **as the task requires** — not as a mandatory full pre-read before every edit. If only **`AGENTS.md`** is injected, read **`CLAUDE.md`** when protocol is needed; if only **`CLAUDE.md`** is injected, read **`AGENTS.md`** when facts are needed.
 
 **Conceptual stack (layers, not install docs):**
 
@@ -62,6 +62,18 @@ Never emit an empty conditional heading or generic placeholder. -->
 <!-- Add only concise, verified entries an unfamiliar Agent needs often.
 Do not force API, port, deployment, or environment subsections without evidence. -->
 
+## Routing Not Recipes
+
+This file routes; it does not teach step-by-step workflows.
+
+- **Do** store verifiable facts, command entry points, ports, module ownership, and where to look next.
+- **Do** state **targeted validation** by risk (see conditional **Targeted Validation** when evidence supports it).
+- **Do** define **safe autonomous zones** when the repo has them — e.g. local disposable fixtures, no production access, rerun affected tests without per-step approval.
+- **Do not** require reading the full doc tree, repo map, or unrelated skills before routine edits.
+- **Do not** duplicate collaboration philosophy, approval policy, or blanket "always test everything" rules that belong in **`CLAUDE.md`** or a narrow skill.
+
+---
+
 ## Tool and Documentation Routing
 
 ### AI Assistant Tool Index (dynamic)
@@ -76,6 +88,18 @@ List executable commands and scripts declared by manifests, CI, or authoritative
 #### Repository-owned AI skills and commands
 
 List Skill, command, and workflow files that physically exist in this repository. If none exist, state that explicitly.
+
+For each skill: keep the **description short and narrow** (when to use, not "use for anything touching X"); prefer a root skill file as a **router** to deeper docs/scripts; avoid overlapping "pick me" descriptions across skills.
+
+When the repository has review, ops, or audit skills, index them in **three tiers** (locale-matched headings):
+
+| Tier | When to list | Examples |
+| --- | --- | --- |
+| **Mandatory gates (fail-closed)** | Code change hits an irreversible or high-asset boundary | migrations, payments/auth, secrets |
+| **User-invoked production ops** | Real production side effects; user names the task | deploy, patrol, gift codes, settlement |
+| **On-demand tools** | Architecture/performance review; user or PR asks | module boundary, capacity, lint-style audits |
+
+Do **not** flatten all skills into one table that reads like "run before every commit."
 
 #### Recommended external / global tools
 

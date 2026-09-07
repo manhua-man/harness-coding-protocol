@@ -18,7 +18,7 @@
   → docs/          — human long-form specs (NOT an AI truth source)
 ```
 
-**Read both 事 and 法 every session.** If only one file is injected, actively use the other — do not infer commands or protocol from `docs/` alone.
+**Entry docs are task-scoped, not a pre-read checklist.** Use root `AGENTS.md` and `CLAUDE.md` as the authority for facts and protocol. Read only what the current task needs — do not load the full doc stack, repo map, or unrelated skills before a small reversible change. If only one entry file is injected, read the other when the task needs facts or protocol you do not already have. Do not infer commands or protocol from `docs/` alone.
 
 **Layering vs conflict:** the arrow above is the **documentation stack** (法 frames how to work with 事). When the **same topic** appears in multiple layers and they disagree, use **Conflict Resolution** below — **`AGENTS.md` (事) wins over this file (法)** on verifiable facts; your explicit instruction always wins first.
 
@@ -47,7 +47,16 @@ Resolved locale for this file and sibling AI entry docs follows this priority �
 Within a single `/harness-init` run, body prose in `AGENTS.md`, `CLAUDE.md`, conditional `DESIGN.md`, and `steering/harness-recommendations.md` must use the same resolved locale. Table labels **事 / 法 / 设** remain layer notation.
 
 - Direct, fact-based, friendly, no emojis
-- Prefer tables, lists, and clear separation for AI and developer readability
+
+---
+
+## Communication
+
+- **Conclusion first** — State the answer, decision, or outcome before background detail when the user asked for action or a judgment.
+- **Paragraphs over decoration** — Prefer clear prose. Use lists or tables only when comparing options, enumerating paths, or ranking rules — not as default formatting.
+- **Honest delivery** — Say what was done, what was verified, and what remains limited. Do not stop at capability acknowledgment or a plan when the user asked for execution.
+- **Direct disagreement** — If a user suggestion conflicts with correctness, scope, or repository contracts, say so and propose a better path. Do not agree for politeness.
+- **No hypothetical disclaimers** — Do not add warnings for risks outside the current task scope unless they are concrete and actionable.
 
 ---
 
@@ -64,10 +73,13 @@ When rules conflict, resolve in this order:
 1. User's explicit instruction for the current session
 2. Root `AGENTS.md` (事 — verifiable facts)
 3. Root `CLAUDE.md` (法 — collaboration protocol)
-4. Matching `steering/*.md` (scoped overrides)
-5. Root `DESIGN.md` (design and experience questions only)
-6. Human `docs/**` — background only; **never overrides** 事/法/steering
-7. Tool adaptation files (compatibility only; do not override truth)
+4. Matching repository-owned skill or command — only when the user invoked it or the task clearly matches its narrow scope; skills do not override 事/法 on facts or global protocol
+5. Matching `steering/*.md` (scoped overrides)
+6. Root `DESIGN.md` (design and experience questions only)
+7. Human `docs/**` — background only; **never overrides** 事/法/steering
+8. Tool adaptation files (compatibility only; do not override truth)
+
+If a skill or steering file causes unnecessary pauses, approval loops, or incomplete work, name the file, quote the relevant instruction, and explain how it applies before stopping.
 
 ---
 
@@ -84,12 +96,24 @@ When rules conflict, resolve in this order:
 ## Development Principles
 
 - **Incremental Progress** — Prefer small, verifiable, reversible changes.
-- **Context First** — Understand the existing implementation before proposing.
+- **Task-Scoped Context** — Read code, configs, and docs that the current task actually needs. Do not pre-read the whole repository, full doc tree, or unrelated skills before small reversible work.
 - **Pragmatism Over Dogma** — Real project constraints win over abstract rules.
 - **Update Before Create** — Update existing docs and rules before introducing duplicate sources.
 - **Complexity Must Be Earned** — Prefer deletion and standard primitives. Add permanent state, locks, hashes, receipts, caches, wrappers, or gates only when observed recurring work justifies their ongoing cost.
 - **Scoped Ownership** — Parallel work uses one writer per module or file set; do not lock an entire repository when write scopes are disjoint.
 - Optional engineering methods such as M5 and Karpathy examples belong in explicitly selected, reference-only `steering/` files rather than mandatory protocol.
+
+---
+
+## Completion and Decision Boundaries
+
+**Completion.** When the user asks for action, carry the authorized scope to a reviewable result. Do not stop at capability acknowledgment, a plan only, or a partial solution unless the user asked to stop there. If the task includes implementation, verification, and fixing failures caused by the change, treat that as one scope unless the user narrows it.
+
+**Reversible work first.** For work that is reversible, read-only, local, or already authorized by context, proceed without re-asking at each step. Ask before irreversible, production, deploy, merge, publish, or externally visible actions — or when authorization is genuinely unclear.
+
+**Intentional safeguards vs accidental friction.** Preserve explicit approval requirements for high-risk boundaries (auth, secrets, user data, payments, migrations, production, destructive operations). Remove or narrow blanket "always ask", "always read everything first", or "always run the full test suite" rules that apply to routine low-risk work.
+
+**Testing proportionality.** Run verification appropriate to the change and stated risk. Do not add broad test sweeps for trivial reversible edits; expand testing when the change, failures, or unresolved concerns justify it. Prefer `AGENTS.md` targeted validation routes over repeating test policy here.
 
 ---
 
@@ -122,6 +146,22 @@ Use the full gate for auth, secrets, user data, migrations, payments, deploys, d
 - Command examples default to Unix shell; on Windows also provide PowerShell equivalents
 - Prefer repo-relative paths in path descriptions
 - Local tool adaptation files are compatibility only; they must not override root truth
+
+---
+
+## Specialized Tool Gates (Protocol examples)
+
+List **when** a tool is mandatory — not "before every delivery." Prefer a three-column table; route product-specific paths in **`AGENTS.md`**.
+
+| Scenario | When required | Entry |
+| --- | --- | --- |
+| Code/architecture review | High-risk paths (payments, auth, migrations, cross-boundary contracts) or user asks for review — **not** typos/docs-only | e.g. `/code-review-linus` |
+| AI entry doc refactor | Layering or steering scope changes across multiple files | `/revise-ai-docs` or steward skill |
+| Single-line fact fix | Port, command, or link correction | Edit `AGENTS.md` / `CLAUDE.md` directly |
+| Human `docs/` sync | API/ops docs drift from implementation or user asks | `/update-docs` |
+| Test-pattern review | Large `*.spec.ts` / Jest config churn | Named test reviewer agent |
+
+If a row would apply to **all** code changes, narrow it or move detail to a risk-tiered skill.
 
 ---
 

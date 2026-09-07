@@ -4,6 +4,18 @@
 
 ### Changed
 
+- Add `Communication` section to `templates/CLAUDE.md` and init scaffold (conclusion-first, direct disagreement, no hypothetical disclaimers); soften default list/table preference.
+- Gate tiering in `templates/AGENTS.md` (mandatory / user-invoked ops / on-demand); `templates/CLAUDE.md` Specialized Tool Gates example table; init anti-bloat for frozen planning prose in AGENTS; steward Gates audit axis.
+- `harness-init`: skill discovery quality contract, subtraction signals for existing root truth, communication habits in required conceptual blocks.
+- M4 steward: skill description budget (~200 target, ~300 flag); plugin command/skill descriptions shortened; CONTRIBUTING dogfood rule for short frontmatter.
+- `REFERENCES.md`: community practice section for subtract-first and skill description diet.
+- M1 contract: task-scoped entry reading, routing-not-recipes `AGENTS.md`, completion/approval boundaries and skill precedence in `CLAUDE.md`; remove blanket "read both every session" and "Context First".
+- M4 steward: mandatory autonomy & friction audit (reading, testing, approval, completion, skills, duplication); discovery includes repository-owned skills/commands.
+- M3 `/revise-ai-docs`: dedupe/merge/delete before add; route safe autonomous zones and targeted validation to AGENTS.
+- README M1/M4 descriptions updated for always-on constraints and friction audit.
+- Add `docs/maintainers/REFERENCES.md` (external source bibliography only; with CHANGELOG in `docs/maintainers/`).
+- Rewrite root `README.md` around M1–M5 capability modules instead of repository directory structure.
+- Collapse `docs/maintainers/` to `CHANGELOG.md` only; merge maintainer rules, smoke probes, roadmap, and capability notes into `CONTRIBUTING.md`.
 - Add Ablation Verification (消融推演) to the opt-in M5 mold as the operating procedure for Counterfactual Deletion: after a first draft, inline or delete the extra layer if core logic and tests still hold and there is no real polymorphism.
 - Rewrite `pipeline-quality-audit` around detect → repair/retry/fallback → quarantine/diagnose → terminal non-delivery, removing project incident dumps and generic hard-rejection doctrine.
 - Make always-on protocol prioritize correctness, explicit authorization, user-owned data, and complexity that is justified by observed recurring work.

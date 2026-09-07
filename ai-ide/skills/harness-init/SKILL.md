@@ -1,6 +1,6 @@
 ---
 name: harness-init
-description: Bootstrap a target repo via /harness-init — ground, read, judge, confirm, apply. The IDE_Agent itself reads, judges, and writes the root-truth files after one confirmation, without requiring Node/npm/npx/tsx.
+description: Bootstrap target-repo root-truth files (AGENTS, CLAUDE, steering) in five phases with one user confirmation. Agent-native; no Node/npm required.
 ---
 
 # Harness Init — agent-native
@@ -184,13 +184,43 @@ Long-form material is omitted by default. Do not copy roadmaps, iteration logs, 
 For new `AGENTS.md` and `CLAUDE.md` files, preserve the following concepts from the reference templates even though the final prose is project-adapted:
 
 - `CLAUDE.md (Protocol · 法)` defines how work is done and routes facts to sibling `AGENTS.md` and design/experience decisions to conditional `DESIGN.md`.
-- The layered model is explicit: `法 → 事 → steering → docs`; every session reads both 法 and 事, and `docs/` is human background rather than an automatic truth override.
-- Core protocol keeps correctness, explicit authorization, user-owned data, and current contracts ahead of optional methods. It requires complexity to be justified by observed recurring work and uses module/file-set single-writer boundaries for parallel work.
+- The layered model is explicit: `法 → 事 → steering → docs`; entry docs are task-scoped rather than a mandatory full pre-read every session, and `docs/` is human background rather than an automatic truth override.
+- Core protocol keeps correctness, explicit authorization, user-owned data, and current contracts ahead of optional methods. It requires complexity to be justified by observed recurring work, uses module/file-set single-writer boundaries for parallel work, and separates intentional high-risk safeguards from accidental friction (over-read, over-test, over-ask, early stop).
+- Communication habits: conclusion first; paragraphs over decorative lists; direct disagreement when a suggestion conflicts with correctness or scope; no hypothetical disclaimers outside the current task.
 - A short division-of-labor table distinguishes Facts (事), Protocol (法), and Design (设).
 - `AGENTS.md (Facts · 事)` states that it contains verifiable repository facts and routes collaboration rules back to `CLAUDE.md`.
-- `AGENTS.md` contains Tool and Documentation Routing, including an `AI Assistant Tool Index`, even when the honest project-local result is “none detected.” Keep repository-native commands/scripts, repository-owned AI skills/commands, and recommended external/global tools distinct.
+- `AGENTS.md` contains Tool and Documentation Routing, including an `AI Assistant Tool Index`, even when the honest project-local result is “none detected.” Keep repository-native commands/scripts, repository-owned AI skills/commands, and recommended external/global tools distinct. `AGENTS.md` routes facts and validation entry points; it does not store step-by-step recipes, blanket pre-read requirements, or collaboration philosophy.
 
 Do not collapse these concepts into a single generic sentence. Do not copy placeholder project values from a template.
+
+### Skill discovery quality contract
+
+When Phase 1 or Phase 2 found repository-owned skills or commands (`**/*SKILL.md`, `.claude/commands/`, `.cursor/commands/`, `ai-ide/commands/`, `.agents/skills/`):
+
+- Record each path and the `description` frontmatter length.
+- Flag descriptions over **~300 characters** (target under **~200**) or with overlapping when-to-use triggers.
+- In Phase 4, surface flagged skills as **recommended narrowing** — suggest shorter descriptions, router-style root `SKILL.md`, and downstream detail files. Do **not** edit skill files unless the user confirms in Phase 4/5.
+- Do not copy recipe-style step lists from skills into `AGENTS.md`; the tool index routes to named skills only.
+
+### Subtraction signals (existing root truth)
+
+When root `AGENTS.md` or `CLAUDE.md` already exists:
+
+- Scan for duplicate topics across 事, 法, `always` steering, and skills.
+- Flag `steering` or `.kiro/steering` files with `inclusion: always` (or equivalent) over **~100 lines**.
+- Flag blanket pre-read, full-suite test, or always-ask wording not tied to a risk tier.
+- Include findings in the Phase 4 summary as **recommended narrowing** (`merge`, `narrow`, `manual` scope, or `delete` duplicate) — not auto-applied.
+- Prefer `patch-section` over `overwrite` when narrowing accidental friction; preserve intentional production, payment, migration, and auth safeguards.
+
+### AGENTS anti-bloat (frozen / planning prose)
+
+When root `AGENTS.md` already exists:
+
+- Flag sections such as **Current status**, **Roadmap**, **Frozen decisions**, or long phase narratives that belong in human `docs/` (implementation truth, ADRs, roadmaps) — not in always-loaded **事**.
+- In Phase 4, recommend **move to `docs/`** with a one-line summary + link left in `AGENTS.md`; do not invent ad-hoc filenames like `00-*.md` unless the target repo already uses that pattern.
+- `AGENTS.md` should keep ports, commands, layout, runtime contracts, and **tiered** tool routing — not full multi-phase construction history.
+
+When repository-owned skills exist, draft **three-tier** tool tables (mandatory gates / user-invoked ops / on-demand tools) per the `AGENTS.md` mold; never imply every skill runs before every commit.
 
 - **AI trace and tool-index disambiguation** (read evidence paths before naming `AGENTS.md` sections):
   - `hooks` under `lib/hooks/`, `src/hooks/`, `hooks/`, or React/Next component source → label as **Code Hooks (React)** (or equivalent factual heading). These are application hooks, not Harness workflow adapters.

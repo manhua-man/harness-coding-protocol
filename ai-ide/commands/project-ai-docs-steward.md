@@ -1,7 +1,5 @@
 ---
-description: >-
-  Full audit of AI entry docs (AGENTS, CLAUDE, steering, Cursor rules) with
-  quality report before any edits. Use for periodic health checks or after large refactors.
+description: Full AI entry-doc audit with quality and friction report before edits. Use after model shifts or large refactors.
 allowed-tools: Read, Glob, Grep, Edit
 ---
 

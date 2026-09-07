@@ -16,7 +16,7 @@
   → docs/          — human long-form background (NOT AI truth)
 ```
 
-**Read both 事 and 法 every session.** If only one is injected, actively read the other. Layering describes responsibilities; verifiable source/manifests/runtime evidence wins factual conflicts and `AGENTS.md` must then be corrected.
+**Entry docs are task-scoped, not a pre-read checklist.** Use root `AGENTS.md` and `CLAUDE.md` as the authority for facts and protocol. Read only what the current task needs. If only one is injected, read the other when the task needs facts or protocol you do not already have. Layering describes responsibilities; verifiable source/manifests/runtime evidence wins factual conflicts and `AGENTS.md` must then be corrected.
 
 ## Division of Labor with AGENTS.md / DESIGN.md
 
@@ -40,15 +40,26 @@ Within one `/harness-init` run, `AGENTS.md`, `CLAUDE.md`, conditional `DESIGN.md
 
 - Be direct, fact-based, friendly without emoji.
 
+## Communication
+
+- Conclusion first when the user asked for action or a judgment.
+- Prefer clear prose; lists and tables only when comparing, enumerating, or ranking.
+- Say what was done, verified, and what remains limited.
+- Disagree directly when a suggestion conflicts with correctness, scope, or repo contracts.
+- No disclaimers for hypothetical risks outside the current task scope.
+
 ## Conflict Resolution
 
 1. Explicit user instruction in the current turn
 2. Root-level `AGENTS.md` (事)
 3. Root-level `CLAUDE.md` (法)
-4. Root-level `DESIGN.md` for design and experience decisions
+4. Matching repository-owned skill or command — only when invoked or clearly in scope; does not override 事/法
 5. Matching `steering/*.md`
-6. Human `docs/**` — background only; never overrides 事/法/steering
-7. Tool adapter files
+6. Root-level `DESIGN.md` for design and experience decisions
+7. Human `docs/**` — background only; never overrides 事/法/steering
+8. Tool adapter files
+
+If a skill or steering file causes unnecessary pauses, approval loops, or incomplete work, name the file, quote the instruction, and explain how it applies before stopping.
 
 ## Decision Priority
 
@@ -61,12 +72,19 @@ Within one `/harness-init` run, `AGENTS.md`, `CLAUDE.md`, conditional `DESIGN.md
 ## Development Principles
 
 - **Incremental Progress** — Prefer small, verifiable, reversible changes.
-- **Context First** — Understand the existing implementation before proposing.
+- **Task-Scoped Context** — Read code, configs, and docs the current task needs; do not pre-read the whole repo before small reversible work.
 - **Pragmatism Over Dogma** — Real project constraints win over abstract rules.
 - **Update Before Create** — Update existing docs and rules before introducing duplicate sources.
 - **Complexity Must Be Earned** — Prefer deletion and standard primitives. Add permanent state, locks, hashes, receipts, caches, wrappers, or gates only when observed recurring work justifies their ongoing cost.
 - **Scoped Ownership** — Parallel work uses one writer per module or file set; do not lock the whole repository when write scopes are disjoint.
 - Optional engineering methods such as M5 and Karpathy examples belong in explicitly selected, reference-only `steering/` files rather than mandatory protocol.
+
+## Completion and Decision Boundaries
+
+- Carry authorized scope to a reviewable result; do not stop at a plan or partial fix unless asked.
+- Proceed on reversible/local/read-only work without re-asking each step; ask before irreversible, production, deploy, merge, publish, or externally visible actions.
+- Preserve intentional high-risk safeguards; remove blanket always-ask / always-read-everything / always-run-full-suite rules for routine low-risk work.
+- Run verification proportional to change risk; prefer `AGENTS.md` targeted validation routes over repeating test policy here.
 
 ## Risk-Tiered RIPER Gate
 

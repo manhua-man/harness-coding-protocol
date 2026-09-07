@@ -1,9 +1,6 @@
 ---
 name: project-ai-docs-steward
-description: >-
-  Audit and improve a target repo's AI entry documentation (AGENTS.md, CLAUDE.md,
-  steering, .cursor rules). Use after /harness-init or when AI context drifts.
-  Generic harness protocol skill — parameterize paths to the open workspace.
+description: Audit AI entry docs (AGENTS, CLAUDE, steering, skills). Report first; edit only after approval. Use after init or when context drifts.
 allowed-tools: Read, Glob, Grep, Edit
 ---
 
@@ -47,24 +44,51 @@ Locate entry files in the **target workspace** (Glob preferred):
 - `.cursor/rules/*.mdc`
 - `steering/**/*.md` and/or `.kiro/steering/**/*.md`
 - `packages/**/CLAUDE.md` (monorepo overrides)
+- Repository-owned skills/commands: `**/*SKILL.md`, `.claude/commands/`, `.cursor/commands/`, `ai-ide/commands/`, `.agents/skills/` (as present)
 
-Record: path, tier, exists/missing, broken links from cursor rules.
+Record: path, tier, exists/missing, broken links from cursor rules, skill description length and overlap.
 
 ### Phase 2: Quality assessment
 
 Score each file (adapt claude-md-improver rubric):
 
-- **AGENTS.md:** commands vs manifests (`package.json`, `Cargo.toml`, …), ports, module paths, steering index, and an honest AI Assistant Tool Index separating repository-owned from external/global recommendations
-- **CLAUDE.md:** decision priority once; links to AGENTS; preserves the 法/事/设 division and layered model; no duplicate fact tables
-- **Steering:** inclusion scope (`always` / `fileMatch` / `manual`); overlap with AGENTS; broken frontmatter
+- **AGENTS.md:** commands vs manifests (`package.json`, `Cargo.toml`, …), ports, module paths, steering index, honest AI Assistant Tool Index (repository-owned vs external), **routing-not-recipes** (no step-by-step workflows or blanket pre-read/test rules), targeted validation by risk when present
+- **CLAUDE.md:** decision priority once; links to AGENTS; preserves the 法/事/设 division and layered model; no duplicate fact tables; **no blanket "read everything first" or "always run full suite"** unless risk-tiered
+- **Steering:** inclusion scope (`always` / `fileMatch` / `manual`); overlap with AGENTS/CLAUDE; broken frontmatter; large `always` files that should be `manual` or `fileMatch`
+- **Skills/commands:** short narrow descriptions (target **under ~200 characters**, flag over **~300**); progressive disclosure (router root → deeper docs); overlapping "pick me" descriptions; recipe-style itineraries in root `SKILL.md`; contradictions with AGENTS/CLAUDE on autonomy, approval, reading, testing, or completion
 - **Rule value:** each durable rule has current evidence, an owner/caller, demonstrated recurrence or future decision value, and lower ongoing cost than the problem it prevents
 - **Cursor rules:** index table paths resolvable
 
 **Grades:** A–F (90+ = A).
 
+### Phase 2b: Autonomy & friction audit (mandatory)
+
+Audit instructions that may cause unnecessary stops, extra confirmations, incomplete work, over-reading, or over-testing. For each finding:
+
+1. Quote the exact instruction and name the file
+2. Explain the likely behavioral effect
+3. Label **`intentional safeguard`** (keep) vs **`accidental friction`** (narrow or remove)
+4. Propose a minimal edit; flag any edit that **expands agent permissions**
+
+Check these axes:
+
+| Axis | Look for | Typical fix |
+|------|----------|-------------|
+| **Reading** | "read X before every edit", full repo map pre-read, session-wide doc stack | Task-scoped reading; link routes in AGENTS |
+| **Testing** | blanket "always run CI/full suite" for all edits | Risk-tiered targeted validation in AGENTS |
+| **Approval** | blanket "ask before continuing" for reversible/local work | Ask only before irreversible/production/external actions |
+| **Completion** | stop after plan/partial implementation; RIPER/mode ceremony pulling early stop | Define done in CLAUDE; keep RIPER risk-tiered only |
+| **Skills** | long descriptions, overlapping triggers, recipe-style itineraries | Short when-to-use (under ~200 chars); router root; move detail downstream; merge overlapping skills |
+| **Gates** | review/audit tools listed as mandatory for all commits; flat skill table | Three tiers: mandatory fail-closed / user-invoked ops / on-demand; match `CLAUDE.md` trigger table |
+| **Duplication** | same topic in AGENTS, CLAUDE, always steering, and skills | One owner per topic; merge or delete duplicates |
+
+Prioritize fixes with the largest practical impact. Do not remove intentional production, payment, migration, auth, or destructive-action safeguards.
+
+Optional bibliography: [`docs/maintainers/REFERENCES.md`](../../docs/maintainers/REFERENCES.md).
+
 ### Phase 3: Quality report (mandatory before edits)
 
-Summary + per-file table (scores, issues, recommended fixes). No silent writes.
+Summary + per-file table (scores, issues, recommended fixes) + **Autonomy & friction findings** table (file, quote, effect, intentional vs accidental, proposed fix). No silent writes.
 
 ### Phase 4: Proposed diffs
 
@@ -94,6 +118,9 @@ Edit only after user confirmation. Facts belong in **AGENTS** before new top-lev
 5. **Broken frontmatter** — invalid YAML on steering files
 6. **Incident promotion** — a one-off failure, temporary workaround, or uncertain note became durable protocol without recurrence evidence
 7. **Governance overgrowth** — a rule adds more permanent state, gates, hashes, receipts, or maintenance than the observed problem
+8. **Accidental friction** — blanket pre-read, over-test, over-ask, or early-stop wording left over from older models
+9. **Skill pollution** — too many skills, long descriptions, overlapping triggers, or recipe-style skill bodies
+10. **Completion gaps** — protocol stops at plans/partials where the user expects end-to-end delivery
 
 When recommending removal or consolidation, identify the simpler counterfactual and the rule owner that becomes unnecessary. Do not retain a rule merely because it once had a plausible rationale.
 
