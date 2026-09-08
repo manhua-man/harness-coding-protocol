@@ -111,9 +111,19 @@ If a skill or steering file causes unnecessary pauses, approval loops, or incomp
 
 **Reversible work first.** For work that is reversible, read-only, local, or already authorized by context, proceed without re-asking at each step. Ask before irreversible, production, deploy, merge, publish, or externally visible actions — or when authorization is genuinely unclear.
 
-**Intentional safeguards vs accidental friction.** Preserve explicit approval requirements for high-risk boundaries (auth, secrets, user data, payments, migrations, production, destructive operations). Remove or narrow blanket "always ask", "always read everything first", or "always run the full test suite" rules that apply to routine low-risk work.
+**Scope.** Apply **Precise and Relaxed** (next section). Preserve explicit approval for high-risk boundaries (auth, secrets, user data, payments, migrations, production, destructive operations). Prefer `AGENTS.md` targeted validation routes over repeating test policy here.
 
-**Testing proportionality.** Run verification appropriate to the change and stated risk. Do not add broad test sweeps for trivial reversible edits; expand testing when the change, failures, or unresolved concerns justify it. Prefer `AGENTS.md` targeted validation routes over repeating test policy here.
+---
+
+## Precise and Relaxed
+
+Align read, review, test, and edit scope with **task risk and blast radius**.
+
+- **Precise:** When contracts, invariants, registered alignment rules, or high-risk anchors (funds, auth/session, etc.) apply, verify the right implementation details — not directory or path names alone.
+- **Relaxed:** Do not pre-read unrelated modules, default to full-suite tests, or drive-by sweeps; reversible small fixes need no ceremonial review.
+- **Both hold:** Relaxed reduces friction; it is not permission to skip boundaries that apply.
+
+Product repos may add concrete protocols under this principle (e.g. cross-product reuse or alignment checklists in product `CLAUDE.md`).
 
 ---
 

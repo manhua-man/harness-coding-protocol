@@ -83,8 +83,17 @@ If a skill or steering file causes unnecessary pauses, approval loops, or incomp
 
 - Carry authorized scope to a reviewable result; do not stop at a plan or partial fix unless asked.
 - Proceed on reversible/local/read-only work without re-asking each step; ask before irreversible, production, deploy, merge, publish, or externally visible actions.
-- Preserve intentional high-risk safeguards; remove blanket always-ask / always-read-everything / always-run-full-suite rules for routine low-risk work.
-- Run verification proportional to change risk; prefer `AGENTS.md` targeted validation routes over repeating test policy here.
+- Apply **Precise and Relaxed** (below); preserve high-risk safeguards; prefer `AGENTS.md` targeted validation routes.
+
+## Precise and Relaxed
+
+Align read, review, test, and edit scope with **task risk and blast radius**.
+
+- **Precise:** When contracts, invariants, registered alignment rules, or high-risk anchors (funds, auth/session, etc.) apply, verify the right implementation details — not directory or path names alone.
+- **Relaxed:** Do not pre-read unrelated modules, default to full-suite tests, or drive-by sweeps; reversible small fixes need no ceremonial review.
+- **Both hold:** Relaxed reduces friction; it is not permission to skip boundaries that apply.
+
+Product repos may add concrete protocols under this principle.
 
 ## Risk-Tiered RIPER Gate
 

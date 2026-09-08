@@ -185,7 +185,7 @@ For new `AGENTS.md` and `CLAUDE.md` files, preserve the following concepts from 
 
 - `CLAUDE.md (Protocol · 法)` defines how work is done and routes facts to sibling `AGENTS.md` and design/experience decisions to conditional `DESIGN.md`.
 - The layered model is explicit: `法 → 事 → steering → docs`; entry docs are task-scoped rather than a mandatory full pre-read every session, and `docs/` is human background rather than an automatic truth override.
-- Core protocol keeps correctness, explicit authorization, user-owned data, and current contracts ahead of optional methods. It requires complexity to be justified by observed recurring work, uses module/file-set single-writer boundaries for parallel work, and separates intentional high-risk safeguards from accidental friction (over-read, over-test, over-ask, early stop).
+- Core protocol keeps correctness, explicit authorization, user-owned data, and current contracts ahead of optional methods. It requires complexity to be justified by observed recurring work, uses module/file-set single-writer boundaries for parallel work, applies **Precise and Relaxed** scope for read/review/test/edit, and separates intentional high-risk safeguards from accidental friction (over-read, over-test, over-ask, early stop).
 - Communication habits: conclusion first; paragraphs over decorative lists; direct disagreement when a suggestion conflicts with correctness or scope; no hypothetical disclaimers outside the current task.
 - A short division-of-labor table distinguishes Facts (事), Protocol (法), and Design (设).
 - `AGENTS.md (Facts · 事)` states that it contains verifiable repository facts and routes collaboration rules back to `CLAUDE.md`.
