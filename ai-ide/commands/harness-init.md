@@ -1,5 +1,5 @@
 ---
-description: Bootstrap a target repo via /harness-init — ground, read, judge, confirm, apply. The IDE_Agent itself reads, judges, and writes the root-truth files after one confirmation.
+description: Bootstrap project entry docs and conditional feature catalogs from repository evidence, with one confirmation.
 argument-hint: <project-path>
 ---
 
@@ -12,4 +12,4 @@ argument-hint: <project-path>
 
 $ARGUMENTS
 
-All phases are agent-native: ground by reading repo files, draft in memory, ask one yes/no confirmation, then write only confirmed Root_Truth_Files. Do not require Node.js, npm, npx, tsx, or the TypeScript maintainer scripts for user onboarding.
+All phases are agent-native: ground by reading repo files, draft in memory, ask one yes/no confirmation, then write only confirmed root entry and resolved feature documentation paths. Do not require Node.js, npm, npx, tsx, or the TypeScript maintainer scripts for user onboarding.

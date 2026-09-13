@@ -103,6 +103,14 @@ IDE 插件：在**你的业务仓库**里铺底并维护 AI 协作入口（`AGEN
 /plugin update harness-coding-protocol@harness-coding-protocol
 ```
 
+### 功能目录与文档维护
+
+`/harness-init` 可根据实际功能生成目录索引和功能组文档，并放入同一次确认的写入清单。已有分组和路径优先复用；小项目可只增加 README 功能章节，空项目不虚构功能。
+
+每组文档维护当前能力、实现与测试入口、实际验证结果、已知问题和下一步。`/update-docs` 同步受影响功能及摘要；`/project-ai-docs-steward` 检查分组遗漏、重复所有者、历史结果冒充本版通过，以及新问题与旧摘要冲突。根入口只保留路由。
+
+模板与规则见[功能文档契约](ai-ide/skills/documentation-architecture/references/feature-documentation.md)。分组数量、版本标识和证据保留方式按项目确定。
+
 ### 深入阅读
 
 | 目的 | 文件 |
@@ -211,6 +219,14 @@ Open your **app repo** (not this protocol repo). Run `/harness-init` on first se
 | `/update-docs` | Sync human `docs/` and README (not AI truth) |
 
 Occasional upgrade: `/plugin marketplace update harness-coding-protocol` then `/plugin update harness-coding-protocol@harness-coding-protocol`.
+
+### Feature catalogs and documentation
+
+`/harness-init` can draft evidence-backed feature groups and their index in the same confirmed write set. Existing owners and paths are reused; small projects may use a README section, and empty projects get no invented capabilities.
+
+Feature pages own current behavior, implementation/test routes, actual validation results, issues, and next steps. `/update-docs` synchronizes affected owners and summaries; `/project-ai-docs-steward` checks missing groups, duplicate owners, stale summaries, and historical results presented as current passes. Root entries keep short routes only.
+
+See the [feature documentation contract and templates](ai-ide/skills/documentation-architecture/references/feature-documentation.md). Group counts, version identifiers, and evidence retention are project-specific.
 
 ### Go deeper
 

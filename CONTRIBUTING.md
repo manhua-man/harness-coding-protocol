@@ -68,6 +68,22 @@ Replace `[最高风险操作]` with the repo's highest-risk action (release, pay
 | 1 passes, 2 fails (Codex only) | Only `AGENTS.md` injected — read `CLAUDE.md` explicitly |
 | 1–2 pass, 3 fails | Skill/config routing issue, not layer separation |
 
+## Feature documentation smoke probes
+
+Use isolated target repos in real IDE sessions; do not run these against a user's live project as a side effect of plugin maintenance. Exercise the shared feature documentation contract through init, update-docs, and steward:
+
+| Scenario | Expected behavior |
+| --- | --- |
+| New repo with two evidenced workflows | Init lists concrete catalog/page paths in its confirmation; no writes before approval; landed links resolve |
+| Existing catalog under nonstandard paths | Reuse owners and paths; preserve unrelated sections; no parallel `docs/features` tree |
+| Tiny repo or empty repo without requirements | Use an existing README section when useful, or skip; no invented groups or passing results |
+| New failure against an older passing summary | Update the detailed current limitation and affected summary; preserve version-qualified historical result |
+| Missing execution evidence | Mark inferred or untested; do not turn source/test presence into a runtime pass |
+| Identical repeat run | No duplicate files, groups, headings, or date-only churn |
+| User declines init / one write fails | No writes on decline; report partial apply and broken routes on failure |
+
+Static checks do not establish these behavioral passes. Record actual IDE results and limitations when performing them.
+
 ## Direction
 
 **In scope:** Git + IDE plugin. User path = M1–M5 capabilities in **target repos**.

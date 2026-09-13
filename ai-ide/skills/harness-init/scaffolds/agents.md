@@ -94,6 +94,8 @@ Label this subsection as not bundled and availability-dependent. Do not claim ex
 
 ### Documentation Routes
 
+When a feature catalog exists or is generated, link its resolved index as the route to capability groups, implementation locations, validation results, and open issues. Detailed results live with feature owners; keep volatile status out of this file.
+
 - Link only documents an unfamiliar Agent needs as an authority or navigation entry.
 - Label each link as current truth, target design, or historical material when that distinction matters.
 - Omit long-form material that is not needed for navigation; never copy iteration logs, large test output, stale snapshots, or sensitive credentials into `AGENTS.md`.

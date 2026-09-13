@@ -4,6 +4,8 @@
 
 ### Changed
 
+- Add evidence-backed feature catalog generation to init, feature/result consistency assessment to steward, and affected-owner synchronization to update-docs. Restore the declared documentation-architecture skill with a shared contract and adaptable catalog/page assets; preserve existing ownership and project-specific evidence retention. Root molds route to detailed feature owners without copying volatile status.
+
 - `templates/CLAUDE.md` and init scaffold: add **Precise and Relaxed** (精准且宽松) — scope read/review/test/edit to task risk; precise on contracts/invariants/implementation detail; relaxed on unrelated pre-read and full-suite tests; consolidate Completion friction/testing bullets under it.
 - Add `Communication` section to `templates/CLAUDE.md` and init scaffold (conclusion-first, direct disagreement, no hypothetical disclaimers); soften default list/table preference.
 - Gate tiering in `templates/AGENTS.md` (mandatory / user-invoked ops / on-demand); `templates/CLAUDE.md` Specialized Tool Gates example table; init anti-bloat for frozen planning prose in AGENTS; steward Gates audit axis.

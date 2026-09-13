@@ -1,7 +1,7 @@
 ---
 name: project-ai-docs-steward
-description: Audit AI entry docs (AGENTS, CLAUDE, steering, skills). Report first; edit only after approval. Use after init or when context drifts.
-allowed-tools: Read, Glob, Grep, Edit
+description: Audit project entry docs, feature catalogs, and current-result summaries for missing owners, stale claims, and friction. Report before scoped edits.
+allowed-tools: Read, Glob, Grep, Write, Edit
 ---
 
 # Project AI Docs Steward
@@ -10,7 +10,7 @@ Maintain **structured entry documentation** so every AI tool reading the target 
 
 **事 = `AGENTS.md` (Facts)** · **法 = `CLAUDE.md` (Protocol)** — both are mandatory for AI context. Missing 法 → codes without collaboration rules; missing 事 → reasons without correct facts.
 
-**This skill edits target-repo entry markdown only after a quality report and explicit user approval.** Files created by a confirmed `/harness-init` run may still be untracked and remain eligible; unknown untracked files are user-owned and out of scope unless the user names them. Prefer updating existing files over duplicates (`Update Before Create`).
+**This skill edits target-repo entry markdown and scoped feature documentation only after a quality report and explicit user approval.** Files created by a confirmed `/harness-init` run may still be untracked and remain eligible; unknown untracked files are user-owned and out of scope unless the user names them. Prefer updating existing files over duplicates (`Update Before Create`).
 
 ## Layer model
 
@@ -44,6 +44,7 @@ Locate entry files in the **target workspace** (Glob preferred):
 - `.cursor/rules/*.mdc`
 - `steering/**/*.md` and/or `.kiro/steering/**/*.md`
 - `packages/**/CLAUDE.md` (monorepo overrides)
+- Existing feature catalog, detailed feature owners, and current status summary; resolve existing paths before considering new ones
 - Repository-owned skills/commands: `**/*SKILL.md`, `.claude/commands/`, `.cursor/commands/`, `ai-ide/commands/`, `.agents/skills/` (as present)
 
 Record: path, tier, exists/missing, broken links from cursor rules, skill description length and overlap.
@@ -60,6 +61,12 @@ Score each file (adapt claude-md-improver rubric):
 - **Cursor rules:** index table paths resolvable
 
 **Grades:** A–F (90+ = A).
+
+### Feature documentation assessment
+
+When a catalog exists or the user requests one, read [the feature documentation contract](../documentation-architecture/references/feature-documentation.md). Check coverage against inspected product surfaces, duplicate/missing owners, source/test entry links, result provenance, review dates, and current summaries. Specifically check whether a newer issue is only prepended above an obsolete success claim. Include exact paths, conflicting claims, and inspected coverage in the quality report; unknown or historical results cannot become current passes through documentation edits.
+
+Missing pages may be proposed with concrete paths and evidence; do not force a new tree onto existing adequate documentation. Use the shared assets for approved new pages.
 
 ### Phase 2b: Autonomy & friction audit (mandatory)
 
@@ -84,7 +91,7 @@ Check these axes:
 
 Prioritize fixes with the largest practical impact. Do not remove intentional production, payment, migration, auth, or destructive-action safeguards.
 
-Optional bibliography: [`docs/maintainers/REFERENCES.md`](../../docs/maintainers/REFERENCES.md).
+Optional bibliography: [`docs/maintainers/REFERENCES.md`](../../../docs/maintainers/REFERENCES.md).
 
 ### Phase 3: Quality report (mandatory before edits)
 
@@ -96,7 +103,7 @@ Per change: target file, one-line **why**, minimal diff.
 
 ### Phase 5: Apply
 
-Edit only after user confirmation. Facts belong in **AGENTS** before new top-level docs.
+Edit only within the approved scope; existing explicit authorization for these edits satisfies confirmation. Validate changed links, section preservation, and detailed-owner/summary consistency. Stable repository facts belong in **AGENTS**; volatile feature results belong in their detailed feature owners, with short entry routes.
 
 ## Routing learnings (quick reference)
 
@@ -107,6 +114,7 @@ Edit only after user confirmation. Facts belong in **AGENTS** before new top-lev
 | Collaboration, modes, priorities | `CLAUDE.md` |
 | Stack-specific conventions | Matching steering file |
 | Domain (payment, infra, …) | `manual` steering file |
+| Feature capability, validation, issues | Resolved feature owner; sync affected catalog/status summary |
 | Long narratives | `docs/` + link from AGENTS |
 
 ## Common issues

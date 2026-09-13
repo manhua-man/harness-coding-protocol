@@ -18,6 +18,10 @@ Sync **human** documentation with implementation reality: $ARGUMENTS
 
 **Not in scope:** replacing `AGENTS.md` / `CLAUDE.md` (use `/revise-ai-docs` or `/project-ai-docs-steward`). No spec-kit phase percentages or `specs/` trees unless the repo actually uses them.
 
+## Feature documentation
+
+For feature grouping, capability/results updates, or summary drift, read [the feature documentation contract](../skills/documentation-architecture/references/feature-documentation.md). Include the affected detailed owner and its index/status consumers in change discovery. Explicit requests to generate a feature catalog authorize proposing and creating its evidence-backed pages; ordinary sync updates existing owners and reports missing ones without inventing test results. Root entry changes remain outside this command.
+
 ## Change discovery (default on)
 
 **Priority:** user `$ARGUMENTS` (topic, paths, module names) **over** git inference below.

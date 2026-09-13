@@ -1,6 +1,6 @@
 ---
-description: Full AI entry-doc audit with quality and friction report before edits. Use after model shifts or large refactors.
-allowed-tools: Read, Glob, Grep, Edit
+description: Audit entry docs and feature catalogs, including stale result summaries. Report quality and friction findings before scoped edits.
+allowed-tools: Read, Glob, Grep, Write, Edit
 ---
 
 # Project AI Docs Steward
@@ -9,6 +9,6 @@ allowed-tools: Read, Glob, Grep, Edit
 
 - Run against the **target project workspace** (the repo being developed), not necessarily this plugin repo.
 - Phase 3 quality report is **mandatory** before proposing diffs.
-- Apply edits only after explicit user approval.
+- Apply edits within explicit user authorization; follow the skill for scope and confirmation.
 
 $ARGUMENTS

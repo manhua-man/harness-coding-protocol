@@ -109,6 +109,8 @@ _The agent inserts project-specific routing tables here in Phases 2–3 based on
 
 ### Documentation Routes
 
+When a feature catalog exists or is generated, link its resolved index as the route to capability groups, implementation locations, validation results, and open issues. Detailed results live with feature owners; keep volatile status out of this file.
+
 Link only long-form documents an unfamiliar Agent needs as an authority or navigation entry. Label each as current truth, target design, or historical material when that distinction matters. Omit everything else; do not copy roadmaps, iteration logs, historical validation snapshots, full design/release manuals, large test output, fast-changing runtime status, or sensitive credentials into this file.
 
 Include scoped `steering/` links only when real overrides exist. Steering supplements root facts/protocol; it does not duplicate them.

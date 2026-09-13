@@ -1,6 +1,6 @@
 ---
 name: harness-init
-description: Bootstrap target-repo root-truth files (AGENTS, CLAUDE, steering) in five phases with one user confirmation. Agent-native; no Node/npm required.
+description: Bootstrap project entry docs and evidence-backed feature catalogs with one confirmation. Reuse existing documentation owners; no Node/npm required.
 ---
 
 # Harness Init — agent-native
@@ -9,15 +9,15 @@ You are the IDE_Agent. `/harness-init` runs in five phases against the user's ta
 
 **Phase 1 — Ground → Phase 2 — Read → Phase 3 — Judge & Write Drafts → Phase 4 — Show & Confirm → Phase 5 — Apply**
 
-All five phases are agent-native. Do not require Node.js, npm, npx, tsx, a package manager, or a project-local runtime. You read the project, judge what each Root_Truth_File should say, produce Drafts in working memory, ask for one confirmation, and then write only the confirmed Root_Truth_Files. Nothing lands on disk until the user types `yes` in Phase 4.
+All five phases are agent-native. Do not require Node.js, npm, npx, tsx, a package manager, or a project-local runtime. You read the project, judge what each Root_Truth_File should say, produce Drafts in working memory, ask for one confirmation, and then write only the confirmed root entry and resolved feature documentation targets. Nothing lands on disk until the user types `yes` in Phase 4.
 
 If the user supplied a project path argument, use it. Otherwise, use the current working directory.
 
 ---
 
-## Targets (Root_Truth_Files)
+## Targets (Root_Truth_Files and conditional feature documents)
 
-You write only these Root_Truth_File targets, treated as agent outputs (no template-only bytes):
+The allowed targets below are agent-written outputs (no template-only bytes):
 
 1. `<target>/AGENTS.md` — project facts
 2. `<target>/CLAUDE.md` — collaboration protocol
@@ -28,6 +28,10 @@ You write only these Root_Truth_File targets, treated as agent outputs (no templ
    - `<target>/.cursor/commands/harness-init.md`
 
    **Slash commands in target repos:** this plugin ships `ai-ide/commands/` and `ai-ide/skills/`. In a **target** repo, the user chooses where IDE slash commands live (`ai-ide/commands/`, `commands/`, `.cursor/commands/`, `.claude/commands/`, etc.). Do **not** scaffold duplicate command trees across paths unless the user requests it. Reference the chosen path from `AGENTS.md`; skip the Cursor pair when `.cursor/` is absent and the user keeps commands elsewhere.
+
+6. **Conditional feature documentation** — when existing feature docs, implementation evidence, or explicit requirements support a useful catalog: the resolved documentation index, named feature pages, and an existing status summary only when affected. Read [the feature documentation contract](../documentation-architecture/references/feature-documentation.md) before selecting paths. For a tiny project, prefer a section in its existing README; for an empty project without requirements, skip with a reason. Each actual path must appear separately in the Phase 4 summary. This is not authorization to write arbitrary `docs/**`.
+
+For the remainder of this procedure, draft/action/write-set checks apply to both Root_Truth_Files and the explicitly resolved feature document targets. Feature documents remain human documentation, not a new root truth layer.
 
 You write nothing else. Anything outside this set is forbidden (see Anti-Patterns below). Conditional targets still appear in the Phase 4 summary as `create`, `patch-section`, `overwrite`, or `skip`.
 
@@ -51,6 +55,7 @@ Capture at least:
 - detected design-surface evidence: UI/frontend/game/documentation site/plugin UI/design system/DX-experience signals, or no such evidence
 - existing Root_Truth_Files and whether they contain harness-managed sections
 - existing assets and product surfaces that should be reused rather than recreated
+- feature groups, existing documentation index/detail owners, status consumers, and uninspected product surfaces
 - current-vs-archive documentation boundaries when the repo contains legacy, recovery, generated, or mirrored docs
 - capability boundaries visible from repo evidence: external network calls, secrets, user data, auth/license/update, deployment, or destructive operations
 - stateful-operation evidence: installers or update commands, database migrations, build caches, resumable jobs, generated artifacts, persistent service state, cleanup commands, or none detected
@@ -124,7 +129,8 @@ Pick exactly one action per Root_Truth_File:
 
 Rules:
 
-- `patch-section`: write only within the target `##` heading section. Bytes outside that section (including other `##` sections, optional YAML frontmatter if present, and any content above the first `##` heading) MUST be preserved verbatim from the prior file.
+- `patch-section`: a missing `##` section may be appended without altering existing bytes. For an existing section, write only within the target `##` heading section. Bytes outside that section (including other `##` sections, optional YAML frontmatter if present, and any content above the first `##` heading) MUST be preserved verbatim from the prior file.
+- Feature documents always use `create`, `patch-section`, or `skip`, never whole-file `overwrite`. Multiple named sections may be patched in one file; preserve bytes outside them.
 - `skip`: record a one-sentence reason. No Draft is produced.
 - For every non-skip file: record a one-line evidence reason naming what supports the chosen action.
 - `DESIGN.md`: create or patch only when at least one condition is true:
@@ -263,16 +269,17 @@ For every Draft, cross-reference it against `Grounding_Summary` and the evidence
 
 Before Phase 4, review the completed Drafts. Fix every detected issue before showing the summary:
 
-1. Verify every referenced project path exists.
+1. Verify every referenced project path exists or is an explicit new document in the same draft write set; verify links and anchors again after apply.
 2. Re-read dynamic facts included in the Draft, such as versions, ports, commands, tool counts, and current capability/status claims.
 3. Do not present roadmap, target design, historical, deprecated, generated, or compatibility-only material as current implementation.
 4. Remove any section that lacks project evidence; do not preserve empty conditional headings.
 5. When current repository evidence defines owners or responsibility boundaries, ensure the Draft preserves them instead of listing directories alone.
 6. When current repository evidence defines validation gates, explain which contract each gate protects instead of listing test commands without scope.
 7. Keep external/plugin/global tools out of repository-owned subsections.
-8. Remove copied iteration logs, large test output, stale snapshots, fast-changing status, and sensitive credentials unless a short current fact is essential and directly verified.
+8. Keep copied iteration logs, large test output, stale snapshots, and fast-changing status out of root entry drafts. Feature pages retain scoped validation results under their own contract. Do not include sensitive credentials in generated content.
 9. Confirm there is no placeholder steering and no duplicated or conflicting Facts/Protocol/Design responsibility.
-10. For every proposed operational rule, confirm a current owner/caller and recurring decision value; reject a rule that adds more permanent state or maintenance than the observed problem.
+10. For feature documents, check coverage limits, unique owners, version-qualified validation, and synchronization of current issues with summaries using the feature documentation contract.
+11. For every proposed operational rule, confirm a current owner/caller and recurring decision value; reject a rule that adds more permanent state or maintenance than the observed problem.
 
 Checks 5 and 6 are evidence-conditional: do not invent owners, boundaries, or gates when the repository does not define them. If an issue cannot be corrected from the evidence already read, classify the run as `Draft_Quality_Failure`, stop before Phase 4, and report the failed check without writing files.
 
@@ -322,7 +329,7 @@ skipped: [ { path, reason } ]
 summary: <summary-string shown to the user>
 ```
 
-Validate internally that every entry path is one of the allowed Root_Truth_File targets and that every non-skip content value is non-empty. If validation fails, write nothing.
+Validate internally that every entry path is one of the allowed root entry or explicitly resolved feature documentation targets and that every non-skip content value is non-empty. If validation fails, write nothing.
 
 After validation passes, tell the user you are entering Phase 5.
 
@@ -346,6 +353,7 @@ After the function returns, report to the user:
 - written paths
 - any per-entry failures: each path and its error
 - any post-write mismatch where re-read content differs from the confirmed Draft
+- changed document link/anchor checks and any incomplete catalog or summary updates after a write failure
 
 ### Rollback
 
@@ -376,14 +384,14 @@ These rules override everything else. Stop and report if you find yourself doing
 | # | Anti-Pattern | Why it is wrong |
 | --- | --- | --- |
 | 1 | Hand-editing or hand-creating any file under `.harness/runs/` (via `Write`, `Edit`, `mkdir`, shell `echo >`, etc.) | `/harness-init` no longer needs user-facing run artifacts. Hand-built artifacts produce fake evidence and break the contract. |
-| 2 | Writing any file outside the allowed Root_Truth_File targets (including conditional `DESIGN.md`, conditional steering, and the Cursor pair when Cursor is detected) | Out-of-target writes are not authorised by `/harness-init`. The Confirmed_Write_Set enumerates exactly which paths land. |
+| 2 | Writing any file outside the allowed root entry and explicitly resolved feature documentation targets | Out-of-target writes are not authorised by `/harness-init`. The Confirmed_Write_Set enumerates exactly which paths land. |
 | 3 | Calling a third-party LLM API or external service during the run | The IDE_Agent IS the LLM and does the writing in-process. No `openai`, `anthropic`, `claude`, `gpt`, or `llm` clients. |
 | 4 | Synthesising `detection.json` from gathered evidence | User-facing `/harness-init` does not use `detection.json`. Use `Grounding_Summary` internally instead of fabricating detector output. |
 | 5 | Writing any Root_Truth_File before the user answers `yes` in Phase 4 | The write set is confirmed before apply. Pre-yes writes bypass user consent. |
-| 6 | Touching bytes outside the target `##` heading section when the action is `patch-section` | `patch-section` is the safe boundary between user-owned and harness-owned content. Preserves all content outside the target section verbatim. |
+| 6 | Changing existing bytes outside the named `##` sections when the action is `patch-section` (appending a missing section is allowed) | `patch-section` is the safe boundary between user-owned and harness-owned content. Preserves all content outside the target section verbatim. |
 | 7 | Running Node/npm/npx/tsx as a required user onboarding step | `/harness-init` must work through agent file inspection and file writes. Maintainer smoke scripts are separate from the user path. |
 | 8 | Treating plugin-provided or global skills as target-repo installed skills | Keep repository-native commands/scripts, repository-owned AI skills/commands, and recommended external/global tools in separate labelled subsections. External tools may be recommended, but they are not bundled project dependencies. |
-| 9 | Adding helper files like `.gitkeep`, supplementary docs, or "integration markers" to round out the apply | The Confirmed_Write_Set is the contract. Anything not in it does not get written. |
+| 9 | Adding helper files like `.gitkeep`, unlisted supplementary docs, or "integration markers" to round out the apply | The Confirmed_Write_Set is the contract. Anything not in it does not get written. |
 | 10 | Writing Node/script onboarding steps into Cursor pair or user-facing docs | User path is agent-native writes after one `yes`; no npx/tsx prerequisite |
 | 11 | Mislabeling React `lib/hooks` as "Dynamic Workflow Hooks" | Read the evidence path. Application code hooks are not Harness workflow adapters. |
 | 12 | Creating empty or placeholder `steering/harness-recommendations.md` | Steering is conditional. Skip until there is project-specific override content. |

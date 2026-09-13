@@ -175,6 +175,10 @@ If a row would apply to **all** code changes, narrow it or move detail to a risk
 
 ---
 
+## Feature Documentation Maintenance
+
+When the project maintains feature documents, update the affected detailed owner after implementation or validation changes and reconcile linked summaries. Distinguish current execution, historical results, code inference, and untested behavior; a newly discovered failure must narrow an older success claim. Follow the project’s evidence retention policy. Documentation updates alone do not require a build or full regression.
+
 ## Maintenance Commands
 
 When the harness-coding-protocol plugin is installed, keep entry docs accurate from **this repository**:
