@@ -19,6 +19,8 @@
   "skills": [
     "./ai-ide/skills/harness-init",
     "./ai-ide/skills/project-ai-docs-steward",
-    "./ai-ide/skills/documentation-architecture"
+    "./ai-ide/skills/documentation-architecture",
+    "./ai-ide/skills/doc-governance",
+    "./ai-ide/skills/pipeline-quality-audit"
   ]
 }
