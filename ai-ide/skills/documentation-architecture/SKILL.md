@@ -9,7 +9,8 @@ Maintain human documentation with one detailed owner per topic. Documentation de
 
 ## Route by task
 
-- For feature catalog generation, feature results, or summary drift, read [feature-documentation.md](references/feature-documentation.md). Use its assets only for missing documents; preserve existing paths and language.
+- For feature catalog generation, feature results, or summary drift, read [feature-documentation.md](references/feature-documentation.md). In domain-driven projects, feature catalogs belong under `docs/03-功能模块/<feature>.md` (or `docs/features/<feature>.md`). Use its assets only for missing documents; preserve existing paths and language.
+- For overall docs lifecycle governance, directory taxonomy design, or dead doc/archive convergence, follow [doc-governance](../doc-governance/SKILL.md).
 - For ordinary API, architecture, or runbook updates, follow [update-docs](../../commands/update-docs.md), scoped to the requested topic and directly affected links.
 - Root facts/protocol changes belong to `/revise-ai-docs` or `/project-ai-docs-steward`. `/harness-init` can draft the initial feature catalog together with root entry routes.
 
