@@ -104,7 +104,10 @@ Static checks do not establish these behavioral passes. Record actual IDE result
 | Init procedure | [`ai-ide/skills/harness-init/SKILL.md`](ai-ide/skills/harness-init/SKILL.md) |
 | Incremental maintenance | [`ai-ide/commands/revise-ai-docs.md`](ai-ide/commands/revise-ai-docs.md) |
 | Full audit | [`ai-ide/skills/project-ai-docs-steward/SKILL.md`](ai-ide/skills/project-ai-docs-steward/SKILL.md) |
+| Human docs sync & routing | [`ai-ide/commands/update-docs.md`](ai-ide/commands/update-docs.md) |
 | Human docs architecture | [`ai-ide/skills/documentation-architecture/SKILL.md`](ai-ide/skills/documentation-architecture/SKILL.md) |
+| Corpus doc governance (block audit, code-to-doc check, build-plan retirement, black-box deliverables) | [`ai-ide/skills/doc-governance/SKILL.md`](ai-ide/skills/doc-governance/SKILL.md) |
+| Media & generation pipeline quality audit (detect, repair, retry, fallback, quarantine) | [`ai-ide/skills/pipeline-quality-audit/SKILL.md`](ai-ide/skills/pipeline-quality-audit/SKILL.md) |
 | Optional stateful operations | [`templates/steering/stateful-operations.md`](templates/steering/stateful-operations.md) |
 | External bibliography | [`docs/maintainers/REFERENCES.md`](docs/maintainers/REFERENCES.md) |
 

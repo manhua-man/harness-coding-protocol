@@ -9,9 +9,11 @@ Maintain human documentation with one detailed owner per topic. Documentation de
 
 ## Route by task
 
-- For feature catalog generation, feature results, or summary drift, read [feature-documentation.md](references/feature-documentation.md). In domain-driven projects, feature catalogs belong under `docs/03-功能模块/<feature>.md` (or `docs/features/<feature>.md`). Use its assets only for missing documents; preserve existing paths and language.
-- For overall docs lifecycle governance, directory taxonomy design, or dead doc/archive convergence, follow [doc-governance](../doc-governance/SKILL.md).
-- For ordinary API, architecture, or runbook updates, follow [update-docs](../../commands/update-docs.md), scoped to the requested topic and directly affected links.
-- Root facts/protocol changes belong to `/revise-ai-docs` or `/project-ai-docs-steward`. `/harness-init` can draft the initial feature catalog together with root entry routes.
+| Task | Route |
+| --- | --- |
+| Feature catalog generation, feature results, or summary drift | Read [feature-documentation.md](references/feature-documentation.md). In domain-driven projects, use the existing feature owner (for example `docs/03-功能模块/` or `docs/features/`). Use its assets only for missing documents; preserve existing paths and language. |
+| Ordinary incremental API, architecture, or runbook updates | Follow [update-docs](../../commands/update-docs.md), scoped to the requested topic and directly affected links. |
+| Full-corpus or block-by-block doc audit (`--audit-corpus`), code-to-doc bidirectional inventory, duplicate consolidation, completed build-plan retirement, or client deliverable black-box convergence | Route to [doc-governance](../doc-governance/SKILL.md). |
+| Root facts/protocol changes (`AGENTS.md` / `CLAUDE.md`) | Use `/revise-ai-docs` or `/project-ai-docs-steward`. `/harness-init` can draft the initial feature catalog together with root entry routes. |
 
 The invoking command owns its write scope and confirmation flow. Reading this skill does not add another approval step, authorize unrelated changes, or authorize tests, deployment, deletion, or publication.

@@ -1,17 +1,21 @@
 ---
 description: >-
-  Sync human docs with implementation: git-anchored discovery of stale markdown
-  plus document types, writing layout, and doc-governance rules.
-  Does not replace AGENTS.md / CLAUDE.md.
+  Sync human docs with implementation via git-anchored incremental discovery or
+  full-corpus audit (--audit-corpus). Does not replace AGENTS.md / CLAUDE.md.
 allowed-tools: Read, Write, Edit, Bash
-argument-hint: [topic] | --api | --architecture | --sync
+argument-hint: "[optional: path, module, PR scope, or --audit-corpus]"
 ---
 
 # Documentation Update
 
 Sync **human** documentation with implementation reality: $ARGUMENTS
 
-**Two jobs:**
+## Mode routing
+
+- **Incremental sync mode (default):** Anchor on `git diff` and user-specified paths/modules to sync recent code changes into existing documentation (follow Discovery, Layout, and Rules 1–6 below).
+- **Full-corpus / block-by-block audit mode (`--audit-corpus` or when the user asks to comprehensively audit, deduplicate, or converge a product's documentation):** Follow [../skills/doc-governance/SKILL.md](../skills/doc-governance/SKILL.md) to execute block-by-block full-text reading (3D audit: redundancy, missing, consolidation), code-to-doc bidirectional inventory check, completed build-plan retirement, and self-contained black-box deliverable convergence.
+
+**Two jobs (incremental mode):**
 
 1. **Discovery** — By default, infer candidate markdown from recent git changes; when the user names a topic or paths, **follow the user first**.
 2. **Writing** — For each file in scope, apply document types, layout, and **doc-governance rules** below.
@@ -77,7 +81,7 @@ These are **process rules**. Do **not** bake domain field tables, stage roadmaps
    Write what it is, how to do it, and necessary caveats. No preaching, no restating the same idea twice. Expand only when the user says it is unclear / asks for more background.
 
 5. **Do not rewrite existing sensitive config presentation**  
-   If a doc already shows credentials or sample secrets, do not delete, mask, or replace them with “do not put secrets in docs” unless the user explicitly asks. Redaction policy is human-owned; default is to follow the file’s existing style.
+   If a doc already shows credentials or sample secrets, do not delete, mask, or replace them with “do not put secrets in docs” unless the user explicitly asks. Redaction policy is human-owned; default is to follow the file’s existing style. This applies to internal maintenance and does not authorize copying real credentials into a new external deliverable. For export, follow the established recipient and credential policy. If absent, prepare examples with placeholders in the deliverable and report the unresolved sharing decision without echoing secret values; preserve the internal original. Do not publish or send the package without authorization.
 
 6. **Conflict resolution order**  
    User request for this turn > code / `AGENTS.md` (facts) > human mainline truth docs > archive/historical docs. When they conflict, converge downstream copies to the winner — do not leave parallel stories.

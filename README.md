@@ -22,7 +22,7 @@ IDE 插件：在**你的业务仓库**里铺底并维护 AI 协作入口（`AGEN
 | **M2 铺底** | 首次或大重置：读证据 → 起草 → **一次确认** → 只写确认过的文件 | `/harness-init` |
 | **M3 增量维护** | 会话结束：把一条可复用经验写回事/法/steering | `/revise-ai-docs` |
 | **M4 全量审计** | 定期体检：**先报告**（含自主性/摩擦审计），确认后再改 | `/project-ai-docs-steward` |
-| **M5 人类文档** | 同步 `docs/`、`README` 与实现；**不改** AI 真值层 | `/update-docs` |
+| **M5 人类文档** | 同步 `docs/`、`README` 与实现（增量同步或 `--audit-corpus` 存量全盘收敛）；**不改** AI 真值层 | `/update-docs` |
 
 **M1 在目标仓落地的分层：**
 
@@ -94,7 +94,7 @@ IDE 插件：在**你的业务仓库**里铺底并维护 AI 协作入口（`AGEN
 | --- | --- |
 | `/revise-ai-docs` | 会话结束，把经验写回 AI 入口 |
 | `/project-ai-docs-steward` | 定期体检（先报告，确认后再改） |
-| `/update-docs` | 人类 `docs/`、`README` 落后时（**不改** AI 真值层） |
+| `/update-docs` | 人类 `docs/`、`README` 落后或需 `--audit-corpus` 存量盘点收敛时（**不改** AI 真值层） |
 
 小改用 `/revise-ai-docs`，**不要**为改几个字反复 `plugin install`。偶尔升级插件：
 
@@ -107,9 +107,9 @@ IDE 插件：在**你的业务仓库**里铺底并维护 AI 协作入口（`AGEN
 
 `/harness-init` 可根据实际功能生成目录索引和功能组文档，并放入同一次确认的写入清单。已有分组和路径优先复用；小项目可只增加 README 功能章节，空项目不虚构功能。
 
-每组文档维护当前能力、实现与测试入口、实际验证结果、已知问题和下一步。`/update-docs` 同步受影响功能及摘要；`/project-ai-docs-steward` 检查分组遗漏、重复所有者、历史结果冒充本版通过，以及新问题与旧摘要冲突。根入口只保留路由。
+每组文档维护当前能力、实现与测试入口、实际验证结果、已知问题和下一步。`/update-docs` 默认按 git 变更增量同步受影响功能及摘要；当传入 `--audit-corpus` 或要求存量全盘梳理时，路由至 [`doc-governance`](ai-ide/skills/doc-governance/SKILL.md) 执行分块全文精读审计（冗余/缺失/整合）、代码全集反向对账、过程施工计划退役与对外交付目录黑盒收敛。`/project-ai-docs-steward` 检查分组遗漏、重复所有者、历史结果冒充本版通过，以及新问题与旧摘要冲突。根入口只保留路由。
 
-模板与规则见[功能文档契约](ai-ide/skills/documentation-architecture/references/feature-documentation.md)。分组数量、版本标识和证据保留方式按项目确定。
+模板与规则见[功能文档契约](ai-ide/skills/documentation-architecture/references/feature-documentation.md)。分组数量、版本标识和证据保留方式按项目确定。针对生成式/媒体管线输出质量审计与恢复，可按需调用 [`pipeline-quality-audit`](ai-ide/skills/pipeline-quality-audit/SKILL.md)。
 
 ### 深入阅读
 
@@ -119,7 +119,10 @@ IDE 插件：在**你的业务仓库**里铺底并维护 AI 协作入口（`AGEN
 | M2 命令入口 | [`ai-ide/commands/harness-init.md`](ai-ide/commands/harness-init.md) |
 | M3 增量维护 | [`ai-ide/commands/revise-ai-docs.md`](ai-ide/commands/revise-ai-docs.md) |
 | M4 全量审计 | [`ai-ide/skills/project-ai-docs-steward/SKILL.md`](ai-ide/skills/project-ai-docs-steward/SKILL.md) |
+| M5 人类文档命令 | [`ai-ide/commands/update-docs.md`](ai-ide/commands/update-docs.md) |
 | M5 人类文档架构 | [`ai-ide/skills/documentation-architecture/SKILL.md`](ai-ide/skills/documentation-architecture/SKILL.md) |
+| M5 存量文档治理与双向对账 | [`ai-ide/skills/doc-governance/SKILL.md`](ai-ide/skills/doc-governance/SKILL.md) |
+| 管线产物质量审计与恢复 | [`ai-ide/skills/pipeline-quality-audit/SKILL.md`](ai-ide/skills/pipeline-quality-audit/SKILL.md) |
 
 ### 注意
 
@@ -147,7 +150,7 @@ Not an npm package. Not a terminal CLI. The target repo does not need `package.j
 | **M2 Bootstrap** | First setup or major reset: read evidence → draft → **one confirmation** → write confirmed files only | `/harness-init` |
 | **M3 Incremental maintenance** | End of session: write one reusable learning back to facts/protocol/steering | `/revise-ai-docs` |
 | **M4 Full audit** | Periodic health check: **report first** (includes autonomy/friction audit), edit only after confirmation | `/project-ai-docs-steward` |
-| **M5 Human docs** | Sync `docs/` and `README` with implementation; **does not** change AI truth | `/update-docs` |
+| **M5 Human docs** | Sync `docs/` and `README` with implementation (incremental sync or `--audit-corpus` full-corpus convergence); **does not** change AI truth | `/update-docs` |
 
 **M1 layer stack in the target repo:**
 
@@ -216,7 +219,7 @@ Open your **app repo** (not this protocol repo). Run `/harness-init` on first se
 | --- | --- |
 | `/revise-ai-docs` | End of session — write learnings back |
 | `/project-ai-docs-steward` | Periodic audit (report first) |
-| `/update-docs` | Sync human `docs/` and README (not AI truth) |
+| `/update-docs` | Sync human `docs/` and README, or run `--audit-corpus` full-corpus convergence (not AI truth) |
 
 Occasional upgrade: `/plugin marketplace update harness-coding-protocol` then `/plugin update harness-coding-protocol@harness-coding-protocol`.
 
@@ -224,9 +227,9 @@ Occasional upgrade: `/plugin marketplace update harness-coding-protocol` then `/
 
 `/harness-init` can draft evidence-backed feature groups and their index in the same confirmed write set. Existing owners and paths are reused; small projects may use a README section, and empty projects get no invented capabilities.
 
-Feature pages own current behavior, implementation/test routes, actual validation results, issues, and next steps. `/update-docs` synchronizes affected owners and summaries; `/project-ai-docs-steward` checks missing groups, duplicate owners, stale summaries, and historical results presented as current passes. Root entries keep short routes only.
+Feature pages own current behavior, implementation/test routes, actual validation results, issues, and next steps. `/update-docs` synchronizes affected owners and summaries incrementally by default, or routes `--audit-corpus` full-corpus audits to [`doc-governance`](ai-ide/skills/doc-governance/SKILL.md) for block-by-block full-text audit (redundancy, missing, consolidation), code-to-doc bidirectional inventory, completed build-plan retirement, and self-contained black-box deliverable convergence; `/project-ai-docs-steward` checks missing groups, duplicate owners, stale summaries, and historical results presented as current passes. Root entries keep short routes only.
 
-See the [feature documentation contract and templates](ai-ide/skills/documentation-architecture/references/feature-documentation.md). Group counts, version identifiers, and evidence retention are project-specific.
+See the [feature documentation contract and templates](ai-ide/skills/documentation-architecture/references/feature-documentation.md). Group counts, version identifiers, and evidence retention are project-specific. For media or generation pipeline output verification and recovery, use [`pipeline-quality-audit`](ai-ide/skills/pipeline-quality-audit/SKILL.md).
 
 ### Go deeper
 
@@ -236,7 +239,10 @@ See the [feature documentation contract and templates](ai-ide/skills/documentati
 | M2 command entry | [`ai-ide/commands/harness-init.md`](ai-ide/commands/harness-init.md) |
 | M3 incremental maintenance | [`ai-ide/commands/revise-ai-docs.md`](ai-ide/commands/revise-ai-docs.md) |
 | M4 full audit | [`ai-ide/skills/project-ai-docs-steward/SKILL.md`](ai-ide/skills/project-ai-docs-steward/SKILL.md) |
+| M5 human docs command | [`ai-ide/commands/update-docs.md`](ai-ide/commands/update-docs.md) |
 | M5 human docs architecture | [`ai-ide/skills/documentation-architecture/SKILL.md`](ai-ide/skills/documentation-architecture/SKILL.md) |
+| M5 corpus doc governance & bidirectional inventory | [`ai-ide/skills/doc-governance/SKILL.md`](ai-ide/skills/doc-governance/SKILL.md) |
+| Pipeline output quality audit & recovery | [`ai-ide/skills/pipeline-quality-audit/SKILL.md`](ai-ide/skills/pipeline-quality-audit/SKILL.md) |
 
 ### Maintainers
 

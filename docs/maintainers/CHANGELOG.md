@@ -4,6 +4,8 @@
 
 ### Changed
 
+- 2026-10-21 — Add `--audit-corpus` routing across update-docs, documentation-architecture, and public indexes. Retain full-text corpus auditing, bidirectional code/document inventory, completed-plan retirement, and deliverable checks while making coverage, examples, historical retention, approvals, and validation proportional to the requested scope. Distinguish internal configuration preservation from external credential sharing. Integrate upstream plugin skill registrations, dual-axis guidance, and the optional layout checker; document its limitations. Validation: both edited skills pass quick validation; all 45 local links in changed files resolve; all five static contracts, plugin skill paths, and diff whitespace checks pass. Real IDE behavior probes were not run; runtime behavior remains unverified.
+
 - Add evidence-backed feature catalog generation to init, feature/result consistency assessment to steward, and affected-owner synchronization to update-docs. Restore the declared documentation-architecture skill with a shared contract and adaptable catalog/page assets; preserve existing ownership and project-specific evidence retention. Root molds route to detailed feature owners without copying volatile status.
 
 - `templates/CLAUDE.md` and init scaffold: add **Precise and Relaxed** (精准且宽松) — scope read/review/test/edit to task risk; precise on contracts/invariants/implementation detail; relaxed on unrelated pre-read and full-suite tests; consolidate Completion friction/testing bullets under it.
