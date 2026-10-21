@@ -15,6 +15,21 @@ Preserve the protocol-first direction: **IDE `/harness-init` in target repos**, 
 - **External bibliography:** [`docs/maintainers/REFERENCES.md`](docs/maintainers/REFERENCES.md) — source links only; not target-repo output.
 - **Local scratch:** `internal/` (gitignored).
 
+## Engineering Rule Ownership
+
+For maintenance of this plugin, apply [Core Engineering Principles](templates/CLAUDE.md#core-engineering-principles), [Requirement Boundary Gate](templates/CLAUDE.md#requirement-boundary-gate), and its [Simplification Consistency Gate](templates/CLAUDE.md#simplification-consistency-gate) as repository rules. Those sections are the single full definitions; the rest of the target-repo template is not this repository's environment or tool configuration. The maintainer conflict order and decision priority above remain authoritative here.
+
+| Content | Authoritative home | Generation or maintenance companion |
+| --- | --- | --- |
+| Core principles, requirements, simplification, completion, verification | [CLAUDE reference mold](templates/CLAUDE.md) | [CLAUDE scaffold](ai-ide/skills/harness-init/scaffolds/claude.md) mirrors these required blocks; update both in one change |
+| Real paths, commands, validation entry points | Target repository `AGENTS.md` | Generate from inspected manifests and project evidence |
+| Complexity proof, ablation, asset assessment methods | [M5 methods reference](templates/steering/m5-engineering-principles.md) | Selected when useful; does not redefine root principles |
+| State contracts, data lifecycle, recovery | [Stateful reference](templates/steering/stateful-operations.md) | Adapt only for evidenced stateful owners |
+| Coding illustrations | [Karpathy examples](templates/steering/karpathy-examples.md) | Follow root requirement and approval boundaries |
+| Operational workflows | Applicable project skill | Root files route to existing entries rather than copy recipes |
+
+Do not copy `servers`-specific Redis, NestJS, database migration, authentication, or batch-performance policies into default protocol. Target projects retain their own concrete contracts. Optional references supplement default principles; they do not make those principles optional.
+
 ## Must
 
 - Log shipped work in [`docs/maintainers/CHANGELOG.md`](docs/maintainers/CHANGELOG.md).
@@ -40,14 +55,14 @@ git grep -n -E "^## M5|M5 Engineering Constraints" -- templates/CLAUDE.md ai-ide
 git grep -rn "createPlan\|applyPlan\|runInitPlan\|merge-engine" ai-ide templates
 ```
 
-All five commands should return no matches. `DESIGN.md` and host-specific rule/skill files may still use YAML frontmatter. M5 remains available under `templates/steering/` as an opt-in reference.
+All five commands should return no matches. `DESIGN.md` and host-specific rule/skill files may still use YAML frontmatter. Detailed engineering methods remain available under `templates/steering/` as opt-in references; the five core principles and requirement gates belong to default protocol.
 
 ### Target-output format contracts
 
 - No YAML frontmatter in reference `AGENTS.md`, `CLAUDE.md`, or plain `steering/*.md`.
 - No whole-document ` ```markdown ` wrapper around steering references.
 - No mandatory `[MODE: ...]` or default-RESEARCH ceremony in target protocol molds.
-- No M5 section in the always-on `CLAUDE.md` mold; M5 stays an opt-in steering reference.
+- No M5 methods section in the always-on `CLAUDE.md` mold; core principles and requirement gates are mandatory, while detailed methods stay in opt-in steering references.
 - `AGENTS.md` scaffold keeps repository-owned and recommended external/global tools separate.
 
 ## Entry smoke probes (target repos)
@@ -67,6 +82,20 @@ Replace `[最高风险操作]` with the repo's highest-risk action (release, pay
 | Probe 1 fails everywhere | Wrong repo root, or `AGENTS.md` missing |
 | 1 passes, 2 fails (Codex only) | Only `AGENTS.md` injected — read `CLAUDE.md` explicitly |
 | 1–2 pass, 3 fails | Skill/config routing issue, not layer separation |
+
+## Engineering Boundary Smoke Probes
+
+In an isolated real IDE target session, check that a new root protocol has five individually addressable core-principle subheadings and the requirement/simplification gates in the resolved locale. Probe these decisions as well as file structure:
+
+| Request | Expected behavior |
+| --- | --- |
+| A speculative feature is justified only by a newly written failing test | Ask for the requirement anchor; do not implement it as an authorized product change |
+| Remove an obsolete mechanism | Identify and remove the withdrawn structure; justify any retained compatibility contract |
+| Make a small reversible edit | Use relevant evidence and targeted checks without blanket full-suite tests or repeated approval |
+| Initialize a stateless project | Generate core requirements without inventing stateful machinery or copying optional reference files |
+| An authorized resumable job meets expected partial state | Use the existing safe entry; distinguish resumability from adding an automatic recovery service |
+
+Static heading/link checks do not establish these behavioral results. Record real-session evidence and any unverified behavior.
 
 ## Feature documentation smoke probes
 

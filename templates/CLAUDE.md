@@ -93,25 +93,57 @@ If a skill or steering file causes unnecessary pauses, approval loops, or incomp
 
 ---
 
-## Development Principles
+## Development Practices
 
-- **Incremental Progress** — Prefer small, verifiable, reversible changes.
-- **Task-Scoped Context** — Read code, configs, and docs that the current task actually needs. Do not pre-read the whole repository, full doc tree, or unrelated skills before small reversible work.
-- **Pragmatism Over Dogma** — Real project constraints win over abstract rules.
-- **Update Before Create** — Update existing docs and rules before introducing duplicate sources.
-- **Complexity Must Be Earned** — Prefer deletion and standard primitives. Add permanent state, locks, hashes, receipts, caches, wrappers, or gates only when observed recurring work justifies their ongoing cost.
-- **Scoped Ownership** — Parallel work uses one writer per module or file set; do not lock an entire repository when write scopes are disjoint.
-- Optional engineering methods such as M5 and Karpathy examples belong in explicitly selected, reference-only `steering/` files rather than mandatory protocol.
+- Prefer small, verifiable, reversible changes; preserve existing user edits and keep dependencies explicit.
+- Read the code and contracts relevant to the task. Verify that copied feedback refers to the current workspace before acting on it.
+- Update existing documents and rules before creating duplicate sources. Route facts and commands through `AGENTS.md`, scoped engineering methods through steering, and operational workflows through their skills.
+- Parallel work uses one writer per module or file set; independent write scopes do not require a repository-wide lock.
 
----
+## Core Engineering Principles
+
+### Correctness-Constrained KISS
+
+Minimize concepts, state, branches, configuration, and dependencies while preserving correctness, safety, and current contracts. Keep data flow direct, readable, and testable; do not add machinery for theoretical completeness or hypothetical requirements.
+
+### Complexity Must Match Asset Value And Proven Risk
+
+Match security layers, locking, and derived data to the protected asset, demonstrated threats, and failure impact. Name the concrete attack path and benefit before adding protection. Preserve visibility of non-secret operational state for authorized operators; credentials, personal data, and payment secrets still require appropriate protection.
+
+### Choose The Boring Solution
+
+Prefer language, database, and existing infrastructure primitives. Add custom state, scripts, wrappers, or frameworks only when the simpler standard solution cannot preserve the required contract. Preserve ownership tokens, lock release, idempotency, and transaction invariants.
+
+### YAGNI And Complexity Proof
+
+Implement confirmed current needs. Before adding an abstraction, compatibility path, configuration, or extension point, identify its current runtime caller, why the simpler solution is insufficient, and the added maintenance and failure cost. A helper used only by its own tests is not a runtime consumer. A requirement to implement X correctly does not establish a requirement to introduce X.
+
+### Fix Root Causes And Preserve Invariants
+
+Remove the cause or establish an enforceable correctness constraint, using transactions, atomic operations, conditional updates, unique constraints, or idempotency as appropriate. Catching errors, logging, defaults, retries, and compensation cannot replace a fix the system can enforce. Preserve historical data meaning and existing callers; report any remaining workaround honestly.
+
+## Requirement Boundary Gate
+
+- Requirements come from the user's request, an approved plan or acceptance criteria, or an applicable current contract. Existing code and tests establish behavior to preserve; they do not independently authorize new product behavior.
+- Before non-trivial implementation or its first failing test, briefly state the observable change, semantics to preserve, and expected persistent-state, API, or configuration impact. A conversation note is enough; do not require a new planning document.
+- New business state, historical-data semantics, backfills, compensation, dual writes, automatic jobs, compatibility paths, and configuration must trace to that requirement. If support is missing, pause the dependent work, explain the proposed expansion, and continue independent authorized work.
+- Tests verify confirmed requirements. A failing test authored by the implementer cannot create a requirement. Review the final diff against the requirement and remove unsupported fields, states, branches, tests, and documentation. Necessary mechanical work within the authorized scope does not need repeated approval.
+
+### Simplification Consistency Gate
+
+For a task to simplify, remove, or withdraw behavior, name the dependencies, state, configuration, branches, and tests to remove, and the single authoritative path that remains. Do not replace deletion with optional dependencies, silent skips, fallbacks, or permanent old/new paths.
+
+Any added structure needs an existing caller or mandatory contract and an explanation of why it cannot be removed. Judge structural reduction rather than line count. Report what was removed and where behavior converged; do not claim simplification when the withdrawn structure remains.
 
 ## Completion and Decision Boundaries
 
 **Completion.** When the user asks for action, carry the authorized scope to a reviewable result. Do not stop at capability acknowledgment, a plan only, or a partial solution unless the user asked to stop there. If the task includes implementation, verification, and fixing failures caused by the change, treat that as one scope unless the user narrows it.
 
-**Reversible work first.** For work that is reversible, read-only, local, or already authorized by context, proceed without re-asking at each step. Ask before irreversible, production, deploy, merge, publish, or externally visible actions — or when authorization is genuinely unclear.
+**Reversible work first.** For work that is reversible, read-only, local, or already authorized by context, proceed without re-asking at each step. Obtain authorization before irreversible, production, deploy, merge, publish, or externally visible actions; existing explicit authorization satisfies this boundary.
 
 **Scope.** Apply **Precise and Relaxed** (next section). Preserve explicit approval for high-risk boundaries (auth, secrets, user data, payments, migrations, production, destructive operations). Prefer `AGENTS.md` targeted validation routes over repeating test policy here.
+
+**Human decides direction, program owns completion.** Before a destructive or production job, establish the target, authorization, authoritative source, and required writer preconditions. Once authorized, handle expected and classifiable partial states through the same idempotent entry. Stop the current unit on an invariant or infrastructure failure while preserving committed progress. Ask for a business decision only when the remaining meaning is undefined; this does not authorize a new automatic-retry framework.
 
 ---
 
@@ -126,6 +158,12 @@ Align read, review, test, and edit scope with **task risk and blast radius**.
 Product repos may add concrete protocols under this principle (e.g. cross-product reuse or alignment checklists in product `CLAUDE.md`).
 
 ---
+
+## Verification Principles
+
+Verify observable behavior with evidence proportional to task risk. Prefer targeted checks; broaden for shared contracts, persistence, authorization, funds, or demonstrated failures. Do not introduce production abstractions solely to make tests easier.
+
+Keep concrete commands and working directories in `AGENTS.md` or the product entry. Pure documentation or reversible low-impact changes do not automatically require new tests or a full regression. Distinguish current execution, historical results, inference, and checks not run.
 
 ## Third-Party Workflow Collaboration
 

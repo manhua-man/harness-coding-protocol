@@ -20,7 +20,7 @@
 | **Think Before Coding** | Wrong assumptions, hidden confusion, missing trade-offs |
 | **Simplicity First** | Over-complexity, bloated abstractions, poor readability |
 | **Surgical Changes** | Orthogonal edits, touching code that shouldn't change |
-| **Goal-Driven Execution** | Test-first, verifiable success criteria |
+| **Goal-Driven Execution** | Confirmed goals and verifiable success criteria |
 | **Explicit Dependencies** | Implicit state, magic dependencies, untestable code |
 
 ---
@@ -29,10 +29,10 @@
 
 **Don't assume. Don't hide confusion. Surface trade-offs.**
 
-- **State assumptions explicitly** — if unsure, ask rather than guess
+- **State material assumptions explicitly** — inspect current evidence first; explain reasonable reversible choices and proceed within scope
 - **Present multiple interpretations** — when ambiguous, don't silently pick one
 - **Push back when needed** — if a simpler approach exists, say so
-- **Stop when confused** — name what's unclear and ask for clarification
+- **Clarify by impact** — pause dependent work when uncertainty changes business meaning, authorization, or an irreversible decision; continue independent authorized work
 
 ### Hidden Assumptions
 
@@ -201,9 +201,9 @@ Avoid complex TypeScript advanced features, tricky decorators, or implicit magic
 
 ### Avoid Premature Abstraction
 
-Don't build complex decorators, interceptors, or mixins unless they clearly solve **at least two existing, immediate problems**.
+Add decorators, interceptors, or mixins only for a current runtime caller whose requirement cannot be satisfied by the simpler standard solution; a fixed count of use cases does not prove necessity.
 
-YAGNI (You Ain't Gonna Need It): don't implement features not required by a failing test today.
+YAGNI: tests verify a user requirement, approved plan, or current mandatory contract. A failing test authored by the implementer does not establish a new requirement.
 
 **❌ Wrong:** Three functions share code → immediately abstract to base class  
 **✅ Correct:** Confirm repetition will persist, then extract; handle the first case on its own
@@ -347,7 +347,9 @@ Orphans from your changes:
 
 ## 4. Goal-Driven Execution
 
-**Define success criteria. Loop until verified.**
+**Define success criteria from confirmed requirements. Verify with checks proportional to risk.**
+
+The test-first examples below apply to confirmed behavior changes where tests provide useful evidence. They do not require a new test for every reversible edit or make a test the source of the requirement.
 
 Turn imperative tasks into verifiable goals:
 
@@ -398,7 +400,7 @@ Plan:
    Verify: Additional tests pass
 
 4. Verify no regression: Existing auth tests still pass
-   Verify: Full test suite green
+   Verify: Relevant regression checks pass; broaden only for demonstrated risk
 
 Current test coverage for auth: [shows coverage]
 What's the specific auth issue you're seeing?
@@ -632,7 +634,7 @@ When these principles work, you'll see:
 
 - Fewer unnecessary changes in diffs
 - Fewer rewrites from over-complication
-- Clarifying questions before implementation, not after errors
+- Material ambiguity resolved before dependent implementation; reversible choices continue without approval loops
 - Clean, minimal PRs — no drive-by refactors or "improvements"
 
 ---

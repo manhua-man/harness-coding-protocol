@@ -38,7 +38,7 @@ IDE 插件：在**你的业务仓库**里铺底并维护 AI 协作入口（`AGEN
 | 局部 | `steering/` | 路径/任务级补丁；仅在有项目证据时条件生成 |
 | 人类 | `docs/` | 背景资料；**不能压过**事/法 |
 
-`templates/steering/` 下的 M5、stateful operations、Karpathy 等是 **opt-in 参考**，不会自动变成目标仓强制协议。外部阅读来源见维护者 [`docs/maintainers/REFERENCES.md`](docs/maintainers/REFERENCES.md)。
+五条核心工程原则、需求边界及简化一致性门禁属于默认 `CLAUDE.md`，每条核心原则有独立三级标题。复杂度五问、消融方法放在 [M5 方法参考](templates/steering/m5-engineering-principles.md)，状态与数据恢复放在 [stateful operations](templates/steering/stateful-operations.md)，编码示例放在 Karpathy 参考；这些详细方法按需选择，不自动生成或改变授权范围。外部阅读来源见维护者 [`docs/maintainers/REFERENCES.md`](docs/maintainers/REFERENCES.md)。
 
 **M1 常驻约束（摘要）：**
 
@@ -166,7 +166,7 @@ Protocol (CLAUDE.md) → Facts (AGENTS.md) → steering/ → docs/ (human only)
 | Local | `steering/` | Path/task-scoped patches; created only from project evidence |
 | Human | `docs/` | Background; **must not override** facts/protocol |
 
-Reference material under `templates/steering/` (M5, stateful operations, Karpathy, etc.) is **opt-in** and never auto-installed as mandatory protocol. Maintainer bibliography: [`docs/maintainers/REFERENCES.md`](docs/maintainers/REFERENCES.md).
+The five core engineering principles, requirement boundary, and simplification gate belong to default `CLAUDE.md`, with a separate third-level heading for each principle. Detailed complexity and ablation methods live in the [M5 methods reference](templates/steering/m5-engineering-principles.md); state/data recovery lives in [stateful operations](templates/steering/stateful-operations.md); coding illustrations live in the Karpathy reference. These methods are selected on demand and never auto-generated or treated as new authorization. Maintainer bibliography: [`docs/maintainers/REFERENCES.md`](docs/maintainers/REFERENCES.md).
 
 **M1 always-on constraints (summary):**
 

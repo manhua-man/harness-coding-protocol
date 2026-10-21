@@ -1,36 +1,27 @@
-# M5 Engineering Principles
+# Engineering Decision Methods (M5 Reference)
 
-> Optional engineering-method reference. This file is not mandatory protocol and is not generated automatically by `/harness-init`. Adapt it to real project paths, assets, risks, and invariants only when the user explicitly selects it.
+> Optional methods for a current complexity or design decision. Core obligations are defined by the target repository's `CLAUDE.md`; selecting or omitting this reference does not switch those obligations on or off. Adapt the methods to the actual task, and do not generate this file automatically.
 
-## Principles
+## Complexity Proof Questions
 
-| Principle | Review question |
-| --- | --- |
-| Correctness-Constrained KISS | Is this the simplest standard solution that still preserves correctness, explicit authorization, user-owned data, and current contracts? |
-| Counterfactual Deletion | After the first draft, can deleting or inlining the extra layer leave the core logic intact and tests passing? |
-| Complexity Must Match Observed Value | Which repeated work is removed, and is that value larger than the ongoing cost of new state, locks, caches, receipts, cleanup, and validation? |
-| Choose The Boring Solution | Can existing repository capabilities or standard primitives solve the problem directly? |
-| YAGNI And Complexity Proof | Is there a current caller and evidence that the simpler design is insufficient? |
-| Fix Root Causes And Preserve Invariants | Does the change remove the cause or establish an enforceable invariant instead of adding logs, retries, or defaults? |
-| Observability Before Ceremony | Can an operator directly see real process, service, data, and failure state without reconstructing internal tokens or receipts? |
-| Named Threat Requirement | For security hardening, who is the attacker, what is the attack mode, which asset is protected, and what evidence makes the mechanism proportionate? |
+When evaluating an added abstraction or mechanism, answer the relevant questions with concrete evidence. A brief explanation is enough; no fixed report is required for routine edits.
+
+1. What current, observable requirement does it satisfy?
+2. What is the simplest standard solution, and why is it insufficient?
+3. Which asset, invariant, or measured limit justifies the extra complexity?
+4. What state, configuration, dependencies, failure modes, migrations, and tests does it add?
+5. Which real runtime caller uses it now? If the consumer is outside the approved scope, defer the helper with its consumer.
 
 ## Ablation Verification (消融推演)
 
-This is the operating procedure for **Counterfactual Deletion**. Use it after a first design or implementation exists. It is not a reason to add another layer.
+After a design or implementation exists, name an added abstraction, wrapper, or intermediate transform. Assume it is removed or inlined, then check whether the remaining behavior and relevant tests still satisfy the requirement. If so, and no current contract or runtime variation needs the layer, remove it. This is a reasoning method, not a requirement to build an alternate implementation or run unrelated tests.
 
-1. Name the extra abstraction, wrapper, or intermediate transform.
-2. Assume it is removed or inlined.
-3. Check whether the remaining core logic still holds, and whether existing tests would still pass.
-4. If yes, and there is no current real polymorphism (multiple live implementations that must switch), flatten it.
+## Asset and Observability Questions
 
-Do not keep a layer because it might be useful later. If the design is self-consistent without it, the layer was overhead.
+Classify the asset before selecting protection: authority-bearing credential, payment asset, regulated personal data, public identifier, or ordinary business identifier. An identifier is not automatically a secret. Name the actual attacker, authority gained, and current requirement before introducing hashing, key rotation, encrypted lookup, or candidate fallback.
+
+Check whether the proposed mechanism hides non-secret logs, cache state, health, or repair progress from authorized operators without a concrete benefit. Keep real secrets protected; operational visibility does not justify exposing credentials.
 
 ## Use
 
-- Apply only when the current task or user explicitly opts into M5.
-- After a first draft, run Ablation Verification before keeping a new wrapper or intermediate transform.
-- Replace generic examples with project-specific evidence before relying on them.
-- Keep authorization, release gates, and mandatory workflows in `CLAUDE.md`; this reference does not override them.
-- Do not promote speculative hardening into always-on protocol. Threat-model work remains opt-in unless the repository has a concrete, current boundary.
-- Treat `karpathy-examples.md` as a sibling reference that may be used independently.
+Read only the method relevant to the current decision. Root authorization, requirement, and simplification gates remain authoritative. Stateful recovery methods belong in `stateful-operations.md`; coding examples belong in `karpathy-examples.md`. Availability of a reference does not authorize new infrastructure or make it a pre-read for every change.
