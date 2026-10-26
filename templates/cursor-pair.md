@@ -1,4 +1,4 @@
-<!-- Style scaffold extracted from cursor.generator.ts during agent-as-writer task 3.1. Reference material — final bytes are agent-written. -->
+<!-- Conditional adapter template: draft the two paths below only when Cursor is in scope. Replace context placeholders with inspected target-repo facts; omit links to skipped targets. -->
 
 <!-- file: .cursor/rules/harness.mdc -->
 ---
@@ -12,7 +12,7 @@ alwaysApply: true
 
 ## Grounding Summary
 
-- shape: monorepo · languages: typescript, javascript · frameworks: react, vite, express · commands: dev, build, test, lint
+<!-- Summarize the target's actual shape, stacks, frameworks, and commands from Grounding_Summary. -->
 
 ## Recommended Files
 
@@ -27,7 +27,7 @@ alwaysApply: true
 ## Harness Cursor Guidance
 
 > HARNESS Cursor adapter block
-Read the root-level AGENTS.md / CLAUDE.md / DESIGN.md before applying any Cursor-private rule.
+Route through root AGENTS.md / CLAUDE.md and conditional DESIGN.md as the task requires; Cursor-private rules do not override them.
 Harness is initialized only via `/harness-init` inside the IDE; never instruct the user to run terminal `harness` commands.
 The agent orchestrates grounding, read, judge & draft, one yes/no confirm, and apply. It does not require Node/npm/npx/tsx or `.harness/runs/` artifacts for user onboarding.
 On user `yes`, freeze the Confirmed_Write_Set and write only those files.
@@ -36,11 +36,11 @@ Default to incremental merge so existing user content is preserved.
 <!-- file: .cursor/commands/harness-init.md -->
 # Harness Init
 
-Target project: `acme-web`.
+Target project: `<grounded-project-name>`.
 
 ## Detected Context
 
-- shape: monorepo · languages: typescript, javascript · frameworks: react, vite, express · commands: dev, build, test, lint
+<!-- Summarize the target's actual shape, stacks, frameworks, and commands from Grounding_Summary. -->
 
 ## Cursor Command Contract
 

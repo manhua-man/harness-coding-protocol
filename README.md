@@ -78,6 +78,8 @@ IDE 插件：在**你的业务仓库**里铺底并维护 AI 协作入口（`AGEN
 2. 首次或大重置时运行 `/harness-init`，看摘要后回复 `yes` / `no`
 3. 已有 `AGENTS.md` + `CLAUDE.md` 的仓：**跳过** init，直接用 M3–M5
 
+**新项目的文档来源：** 运行 `/harness-init`，由 AI 读取项目证据，并按 [`templates/`](templates/) 中的唯一模板起草项目自己的入口文档。`AGENTS.md`、`CLAUDE.md` 是基础入口，`DESIGN.md`、局部 steering 和 Cursor 适配按项目需要生成。`templates/steering/` 中的其他方法参考不会整包复制到项目。
+
 **`/harness-init` 五阶段：**
 
 | 阶段 | 做什么 |
@@ -202,6 +204,8 @@ Verify: `claude plugin list` shows the plugin; `/` completes all four commands i
 **② Bootstrap (M2)**
 
 Open your **app repo** (not this protocol repo). Run `/harness-init` on first setup or major reset; confirm `yes` / `no`. If `AGENTS.md` and `CLAUDE.md` already exist, skip init and use M3–M5 only.
+
+**Template source for new projects:** Run `/harness-init`. The agent reads project evidence and drafts your project's entry docs from the single template source in [`templates/`](templates/). `AGENTS.md` and `CLAUDE.md` are the base entries; `DESIGN.md`, local steering, and Cursor adapters are conditional. Other method references under `templates/steering/` are not copied as a bundle.
 
 **`/harness-init` five phases:**
 

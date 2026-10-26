@@ -37,11 +37,11 @@ Body prose language must match the resolved locale in sibling `CLAUDE.md` (see *
 
 ## Project Overview
 
-<!-- 2-3 sentences on project goals, primary users, and technical boundaries (filled by generator or user) -->
+<!-- 2-3 sentences on project goals, primary users, and technical boundaries, grounded by the agent in target-repo evidence. -->
 
 ## Workspace Layout
 
-<!-- List only real directories useful for collaboration (auto-detected and filled by generator) -->
+<!-- List only real directories useful for collaboration, verified by inspecting the target repo. -->
 
 ## Key Technologies
 
@@ -55,7 +55,7 @@ Never emit an empty conditional heading or generic placeholder. -->
 
 ## Build, Test & Development Commands
 
-<!-- Copy-paste commands consistent with package.json / Makefile / CI (synced by generator) -->
+<!-- Copy-paste commands verified against the target repo's manifests, Makefile, or CI. -->
 
 ## Quick Reference
 

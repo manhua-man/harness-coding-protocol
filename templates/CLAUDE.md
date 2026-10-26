@@ -22,6 +22,8 @@
 
 **Layering vs conflict:** the arrow above is the **documentation stack** (法 frames how to work with 事). When the **same topic** appears in multiple layers and they disagree, use **Conflict Resolution** below — **`AGENTS.md` (事) wins over this file (法)** on verifiable facts; your explicit instruction always wins first.
 
+For factual conflicts, verifiable source, manifests, and current runtime evidence take precedence over stale entry documentation; correct `AGENTS.md` accordingly. This does not authorize changing the user's requirements or collaboration rules.
+
 ---
 
 ## Division of Labor with AGENTS.md / DESIGN.md

@@ -1,4 +1,4 @@
-<!-- Style scaffold — SKIP unless you have real project-specific overrides. No frontmatter. -->
+<!-- Conditional template — SKIP unless you have real project-specific overrides. No frontmatter. -->
 # steering/harness-recommendations.md
 
 > Local overrides for project-specific behaviour only.

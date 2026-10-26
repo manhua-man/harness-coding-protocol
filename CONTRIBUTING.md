@@ -7,7 +7,7 @@ Preserve the protocol-first direction: **IDE `/harness-init` in target repos**, 
 - Maintainer docs: English, direct, no emojis.
 - **Do not** add root `AGENTS.md` / `CLAUDE.md` to this protocol repo — those are output molds for **target** repos (`templates/`).
 - **Do not** point plugin users at `docs/` — users read root `README.md` + `ai-ide/` only.
-- One authoritative home per rule: **skills > commands > this file**.
+- Root-entry templates and adapters live only in `templates/`. Skills own workflow and generation checks; commands delegate to skills; this file owns maintainer guidance.
 - Keep plugin `ai-ide/commands/` and `ai-ide/skills/` `description` fields short and narrow (target under **~200 characters**); long procedure belongs in the skill/command body, not frontmatter.
 - Conflict order (this repo): user instruction → root `README.md` → `CONTRIBUTING.md` → `docs/maintainers/CHANGELOG.md`.
 - Decision priority: correctness / explicit authorization / user-owned data → testability / verifiability → repository consistency → earned simplicity / readability → reversibility.
@@ -21,7 +21,8 @@ For maintenance of this plugin, apply [Core Engineering Principles](templates/CL
 
 | Content | Authoritative home | Generation or maintenance companion |
 | --- | --- | --- |
-| Core principles, requirements, simplification, completion, verification | [CLAUDE reference mold](templates/CLAUDE.md) | [CLAUDE scaffold](ai-ide/skills/harness-init/scaffolds/claude.md) mirrors these required blocks; update both in one change |
+| Root-entry structure and reusable rules | [`templates/`](templates/) | Init reads these templates directly; do not maintain a second scaffold body |
+| Core principles, requirements, simplification, completion, verification | [CLAUDE template](templates/CLAUDE.md) | Init checks required concept coverage; full definitions stay in this template |
 | Real paths, commands, validation entry points | Target repository `AGENTS.md` | Generate from inspected manifests and project evidence |
 | Complexity proof, ablation, asset assessment methods | [M5 methods reference](templates/steering/m5-engineering-principles.md) | Selected when useful; does not redefine root principles |
 | State contracts, data lifecycle, recovery | [Stateful reference](templates/steering/stateful-operations.md) | Adapt only for evidenced stateful owners |
@@ -51,7 +52,7 @@ Before IDE smoke:
 git grep -n -E "^(description:|alwaysApply:)" -- templates/AGENTS.md templates/CLAUDE.md templates/steering
 git grep -n "^```markdown$" -- templates/steering
 git grep -n -E "Default: RESEARCH|declare mode at response start" -- templates ai-ide
-git grep -n -E "^## M5|M5 Engineering Constraints" -- templates/CLAUDE.md ai-ide/skills/harness-init/scaffolds/claude.md
+git grep -n -E "^## M5|M5 Engineering Constraints" -- templates/CLAUDE.md
 git grep -rn "createPlan\|applyPlan\|runInitPlan\|merge-engine" ai-ide templates
 ```
 
@@ -63,7 +64,8 @@ All five commands should return no matches. `DESIGN.md` and host-specific rule/s
 - No whole-document ` ```markdown ` wrapper around steering references.
 - No mandatory `[MODE: ...]` or default-RESEARCH ceremony in target protocol molds.
 - No M5 methods section in the always-on `CLAUDE.md` mold; core principles and requirement gates are mandatory, while detailed methods stay in opt-in steering references.
-- `AGENTS.md` scaffold keeps repository-owned and recommended external/global tools separate.
+- `AGENTS.md` template keeps repository-owned and recommended external/global tools separate.
+- Init template links resolve within the installed plugin, including `templates/`; no standalone scaffold copies are distributed. Generated links resolve within the target repo.
 
 ## Entry smoke probes (target repos)
 

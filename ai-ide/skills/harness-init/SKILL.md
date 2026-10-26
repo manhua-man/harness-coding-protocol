@@ -109,6 +109,8 @@ Optional reads (grep / read of source, fixtures, internal docs) count against th
 
 For each Root_Truth_File target (Cursor pair counted as one logical target), produce a Draft in working memory unless its action is `skip`. Nothing goes to disk yet.
 
+Read the relevant [output templates](#output-templates) before drafting. Resolve those paths from this installed plugin, not from the target repository.
+
 ### Progress feedback
 
 Before drafting, tell the user:
@@ -412,15 +414,16 @@ Root-level `AGENTS.md`, `CLAUDE.md`, and `steering/*.md` are plain Markdown for 
 - **Tables:** Use only when rows are short. Put a blank line before the table. Separator row must use spaced pipes: `| --- | --- |`, never tight `|---|---|`.
 - **Prefer lists** for Quick Reference, skill indexes, conflict/decision priority, and any cell with long Chinese prose. Ordered lists for ranked rules; bullet lists for paths and tools.
 
-## Style Scaffolds
+## Output Templates
 
-Read the relevant scaffold file completely before drafting its target:
+`templates/` at the plugin root is the single source for root-entry templates and adapters. Read the relevant file completely before drafting its target:
 
-- [agents.md](scaffolds/agents.md) — required Facts (事) core structure, evidence-conditional sections, and three-class tool/document routing
-- [claude.md](scaffolds/claude.md) — required Protocol (法) structure, layered model, decision priorities, and risk-tiered RIPER Gate
-- [design.md](scaffolds/design.md) — conditional Design (设) structure
-- [steering-harness-recommendations.md](scaffolds/steering-harness-recommendations.md) — conditional project-specific overrides
-- [cursor-pair.md](scaffolds/cursor-pair.md) — optional Cursor adapter
+- [AGENTS.md](../../../templates/AGENTS.md) — required Facts (事) core structure, evidence-conditional sections, and three-class tool/document routing
+- [CLAUDE.md](../../../templates/CLAUDE.md) — required Protocol (法) structure, layered model, decision priorities, and risk-tiered RIPER Gate
+- [DESIGN.md](../../../templates/DESIGN.md) — conditional Design (设) structure
+- [harness-recommendations.md](../../../templates/steering/harness-recommendations.md) — conditional project-specific overrides
+- [cursor-pair.md](../../../templates/cursor-pair.md) — optional Cursor adapter
 
-The complete human-readable reference molds under `../../../templates/` preserve fuller explanations and optional reference material. Use them to retain the 法/事/设 concepts, but adapt every output to target-repo evidence and never copy placeholder bytes or generic examples as project facts.
-`../../../templates/steering/stateful-operations.md` is an opt-in maintainer reference only when Grounding found a real stateful-operation owner.
+Adapt each template to target-repo evidence and the resolved locale. Preserve required concepts, replace placeholders, and omit unsupported conditional sections, example tools, and sample tokens; do not copy these files wholesale. Generated target links must resolve within the target repo, not point back to plugin templates. An existing target document is patched under the section-boundary rules above, not replaced merely to match a template.
+
+Other material under `templates/steering/` is optional reference content, not an automatic write set. In particular, [stateful-operations.md](../../../templates/steering/stateful-operations.md) is selected only when Grounding found a real stateful-operation owner.
