@@ -16,6 +16,10 @@
     "cursor",
     "codex"
   ],
+  "commands": [
+    "./ai-ide/commands/revise-ai-docs.md",
+    "./ai-ide/commands/update-docs.md"
+  ],
   "skills": [
     "./ai-ide/skills/harness-init",
     "./ai-ide/skills/project-ai-docs-steward",

@@ -72,6 +72,8 @@ IDE 插件：在**你的业务仓库**里铺底并维护 AI 协作入口（`AGEN
 不在 Anthropic 默认市场，需手动添加上述 GitHub 源。  
 验证：`claude plugin list` 有 `harness-coding-protocol@harness-coding-protocol`；任意已接入 IDE 里 `/` 能补全四条命令。
 
+Claude Code 中插件命令带命名空间，例如 `/harness-coding-protocol:harness-init`、`/harness-coding-protocol:revise-ai-docs`。下文使用不带前缀的简称；调用时选择该插件提供的入口。
+
 **② 在业务仓铺底（M2）**
 
 1. 用 IDE 打开**目标仓库**（不是本协议仓）
@@ -200,6 +202,8 @@ The five core engineering principles, requirement boundary, and simplification g
 ```
 
 Verify: `claude plugin list` shows the plugin; `/` completes all four commands in any connected IDE.
+
+Claude Code namespaces plugin commands, for example `/harness-coding-protocol:harness-init` and `/harness-coding-protocol:revise-ai-docs`. The sections below use their short names; select the entries provided by this plugin when invoking them.
 
 **② Bootstrap (M2)**
 
